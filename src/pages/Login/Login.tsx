@@ -6,6 +6,7 @@ import { useRecoilState } from 'recoil';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import tokenState from '../../recoil/tokenState/atom';
+import './Login.module.css';
 
 interface IUser {
   userId: string;
@@ -26,36 +27,40 @@ function Login() {
         `${import.meta.env.VITE_SERVER_URL}/users/login`,
         user,
       );
-      console.log('이게 뤼스펀스 헤더야', response.headers);
       const { access_key: accessKey, refresh_key: refreshKey } =
         response.headers;
       const accessToken = accessKey.replace('Bearer ', '');
       const refreshToken = refreshKey.replace('Bearer ', '');
       console.log('accessToken?', accessToken);
       console.log('refreshToken?', refreshToken);
-      // const accessToken: string = tokens[0];
-      // const refreshToken: string = tokens[1];
       const accessTokenDecoded: any = jwtDecode(accessToken);
       const refreshTokenDecoded: any = jwtDecode(refreshToken);
-      console.log('디코디드', refreshTokenDecoded);
       const accessTokenExpirationTime = new Date(accessTokenDecoded.exp * 1);
       const refreshTokenExpirationTime = new Date(refreshTokenDecoded.exp * 1);
 
       Cookies.set('refreshToken', refreshToken, {
         expires: refreshTokenExpirationTime,
       }); // Store refreshToken in a cookie
-      setToken({ accessToken }); // Store only accessToken in recoil state
-      setLoginError('');
-      alert('로그인 성공');
-      console.log('하이하이', token);
+      setToken({ accessToken, refreshToken });
+      console.log('로그인의 대성공', token);
       navigate('/');
     } catch (error) {
-      console.error(error);
-      setLoginError('비밀번호가 일치하지 않습니다.');
-      alert('로그인 실패'); // Optionally add a user-facing alert for login failure
+      if (axios.isAxiosError(error)) {
+        const serverError = error.response?.data;
+        if (serverError) {
+          if (serverError.message === '아이디가 일치하지 않습니다.') {
+            setLoginError('아이디가 일치하지 않습니다.');
+          } else if (serverError.message === '비밀번호가 일치하지 않습니다.') {
+            setLoginError('비밀번호가 일치하지 않습니다.');
+          } else {
+            setLoginError('Unknown error occurred.');
+          }
+        }
+      } else {
+        console.error(error);
+      }
     }
   });
-
   const userIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setUserIdInput(e.target.value);
   };
@@ -67,26 +72,56 @@ function Login() {
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
     if (userIdInput.trim() === '' || passwordInput.trim() === '') {
-      alert('사용자 ID와 비밀번호를 입력해주세요.');
       return;
     }
     mutation.mutate({ userId: userIdInput, password: passwordInput });
   };
 
-  // const SocialKakao=()=>{
-  //   const Rest_api_key='REST API KEY'
-  //   const redirecti_uri= 'http://43.201.181.250/kakao/callback'
-  //   const kakaoURL=`https://kauth.kakao.com/oauth/authorize?client_id=7fe3a140583f0df4191f29f81742062c&redirect_uri=http://43.201.181.250/members/kakao/callback&response_type=code`
-  //   const handleLogin =()=>{
-  //     window.location.href = kakaoURL
-  //   }
-  //  const code = new URL(window.location.href).searchParams.get("code");
+  const kakaoLoginHandler = () => {
+    const REST_API_KEY = '826134c9ef39a5b494d322490e0e3abe';
+    const REDIRECT_URI = 'http://13.209.106.144:8080/users/oauth/kakao';
+    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+
+    // navigate(`${kakaoURL}`);
+
+    window.location.href = kakaoURL;
+
+    const redirectCode = new URL(window.location.href).searchParams.get('code');
+    console.log('너왔니코드?', redirectCode);
+  };
+
   return (
-    <div className="min-h-screen bg-secondary-color-light flex items-center justify-between sm:py-12 border-2">
-      <div className="w-full md:w-1/4 p-10">
-        <img src="" alt="" className="w-full" />
+    <div
+      style={{
+        background:
+          'linear-gradient(to bottom, var(--secondary-color-light) 75%, var(--background-color-grey) 25%)',
+        minHeight: '100vh', // To make sure it takes the full height of the screen
+      }}
+      className="flex justify-between sm:py-12 border-2"
+    >
+      <div
+        style={{
+          marginLeft: 250,
+          marginRight: -300,
+          width: '100%',
+          maxWidth: '25%',
+          padding: 100,
+        }}
+      >
+        <img
+          src="/src/img/Group.png"
+          alt="Logo"
+          className="w-full"
+          style={{ width: '130px', height: 'auto' }}
+        />
+        <img
+          src="/src/img/kong.png"
+          alt="charac"
+          className="w-full"
+          style={{ width: '500px', height: 'auto' }}
+        />
       </div>
-      <div className="p-10 xs:p-0 mx-auto md:w-full md:max-w-md">
+      <div className="p-10 xs:p-0 mx-auto md:w-full md:max-w-md mt-[-3rem]">
         <div className="bg-white border-4 border-primary-color-salgu shadow w-full  divide-y divide-gray-200">
           <div className="px-5 py-7 ">
             <div className="p-5">
@@ -98,7 +133,11 @@ function Login() {
                     placeholder="아이디를 입력하세요"
                     value={userIdInput}
                     onChange={userIdInputHandler}
-                    className=" border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                    className={`border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full ${
+                      loginError === '아이디가 일치하지 않습니다.'
+                        ? 'border-red-500'
+                        : ''
+                    }`}
                   />
                   <p>비밀번호</p>
                   <input
@@ -106,7 +145,11 @@ function Login() {
                     placeholder="비밀번호 입력(영문, 숫자 조합 최소 8자)"
                     value={passwordInput}
                     onChange={passwordInputHandler}
-                    className=" border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full "
+                    className={`border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full ${
+                      loginError === '비밀번호가 일치하지 않습니다.'
+                        ? 'border-red-500'
+                        : ''
+                    } `}
                   />
                   <button
                     type="submit"
@@ -121,6 +164,7 @@ function Login() {
 
                 <button
                   type="submit"
+                  onClick={kakaoLoginHandler}
                   className="transition duration-200 bg-amber-300 hover:bg-yellow-400 
                   focus:bg-kakao-color focus:shadow-sm focus:ring-4 focus:ring-yellow-500 
                   focus:ring-opacity-50 w-full py-2.5 rounded-lg text-sm shadow-sm 
@@ -129,7 +173,7 @@ function Login() {
                   카카오 로그인
                 </button>
                 <div className="flex justify-center mt-4">
-                  <p className="mr-2 test-9">계정이 없으신가요?</p>
+                  <p className="text-sm mr-2 test-9">계정이 없으신가요?</p>
                   <button
                     type="button"
                     className="text-primary-color-orange inline-block mr-2 text-sm"
