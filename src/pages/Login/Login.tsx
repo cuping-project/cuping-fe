@@ -1,11 +1,10 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { useMutation } from 'react-query';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import Cookies from 'js-cookie';
-import jwtDecode from 'jwt-decode';
 import tokenState from '../../recoil/tokenState/atom';
+import loginUser from '../../apis/api/userApi';
 import './Login.module.css';
 
 interface IUser {
@@ -18,47 +17,44 @@ function Login() {
   const [userIdInput, setUserIdInput] = React.useState('');
   const [passwordInput, setPasswordInput] = React.useState('');
   const [loginError, setLoginError] = useState('');
-
   const navigate = useNavigate();
-  // console.log({ userId: userIdInput, password: passwordInput });
+
+  console.log({ userId: userIdInput, password: passwordInput });
   const mutation = useMutation(async (user: IUser) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/users/login`,
-        user,
-      );
-      const { access_key: accessKey, refresh_key: refreshKey } =
-        response.headers;
-      const accessToken = accessKey.replace('Bearer ', '');
-      const refreshToken = refreshKey.replace('Bearer ', '');
-      console.log('accessToken?', accessToken);
-      console.log('refreshToken?', refreshToken);
-      const accessTokenDecoded: any = jwtDecode(accessToken);
-      const refreshTokenDecoded: any = jwtDecode(refreshToken);
-      const accessTokenExpirationTime = new Date(accessTokenDecoded.exp * 1);
-      const refreshTokenExpirationTime = new Date(refreshTokenDecoded.exp * 1);
+      const tokens = await loginUser(user); // Fetch the tokens
 
-      Cookies.set('refreshToken', refreshToken, {
-        expires: refreshTokenExpirationTime,
-      }); // Store refreshToken in a cookie
-      setToken({ accessToken, refreshToken });
-      console.log('로그인의 대성공', token);
-      navigate('/');
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const serverError = error.response?.data;
-        if (serverError) {
-          if (serverError.message === '아이디가 일치하지 않습니다.') {
-            setLoginError('아이디가 일치하지 않습니다.');
-          } else if (serverError.message === '비밀번호가 일치하지 않습니다.') {
-            setLoginError('비밀번호가 일치하지 않습니다.');
-          } else {
-            setLoginError('Unknown error occurred.');
-          }
+      // Check if tokens are received successfully
+      if (!tokens || typeof tokens === 'number') {
+        // Check for error messages
+        if (tokens === 401) {
+          setLoginError('아이디가 일치하지 않습니다.');
+        } else if (tokens === 403) {
+          setLoginError('비밀번호가 일치하지 않습니다.');
+        } else {
+          setLoginError('Unknown error occurred.');
         }
-      } else {
-        console.error(error);
+
+        throw new Error('Failed to fetch tokens');
       }
+
+      // Save the tokens in cookies
+      Cookies.set('accessToken', tokens.accessToken, {
+        expires: tokens.accessTokenExpirationTime,
+      });
+      Cookies.set('refreshToken', tokens.refreshToken, {
+        expires: tokens.refreshTokenExpirationTime,
+      });
+
+      // Save tokens in the state
+      setToken({
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+      });
+
+      navigate('/'); // Redirect to home page
+    } catch (error) {
+      console.error(error);
     }
   });
   const userIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -133,30 +129,40 @@ function Login() {
                     placeholder="아이디를 입력하세요"
                     value={userIdInput}
                     onChange={userIdInputHandler}
-                    className={`border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full ${
+                    className={`border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full ${
                       loginError === '아이디가 일치하지 않습니다.'
                         ? 'border-red-500'
                         : ''
                     }`}
                   />
+                  {loginError === '아이디가 일치하지 않습니다.' && (
+                    <p className="text-red-500 text-xs mb-8">
+                      잘못된 아이디입니다.
+                    </p>
+                  )}
                   <p>비밀번호</p>
                   <input
                     type="password"
                     placeholder="비밀번호 입력(영문, 숫자 조합 최소 8자)"
                     value={passwordInput}
                     onChange={passwordInputHandler}
-                    className={`border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full ${
+                    className={`border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full ${
                       loginError === '비밀번호가 일치하지 않습니다.'
                         ? 'border-red-500'
                         : ''
                     } `}
                   />
+                  {loginError === '비밀번호가 일치하지 않습니다.' && (
+                    <p className="text-red-500 mt-10] text-xs">
+                      비밀번호가 일치하지 않습니다.
+                    </p>
+                  )}
                   <button
                     type="submit"
                     className="transition duration-200 bg-primary-color-salgu hover:bg-neutral-400
               focus:bg-primary-color-orange focus:shadow-sm focus:ring-4 focus:ring-neutral-400 
               focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm 
-              hover:shadow-md font-semibold text-center inline-block mb-8"
+              hover:shadow-md font-semibold text-center inline-block mt-8 mb-8"
                   >
                     로그인
                   </button>
