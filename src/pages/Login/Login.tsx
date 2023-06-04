@@ -27,7 +27,8 @@ function Login() {
       // Check if tokens are received successfully
       if (!tokens || typeof tokens === 'number') {
         // Check for error messages
-        if (tokens === 401) {
+        console.log('Server response: ', tokens);
+        if (tokens === 400) {
           setLoginError('아이디가 일치하지 않습니다.');
         } else if (tokens === 403) {
           setLoginError('비밀번호가 일치하지 않습니다.');
