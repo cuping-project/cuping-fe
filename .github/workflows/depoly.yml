@@ -1,0 +1,50 @@
+name: Deploy # Workflow 이름
+on: # Event 감지
+  push:
+    branches:
+      - main # 해당 브랜치의 푸쉬가 일어날 때 CI/CD를 진행하겠다는 뜻
+
+env:
+  S3_BUCKET_NAME: s3-cuping-fe # S3 버킷 이름
+  CODE_DEPLOY_APPLICATION_NAME: cuping-cicd-fe # codedeploy에서 만든 어플리케이션 이름
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: dg-cuping-fe # codedeploy 만든 배포 그룹 세부 정보
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout source code.
+        uses: actions/checkout@v2
+
+      - name: Check Node v # 노드 버전 확인
+        run: node -v
+
+      - name: Install Dependencies
+        run: yarn
+
+      - name: Build # 빌드
+        run: yarn build
+        env:
+          CI: ''
+
+      - name: zip create
+        # zip 파일을 만듭니다(파일명은 자유, 대신 아래 workflow에 적을 파일명과 동일하게 맞춰주세요).
+        run: zip -qq -r ./dist.zip .
+        shell: bash
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Upload to S3 # Upload build file to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 cp --region ap-northeast-2 ./dist.zip s3://${{env.S3_BUCKET_NAME}}/dist.zip
+
+      - name: Deploy # Deploy to EC2
+        run: aws deploy create-deployment --deployment-config-name CodeDeployDefault.AllAtOnce --application-name ${{env.CODE_DEPLOY_APPLICATION_NAME}} --deployment-group-name ${{env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME}} --s3-location bucket=${{env.S3_BUCKET_NAME}},key=dist.zip,bundleType=zip
