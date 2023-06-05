@@ -11,14 +11,18 @@
     "lint:fix": "eslint --fix \"./src/**/*.{ts,tsx,js,jsx}\""
   },
   "dependencies": {
+    "@types/dotenv": "^8.2.0",
     "axios": "^1.4.0",
+    "dotenv": "^16.1.0",
     "react": "^18.2.0",
+    "react-daum-postcode": "^3.1.1",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.11.2",
     "recoil": "^0.7.7"
   },
   "devDependencies": {
+    "@types/node": "^20.2.5",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
