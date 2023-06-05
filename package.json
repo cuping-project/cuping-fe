@@ -11,8 +11,11 @@
     "lint:fix": "eslint --fix \"./src/**/*.{ts,tsx,js,jsx}\""
   },
   "dependencies": {
+    "@types/dotenv": "^8.2.0",
     "axios": "^1.4.0",
+    "dotenv": "^16.1.0",
     "react": "^18.2.0",
+    "react-daum-postcode": "^3.1.1",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.11.2",
