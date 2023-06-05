@@ -18,11 +18,13 @@ module.exports = {
     sourceType: 'module',
     project: './tsconfig.json',
   },
-  plugins: ['react', '@typescript-eslint'],
+  plugins: ['react', 'react-hooks', '@typescript-eslint'],
   rules: {
     'no-console': 'off', // 코드에서 console 객체를 사용하면 제거하도록 유도
     'react/react-in-jsx-scope': 'off', // JSX를 사용할 때 React가 import되어 있는지 확인하는 규칙
     'import/no-extraneous-dependencies': 0, // 외부 패키지 사용 가능
+    'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
+    'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
 
     // TypeScript 관련 규칙
     '@typescript-eslint/no-unused-vars': 'warn', // 사용하지 않는 변수에 대해 경고 표시
