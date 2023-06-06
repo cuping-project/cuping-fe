@@ -1,0 +1,12 @@
+:root {
+  --secondary-color-light: #f3eae1;
+  --background-color-grey: #d8d8d6;
+}
+
+.outer-div {
+  background: linear-gradient(
+    to bottom,
+    var(--secondary-color-light) 60%,
+    var(--background-color-grey) 40%
+  );
+}
