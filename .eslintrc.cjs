@@ -38,6 +38,10 @@ module.exports = {
     'react/react-in-jsx-scope': 'warn', // JSX에서 React를 import하지 않았을 때 경고 표시
     'react-hooks/rules-of-hooks': 'error', // Hooks 규칙 적용
     'react-hooks/exhaustive-deps': 'warn', // useEffect의 의존성 배열 누락에 대해 경고 표시
+    'react/function-component-definition': [
+      2,
+      { namedComponents: 'arrow-function' },
+    ],
   },
   ignorePatterns: ['.eslintrc.cjs', 'tailwind.config.js', 'postcss.config.js'],
 };

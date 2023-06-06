@@ -4,12 +4,12 @@ import Router from './shared/Router';
 
 const queryClient = new QueryClient();
 
-function App() {
+const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <Router />
     </QueryClientProvider>
   );
-}
+};
 
 export default App;
