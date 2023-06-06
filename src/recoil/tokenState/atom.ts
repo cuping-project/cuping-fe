@@ -3,6 +3,8 @@ import { atom } from 'recoil';
 interface TokenState {
   accessToken: string;
   refreshToken: string;
+  accessTokenExpirationTime: Date;
+  refreshTokenExpirationTime: Date;
 }
 
 type AxiosError = Error & Partial<ErrorResponse>;
