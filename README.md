@@ -21,5 +21,5 @@ tailwindCSS
 recoil
 react-query
 
-CI/CD
+CI/CD (gitaction)
 ```
