@@ -28,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({ loggedin }) => {
         <button type="button" onClick={handleHomePage}>
           <img
             src={cuppingLogo}
-            className="w-[5rem] desktop1600:w-[8rem] desktop1700:w-[12rem]"
+            className="w-[12rem] desktop1440:w-[8rem]"
             alt="커핑로고"
           />
         </button>
