@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-function OwnerPage(): JSX.Element {
+const OwnerPage = (): JSX.Element => {
   const [selected, setSelected] = useState<string>('내 정보 관리');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -74,6 +74,6 @@ function OwnerPage(): JSX.Element {
       </div>
     </div>
   );
-}
+};
 
 export default OwnerPage;

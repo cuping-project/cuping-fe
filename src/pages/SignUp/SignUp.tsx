@@ -6,7 +6,6 @@ import { userSignup, checkUserId } from '../../apis/api/signup';
 import OwnerSignUpForm from './OwnerSignUpForm';
 import useToggle from '../../hooks/useToggle';
 import errorIcon from '../../assets/warning.svg';
-import Post from '../../components/Modal/Post';
 
 const SignUp = () => {
   const navigate = useNavigate();
