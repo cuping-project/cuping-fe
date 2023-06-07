@@ -12,12 +12,20 @@ interface IUser {
   password: string;
 }
 
-function Login() {
+const Login = () => {
   const [token, setToken] = useRecoilState(tokenState);
   const [userIdInput, setUserIdInput] = React.useState('');
   const [passwordInput, setPasswordInput] = React.useState('');
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
+
+  const handleHomePage = () => {
+    navigate('/');
+  };
+
+  const handleSignupPage = () => {
+    navigate('/signup');
+  };
 
   console.log({ userId: userIdInput, password: passwordInput });
   const mutation = useMutation(async (user: IUser) => {
@@ -108,8 +116,10 @@ function Login() {
         <img
           src="/src/img/Group.png"
           alt="Logo"
-          className="w-full"
+          className="w-full cursor-pointer"
           style={{ width: '130px', height: 'auto' }}
+          onClick={handleHomePage}
+          role="presentation"
         />
         <img
           src="/src/img/kong.png"
@@ -118,6 +128,7 @@ function Login() {
           style={{ width: '500px', height: 'auto' }}
         />
       </div>
+
       <div className="p-10 xs:p-0 mx-auto md:w-full md:max-w-md mt-[-3rem]">
         <div className="bg-white border-4 border-primary-color-salgu shadow w-full  divide-y divide-gray-200">
           <div className="px-5 py-7 ">
@@ -184,6 +195,7 @@ function Login() {
                   <button
                     type="button"
                     className="text-primary-color-orange inline-block mr-2 text-sm"
+                    onClick={handleSignupPage}
                   >
                     회원가입 하러 가기
                   </button>
@@ -195,6 +207,6 @@ function Login() {
       </div>
     </div>
   );
-}
+};
 
 export default Login;

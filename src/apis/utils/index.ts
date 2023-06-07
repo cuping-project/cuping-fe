@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_SERVER_URL,
+  baseURL: import.meta.env.VITE_BE_SERVER,
   headers: {
     'Access-Control-Allow-Origin': '*',
   },
@@ -35,7 +35,7 @@ instance.interceptors.response.use(
 );
 
 export const baseURL = axios.create({
-  baseURL: import.meta.env.VITE_SERVER_URL,
+  baseURL: import.meta.env.VITE_BE_SERVER,
   headers: {
     'Access-Control-Allow-Origin': '*',
   },

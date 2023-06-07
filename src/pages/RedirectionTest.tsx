@@ -9,7 +9,7 @@
 //       try {
 //         const response = await axios.get(
 //           `${
-//             import.meta.env.VITE_SERVER_URL
+//             import.meta.env.VITE_BE_SERVER
 //           }/users/oauth/kakao?code=${redirectCode}`,
 //         );
 //         console.log('이게 카카오의 reponse 헤더야', response.headers);

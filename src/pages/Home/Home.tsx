@@ -68,18 +68,22 @@ const Home: React.FC = () => {
   const handleToggleShin = () => {
     setIsSshinSelected(!isSshinSelected);
   };
+
   // 쓴맛 태그 클릭 토글
   const handleToggleSsun = () => {
     setIsSsunSelected(!isSsunSelected);
   };
+
   // 탄맛 태그 클릭 토글
   const handleToggleTan = () => {
     setIsTanSelected(!isTanSelected);
   };
+
   // 단맛 태그 클릭 토글
   const handleToggleDan = () => {
     setIsDanSelected(!isDanSelected);
   };
+
   // 디카페인 태그 클릭 토글
   const handleToggleDe = () => {
     setIsDeSelected(!isDeSelected);
@@ -150,7 +154,7 @@ const Home: React.FC = () => {
       <div className="main-contents w-full flex justify-center items-center flex-col mt-[-5rem]">
         {/* ---------- 검색 네비게이터 ---------- */}
         <div className="search-bar mb-[4rem] relative">
-          <div className="text-primaryColor pb-4 pl-2 flex space-x-2">
+          <div className="text-primary-color-orange pb-4 pl-2 flex space-x-2">
             <img src={pinIcon} alt="" className="w-[14px]" />
             <button type="submit">서울특별시 강남구</button>
           </div>
@@ -177,7 +181,7 @@ const Home: React.FC = () => {
         </div>
         <div className="content-text flex text-5xl mb-[4rem]">
           <div>지금&nbsp;</div>
-          <div className="text-primaryColor">여기, 내 취향&nbsp;</div>
+          <div className="text-primary-color-orange">여기, 내 취향&nbsp;</div>
           <div>으로 찾는 원두</div>
         </div>
         <div className="card-contents w-full">
@@ -185,7 +189,7 @@ const Home: React.FC = () => {
             <div className="sorting-btn-right flex">
               <button
                 type="submit"
-                className={`sorting-btn bg-primaryColor text-white border-1 m-2 px-2 py-1 rounded-[10px] ${
+                className={`sorting-btn bg-primary-color-orange text-white border-1 m-2 px-2 py-1 rounded-[10px] ${
                   isAllSelected ? '' : 'opacity-30'
                 }`}
                 onClick={handleToggleAll}
@@ -199,7 +203,7 @@ const Home: React.FC = () => {
                 type="submit"
                 className={`m-2 px-4 py-1 border-2 rounded-[10px] text-[12px] cursor-pointer ${
                   isSshinSelected
-                    ? 'bg-primaryColor text-white'
+                    ? 'bg-primary-color-orange text-white'
                     : 'border-black opacity-20'
                 }`}
                 onClick={handleToggleShin}
@@ -210,7 +214,7 @@ const Home: React.FC = () => {
                 type="submit"
                 className={`m-2 px-4 py-1 border-2 rounded-[10px] text-[12px] cursor-pointer ${
                   isSsunSelected
-                    ? 'bg-primaryColor text-white'
+                    ? 'bg-primary-color-orange text-white'
                     : 'border-black opacity-20'
                 }`}
                 onClick={handleToggleSsun}
@@ -221,7 +225,7 @@ const Home: React.FC = () => {
                 type="submit"
                 className={`m-2 px-4 py-1 border-2 rounded-[10px] text-[12px] cursor-pointer ${
                   isTanSelected
-                    ? 'bg-primaryColor text-white'
+                    ? 'bg-primary-color-orange text-white'
                     : 'border-black opacity-20'
                 }`}
                 onClick={handleToggleTan}
@@ -232,7 +236,7 @@ const Home: React.FC = () => {
                 type="submit"
                 className={`m-2 px-4 py-1 border-2 rounded-[10px] text-[12px] cursor-pointer ${
                   isDanSelected
-                    ? 'bg-primaryColor text-white'
+                    ? 'bg-primary-color-orange text-white'
                     : 'border-black opacity-20'
                 }`}
                 onClick={handleToggleDan}
@@ -243,7 +247,7 @@ const Home: React.FC = () => {
                 type="submit"
                 className={`m-2 px-4 py-1 border-2 rounded-[10px] text-[12px] cursor-pointer ${
                   isDeSelected
-                    ? 'bg-primaryColor text-white'
+                    ? 'bg-primary-color-orange text-white'
                     : 'border-black opacity-20'
                 }`}
                 onClick={handleToggleDe}
