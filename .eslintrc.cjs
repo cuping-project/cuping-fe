@@ -25,6 +25,7 @@ module.exports = {
     'import/no-extraneous-dependencies': 0, // 외부 패키지 사용 가능
     'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
     'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
+    'no-alert': 'off', // alert 끄기
 
     // TypeScript 관련 규칙
     '@typescript-eslint/no-unused-vars': 'warn', // 사용하지 않는 변수에 대해 경고 표시
