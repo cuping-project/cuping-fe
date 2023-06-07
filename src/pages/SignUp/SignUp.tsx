@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useInput from '../../hooks/useInput';
 import { userSignup, checkUserId } from '../../apis/api/signup';
 import OwnerSignUpForm from './OwnerSignUpForm';
@@ -8,7 +8,7 @@ import useToggle from '../../hooks/useToggle';
 import errorIcon from '../../assets/warning.svg';
 import Post from '../../components/Modal/Post';
 
-function SignUp() {
+const SignUp = () => {
   const navigate = useNavigate();
   const [userId, idRef, handleChangeUserId] = useInput();
   const [nickname, nicknameRef, handleChangeNickname] = useInput();
@@ -113,7 +113,9 @@ function SignUp() {
                 <button
                   type="button"
                   onClick={() => handleButtonClick(false)}
-                  className={`transition duration-200 border bg-gray-200 border-gray-200 text-gray-500 w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md 
+                  className={`transition duration-200 border bg-gray-200
+                  border-gray-200 text-gray-500 py-0.5 rounded-lg
+                  text-sm hover:shadow-sm mx-0.5
                   ${
                     !active ? 'bg-white text-orange-400 font-semibold' : ''
                   } font-normal text-center inline-block`}
@@ -123,7 +125,9 @@ function SignUp() {
                 <button
                   type="button"
                   onClick={() => handleButtonClick(true)}
-                  className={`transition duration-200 border bg-gray-200 border-gray-200 text-gray-500 w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md
+                  className={`transition duration-200 border bg-gray-200
+                  border-gray-200 text-gray-500 py-0.5 rounded-lg
+                  text-sm hover:shadow-sm mx-0.5
                   ${
                     active ? 'bg-white text-orange-400 font-semibold' : ''
                   } font-normal text-center inline-block`}
@@ -259,7 +263,8 @@ function SignUp() {
                   <button
                     type="button"
                     onClick={() => navigate('/login')}
-                    className="font-semibold text-sm ml-2 text-primary-color-orange  tracking-tighter"
+                    className="font-semibold text-sm ml-2 text-primary-color-orange
+                    tracking-tighter"
                   >
                     로그인 하러 가기
                   </button>
@@ -271,6 +276,6 @@ function SignUp() {
       </div>
     </div>
   );
-}
+};
 
 export default SignUp;

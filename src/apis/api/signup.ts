@@ -15,7 +15,7 @@ type UserId = {
 const userSignup = async (users: Users) => {
   try {
     const response = await instance.post(
-      `${import.meta.env.VITE_SERVER_URL}/users/signup/user`,
+      `${import.meta.env.VITE_BE_SERVER}/users/signup/user`,
       users,
     );
     // console.log(response);
@@ -29,7 +29,7 @@ const userSignup = async (users: Users) => {
 const ownerSignup = async (users: Users) => {
   try {
     const response = await instance.post(
-      `${import.meta.env.VITE_SERVER_URL}/users/signup/owner`,
+      `${import.meta.env.VITE_BE_SERVER}/users/signup/owner`,
       users,
     );
     return response;
@@ -41,7 +41,7 @@ const ownerSignup = async (users: Users) => {
 const adminSignup = async (users: Users) => {
   try {
     const response = await instance.post(
-      `${import.meta.env.VITE_SERVER_URL}/users/signup/admin`,
+      `${import.meta.env.VITE_BE_SERVER}/users/signup/admin`,
       users,
     );
     return response;
@@ -52,20 +52,19 @@ const adminSignup = async (users: Users) => {
 
 // 회원가입 - 아이디 중복 검사
 
-const checkUserId = async () => {
+const checkUserId = async (userId: UserId) => {
   try {
-    const userId = 'adsf';
     const response = await instance.post(
-      `${import.meta.env.VITE_SERVER_URL}/users/checkId`,
+      `${import.meta.env.VITE_BE_SERVER}/users/checkId`,
       userId,
     );
 
-    console.log('이건 이거야', response);
-    // if (response.data.message === '사용중인 아이디입니다.')
-    //   return response.data.message;
-    // if (response.data.message === '사용가능한 아이디입니다.')
-    //   return response.data.message;
-  } catch (error) {
+    alert(`사용가능한 아이디입니다.`);
+  } catch (error: any) {
+    const errorCode = parseInt(error.response.status, 10);
+    if (errorCode === 400) {
+      alert(error.response.data.message);
+    }
     return error;
   }
 };

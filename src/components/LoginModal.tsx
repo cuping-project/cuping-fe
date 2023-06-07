@@ -1,15 +1,21 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type ModalProps = {
   show: boolean;
   handleClose: () => void;
-  handleLogin: () => void;
 };
 
-function LoginModal({ show, handleClose, handleLogin }: ModalProps) {
+const LoginModal = ({ show, handleClose }: ModalProps) => {
+  const navigate = useNavigate();
+
   const showHideClassName = show
     ? 'fixed z-10 inset-0 overflow-y-auto'
     : 'hidden';
+
+  const handleLoginPage = () => {
+    navigate('./login');
+  };
 
   return (
     <div className={showHideClassName}>
@@ -37,7 +43,7 @@ function LoginModal({ show, handleClose, handleLogin }: ModalProps) {
           <div className="mt-5 sm:mt-6">
             <button
               type="button"
-              onClick={handleLogin}
+              onClick={handleLoginPage}
               className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm"
             >
               확인
@@ -54,6 +60,6 @@ function LoginModal({ show, handleClose, handleLogin }: ModalProps) {
       </div>
     </div>
   );
-}
+};
 
 export default LoginModal;
