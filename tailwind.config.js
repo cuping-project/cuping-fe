@@ -12,7 +12,7 @@ export default {
       desktop1700: '1700px',
       // => @media (min-width: 1700px) { ... }
 
-      desktop1600: '1600px',
+      desktop1440: '14400px',
       // => @media (min-width: 1600px) { ... }
     },
     extend: {
