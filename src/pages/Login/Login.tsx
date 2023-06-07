@@ -99,102 +99,104 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full h-[100vh] bg-[#FFF1E9]">
-      <div className="top flex items-center w-full h-full">
-        <div className="flex w-full items-center justify-center">
-          <div className="left flex h-full items-center mt-[5rem] mr-[3rem]">
-            <div className="flex flex-col">
-              <img
-                src={cupingLogo}
-                alt="Logo"
-                className="w-[10rem] cursor-pointer mb-10"
-                onClick={handleHomePage}
-                role="presentation"
-              />
-              <div className="mb-20">
-                <div className="text-[24px] text-[#CEAC8A] mb-2">
-                  <div>지금 여기,</div>
-                  <div>맛있는 원두를 찾고 싶을 땐</div>
-                  <div>커핑 하세요!</div>
+    <div className="bg-secondary-color-light w-full h-[100vh] flex justify-center items-center">
+      <div className="w-[1440px] flex justify-center">
+        <div className="top flex items-center w-full h-full">
+          <div className="flex w-full items-center justify-center">
+            <div className="left flex h-full items-center mt-[5rem] mr-[3rem]">
+              <div className="flex flex-col">
+                <img
+                  src={cupingLogo}
+                  alt="Logo"
+                  className="w-[10rem] cursor-pointer mb-10"
+                  onClick={handleHomePage}
+                  role="presentation"
+                />
+                <div className="mb-20">
+                  <div className="text-[24px] text-[#CEAC8A] mb-2">
+                    <div>지금 여기,</div>
+                    <div>맛있는 원두를 찾고 싶을 땐</div>
+                    <div>커핑 하세요!</div>
+                  </div>
+                  <div>원두 기반 카페 검색 서비스</div>
                 </div>
-                <div>원두 기반 카페 검색 서비스</div>
+                <img src={bini} alt="charac" className="w-full" />
               </div>
-              <img src={bini} alt="charac" className="w-full" />
             </div>
-          </div>
-          <div className="right flex h-full items-center">
-            <div className="flex">
-              <div className="p-10 mx-auto w-[428px]">
-                <div className="w-full bg-white border-4 border-primary-color-salgu shadow divide-y divide-gray-200">
-                  <div className="">
-                    <div className="p-[39px] w-[350px]">
-                      <form onSubmit={submitHandler}>
-                        <p>아이디</p>
-                        <input
-                          type="text"
-                          placeholder="아이디를 입력하세요"
-                          value={userIdInput}
-                          onChange={userIdInputHandler}
-                          className={`border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full ${
-                            loginError === '아이디가 일치하지 않습니다.'
-                              ? 'border-red-500'
-                              : ''
-                          }`}
-                        />
-                        {loginError === '아이디가 일치하지 않습니다.' && (
-                          <p className="text-red-500 text-xs mb-8">
-                            잘못된 아이디입니다.
-                          </p>
-                        )}
-                        <p>비밀번호</p>
-                        <input
-                          type="password"
-                          placeholder="비밀번호 입력(영문, 숫자 조합 최소 8자)"
-                          value={passwordInput}
-                          onChange={passwordInputHandler}
-                          className={`border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full ${
-                            loginError === '비밀번호가 일치하지 않습니다.'
-                              ? 'border-red-500'
-                              : ''
-                          } `}
-                        />
-                        {loginError === '비밀번호가 일치하지 않습니다.' && (
-                          <p className="text-red-500 mt-10] text-xs">
-                            비밀번호가 일치하지 않습니다.
-                          </p>
-                        )}
-                        <button
-                          type="submit"
-                          className="transition duration-200 bg-primary-color-salgu hover:bg-neutral-400
+            <div className="right flex h-full items-center">
+              <div className="flex">
+                <div className="p-10 mx-auto w-[428px]">
+                  <div className="w-full bg-white border-4 border-primary-color-salgu shadow divide-y divide-gray-200">
+                    <div className="">
+                      <div className="p-[39px] w-[350px]">
+                        <form onSubmit={submitHandler}>
+                          <p>아이디</p>
+                          <input
+                            type="text"
+                            placeholder="아이디를 입력하세요"
+                            value={userIdInput}
+                            onChange={userIdInputHandler}
+                            className={`border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full ${
+                              loginError === '아이디가 일치하지 않습니다.'
+                                ? 'border-red-500'
+                                : ''
+                            }`}
+                          />
+                          {loginError === '아이디가 일치하지 않습니다.' && (
+                            <p className="text-red-500 text-xs mb-8">
+                              잘못된 아이디입니다.
+                            </p>
+                          )}
+                          <p>비밀번호</p>
+                          <input
+                            type="password"
+                            placeholder="비밀번호 입력(영문, 숫자 조합 최소 8자)"
+                            value={passwordInput}
+                            onChange={passwordInputHandler}
+                            className={`border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full ${
+                              loginError === '비밀번호가 일치하지 않습니다.'
+                                ? 'border-red-500'
+                                : ''
+                            } `}
+                          />
+                          {loginError === '비밀번호가 일치하지 않습니다.' && (
+                            <p className="text-red-500 mt-10] text-xs">
+                              비밀번호가 일치하지 않습니다.
+                            </p>
+                          )}
+                          <button
+                            type="submit"
+                            className="transition duration-200 bg-primary-color-salgu hover:bg-neutral-400
                             focus:bg-primary-color-orange focus:shadow-sm focus:ring-4 focus:ring-neutral-400 
                             focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm 
                             hover:shadow-md font-semibold text-center inline-block mt-8 mb-8"
-                        >
-                          로그인
-                        </button>
-                      </form>
+                          >
+                            로그인
+                          </button>
+                        </form>
 
-                      <button
-                        type="submit"
-                        onClick={kakaoLoginHandler}
-                        className="transition duration-200 bg-amber-300 hover:bg-yellow-400 
+                        <button
+                          type="submit"
+                          onClick={kakaoLoginHandler}
+                          className="transition duration-200 bg-amber-300 hover:bg-yellow-400 
                           focus:bg-kakao-color focus:shadow-sm focus:ring-4 focus:ring-yellow-500 
                           focus:ring-opacity-50 w-full py-2.5 rounded-lg text-sm shadow-sm 
                           hover:shadow-md font-semibold text-center inline-block"
-                      >
-                        카카오 로그인
-                      </button>
-                      <div className="flex justify-center mt-4">
-                        <p className="text-sm mr-2 test-9">
-                          계정이 없으신가요?
-                        </p>
-                        <button
-                          type="button"
-                          className="text-primary-color-orange inline-block mr-2 text-sm"
-                          onClick={handleSignupPage}
                         >
-                          회원가입 하러 가기
+                          카카오 로그인
                         </button>
+                        <div className="flex justify-center mt-4">
+                          <p className="text-sm mr-2 test-9">
+                            계정이 없으신가요?
+                          </p>
+                          <button
+                            type="button"
+                            className="text-primary-color-orange inline-block mr-2 text-sm"
+                            onClick={handleSignupPage}
+                          >
+                            회원가입 하러 가기
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
