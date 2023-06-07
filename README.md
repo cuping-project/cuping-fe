@@ -10,4 +10,6 @@ prettier
 tailwindCSS
 recoil
 react-query
+
+CI/CD
 ```
