@@ -83,13 +83,13 @@ const Login = () => {
   };
 
   const kakaoLoginHandler = () => {
-    const REST_API_KEY = '826134c9ef39a5b494d322490e0e3abe';
-    const REDIRECT_URI = 'http://13.209.106.144:8080/users/oauth/kakao';
-    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+    // const REST_API_KEY = '826134c9ef39a5b494d322490e0e3abe';
+    // const REDIRECT_URI = 'http://13.209.106.144:8080/users/oauth/kakao';
+    // const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
     // navigate(`${kakaoURL}`);
 
-    window.location.href = kakaoURL;
+    // window.location.href = kakaoURL;
 
     const redirectCode = new URL(window.location.href).searchParams.get('code');
     console.log('너왔니코드?', redirectCode);
