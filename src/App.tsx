@@ -7,7 +7,9 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router />
+      <div className="flex justify-center ">
+        <Router />
+      </div>
     </QueryClientProvider>
   );
 };

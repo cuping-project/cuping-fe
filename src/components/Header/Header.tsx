@@ -32,7 +32,10 @@ const Header: React.FC<HeaderProps> = ({ loggedin }) => {
           <div className="signup text-primaryColor m-2 p-2 relative z-10 cursor-pointer">
             회원가입
           </div>
-          <div className="login bg-primaryColor m-2 px-4 py-2 rounded-lg relative z-10 cursor-pointer">
+          <div
+            className="login bg-primaryColor m-2 px-4 py-2 rounded-lg relative z-10
+            cursor-pointer text-white"
+          >
             로그인
           </div>
         </div>
