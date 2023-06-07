@@ -33,13 +33,6 @@ const Home: React.FC = () => {
     checkLoginStatus();
   }, []);
 
-  // 하트변수를 담는곳
-  const [isHeartPressed, setIsHeartPressed] = useState(false);
-
-  const heartHandler = () => {
-    setIsHeartPressed(!isHeartPressed);
-  };
-
   // 로그인 모달 관련된 변수
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
