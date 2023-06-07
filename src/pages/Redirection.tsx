@@ -24,7 +24,7 @@
 //   const getKakaoToken = async code => {
 //     try {
 //       const response = await axios.get(
-//         `${import.meta.env.VITE_SERVER_URL}/users/oauth/kakao?code=${code}`,
+//         `${import.meta.env.VITE_BE_SERVER}/users/oauth/kakao?code=${code}`,
 //       );
 //       const { ACCESS_KEY: accessKey, REFRESH_KEY: refreshKey } =
 //         response.headers;

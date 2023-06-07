@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import jwtDecode from 'jwt-decode';
 
 const userApi = axios.create({
-  baseURL: import.meta.env.VITE_SERVER_URL as string,
+  baseURL: import.meta.env.VITE_BE_SERVER as string,
 });
 
 interface IUser {
