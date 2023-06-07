@@ -141,7 +141,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="main-container w-full flex flex-col">
+    <div className="main-container w-[1440px] flex flex-col">
       <Header loggedin={loggedin} />
       <hr />
       <div className="main-contents w-full flex justify-center items-center flex-col mt-[-5rem]">
