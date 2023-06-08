@@ -33,13 +33,6 @@ const Home: React.FC = () => {
     checkLoginStatus();
   }, []);
 
-  // 하트변수를 담는곳
-  const [isHeartPressed, setIsHeartPressed] = useState(false);
-
-  const heartHandler = () => {
-    setIsHeartPressed(!isHeartPressed);
-  };
-
   // 로그인 모달 관련된 변수
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
@@ -148,7 +141,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="main-container w-9/12 flex flex-col">
+    <div className="main-container w-[1440px] flex flex-col">
       <Header loggedin={loggedin} />
       <hr />
       <div className="main-contents w-full flex justify-center items-center flex-col mt-[-5rem]">
