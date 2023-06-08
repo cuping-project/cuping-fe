@@ -4,6 +4,7 @@ import Header from '../../components/Header/Header';
 import beanImage from '../../assets/bean-image.png';
 import beanDetail from '../../assets/detail.png';
 import profileImage from '../../assets/detail-profile-card.png';
+import Kakaomap from '../../components/KakaoMap/Kakaomap';
 
 const Details: React.FC = () => {
   // 로그인이 되었는지 확인
@@ -149,6 +150,12 @@ const Details: React.FC = () => {
 
         {/* ----- bottom ----- */}
         <div className="bottom" />
+        <div className="middle-title text-[2.5rem] flex">
+          <div>근처에서 찾는 원두</div>
+        </div>
+        <div>
+          <Kakaomap />
+        </div>
       </div>
     </div>
   );
