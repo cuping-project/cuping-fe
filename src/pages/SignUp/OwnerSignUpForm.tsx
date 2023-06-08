@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import DaumPostcode from 'react-daum-postcode';
 import Post from '../../components/Modal/Post';
 
-function OwnerSignUpForm({
+const OwnerSignUpForm = ({
   userId,
   handleChangeUserId,
   nickname,
@@ -12,7 +12,7 @@ function OwnerSignUpForm({
   passwordCheck,
   handleChangePasswordCheck,
   passwordCheckError,
-}) {
+}) => {
   const [enrollCompany, setEnrollCompany] = useState({
     address: '',
     zonecode: '',
@@ -227,6 +227,6 @@ function OwnerSignUpForm({
 
     // 나머지 사장님 회원 등록 폼 요소들
   );
-}
+};
 
 export default OwnerSignUpForm;

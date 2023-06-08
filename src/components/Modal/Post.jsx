@@ -2,10 +2,10 @@ import React from 'react';
 import DaumPostcode from 'react-daum-postcode';
 import './Post.module.css';
 
-function Post(props) {
+const Post = props => {
   const complete = data => {
     let fullAddress = data.address;
-    let zonecode = data.zonecode;
+    const { zonecode } = data;
     let extraAddress = '';
 
     if (data.addressType === 'R') {
@@ -33,6 +33,6 @@ function Post(props) {
       <DaumPostcode autoClose onComplete={complete} />
     </div>
   );
-}
+};
 
 export default Post;
