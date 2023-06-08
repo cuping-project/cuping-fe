@@ -85,18 +85,18 @@ const Login = () => {
     mutation.mutate({ userId: userIdInput, password: passwordInput });
   };
 
-  const kakaoLoginHandler = () => {
-    const REST_API_KEY = import.meta.env.VITE_KAKAO_API_KEY;
-    const REDIRECT_URI = `${import.meta.env.VITE_BE_SERVER}/users/oauth/kakao`;
-    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  // const kakaoLoginHandler = () => {
+  //   const REST_API_KEY = import.meta.env.VITE_KAKAO_API_KEY;
+  //   const REDIRECT_URI = `${import.meta.env.VITE_BE_SERVER}/users/oauth/kakao`;
+  //   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
-    navigate(`${kakaoURL}`);
+  //   navigate(`${kakaoURL}`);
 
-    window.location.href = kakaoURL;
+  //   window.location.href = kakaoURL;
 
-    const redirectCode = new URL(window.location.href).searchParams.get('code');
-    console.log('너왔니코드?', redirectCode);
-  };
+  //   const redirectCode = new URL(window.location.href).searchParams.get('code');
+  //   console.log('너왔니코드?', redirectCode);
+  // };
 
   return (
     <div className="bg-secondary-color-light w-full h-[100vh] flex justify-center items-center">
