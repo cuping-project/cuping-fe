@@ -1,16 +1,35 @@
 import React from 'react';
+<<<<<<< HEAD
+=======
+import { useNavigate } from 'react-router-dom';
+>>>>>>> 3c5939ec1257365b6b2b6b469e00af34e29e6d8d
 
 type ModalProps = {
   show: boolean;
   handleClose: () => void;
+<<<<<<< HEAD
   handleLogin: () => void;
 };
 
 function LoginModal({ show, handleClose, handleLogin }: ModalProps) {
+=======
+};
+
+const LoginModal = ({ show, handleClose }: ModalProps) => {
+  const navigate = useNavigate();
+
+>>>>>>> 3c5939ec1257365b6b2b6b469e00af34e29e6d8d
   const showHideClassName = show
     ? 'fixed z-10 inset-0 overflow-y-auto'
     : 'hidden';
 
+<<<<<<< HEAD
+=======
+  const handleLoginPage = () => {
+    navigate('./login');
+  };
+
+>>>>>>> 3c5939ec1257365b6b2b6b469e00af34e29e6d8d
   return (
     <div className={showHideClassName}>
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -37,7 +56,11 @@ function LoginModal({ show, handleClose, handleLogin }: ModalProps) {
           <div className="mt-5 sm:mt-6">
             <button
               type="button"
+<<<<<<< HEAD
               onClick={handleLogin}
+=======
+              onClick={handleLoginPage}
+>>>>>>> 3c5939ec1257365b6b2b6b469e00af34e29e6d8d
               className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm"
             >
               확인
@@ -54,6 +77,10 @@ function LoginModal({ show, handleClose, handleLogin }: ModalProps) {
       </div>
     </div>
   );
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> 3c5939ec1257365b6b2b6b469e00af34e29e6d8d
 
 export default LoginModal;
