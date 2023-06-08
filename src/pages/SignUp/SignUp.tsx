@@ -6,7 +6,12 @@ import { userSignup, checkUserId } from '../../apis/api/signup';
 import OwnerSignUpForm from './OwnerSignUpForm';
 import useToggle from '../../hooks/useToggle';
 import errorIcon from '../../assets/warning.svg';
+<<<<<<< HEAD
+=======
 import Post from '../../components/Modal/Post';
+import cupingLogo from '../../img/Group.png';
+import bini from '../../img/kong.png';
+>>>>>>> fef45d4cdc41b3cb17920f993aca955a9f48963a
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -29,6 +34,10 @@ const SignUp = () => {
       alert(`${(error as Error).response.data.message}`);
     },
   });
+
+  const handleHomePage = () => {
+    navigate('/');
+  };
 
   const checkId = useMutation(checkUserId, {
     onSuccess: (response: any) => {
@@ -103,6 +112,7 @@ const SignUp = () => {
   };
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-secondary-color-light sm:py-12 w-full">
       <div className="p-10 xs:p-0 mx-auto md:w-full w-full flex justify-center">
         {/* <h1 className="font-bold text-center text-2xl mb-5">Cupping</h1> */}
@@ -114,11 +124,45 @@ const SignUp = () => {
                   type="button"
                   onClick={() => handleButtonClick(false)}
                   className={`transition duration-200 border bg-gray-200
+=======
+    <div className="bg-secondary-color-light w-full h-[100vh] flex justify-center items-center">
+      <div className="w-[1440px] flex justify-center">
+        <div className="left flex h-full items-center mt-[5rem] mr-[3rem]">
+          <div className="flex flex-col">
+            <img
+              src={cupingLogo}
+              alt="Logo"
+              className="w-[10rem] cursor-pointer mb-10"
+              onClick={handleHomePage}
+              role="presentation"
+            />
+            <div className="mb-20">
+              <div className="text-[24px] text-[#CEAC8A] mb-2">
+                <div>지금 여기,</div>
+                <div>맛있는 원두를 찾고 싶을 땐</div>
+                <div>커핑 하세요!</div>
+              </div>
+              <div>원두 기반 카페 검색 서비스</div>
+            </div>
+            <img src={bini} alt="charac" className="w-full" />
+          </div>
+        </div>
+        <div className="right">
+          <div className="p-10 xs:p-0 mx-auto md:w-full w-full flex justify-center items-center h-full">
+            <div className="bg-white divide-y divide-gray-200 border-4 border-primary-color-salgu w-[428px]">
+              <div className="m-[39px]">
+                <div className="member w-[350px] grid grid-cols-2 gap-1 bg-gray-200 rounded-lg px-0.5 py-1 my-[44px]">
+                  <button
+                    type="button"
+                    onClick={() => handleButtonClick(false)}
+                    className={`transition duration-200 border bg-gray-200
+>>>>>>> fef45d4cdc41b3cb17920f993aca955a9f48963a
                   border-gray-200 text-gray-500 py-0.5 rounded-lg
                   text-sm hover:shadow-sm mx-0.5
                   ${
                     !active ? 'bg-white text-orange-400 font-semibold' : ''
                   } font-normal text-center inline-block`}
+<<<<<<< HEAD
                 >
                   일반 회원 등록
                 </button>
@@ -126,91 +170,22 @@ const SignUp = () => {
                   type="button"
                   onClick={() => handleButtonClick(true)}
                   className={`transition duration-200 border bg-gray-200
+=======
+                  >
+                    일반 회원 등록
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleButtonClick(true)}
+                    className={`transition duration-200 border bg-gray-200
+>>>>>>> fef45d4cdc41b3cb17920f993aca955a9f48963a
                   border-gray-200 text-gray-500 py-0.5 rounded-lg
                   text-sm hover:shadow-sm mx-0.5
                   ${
                     active ? 'bg-white text-orange-400 font-semibold' : ''
                   } font-normal text-center inline-block`}
-                >
-                  사장님 회원 등록
-                </button>
-              </div>
-            </div>
-
-            {active ? (
-              <OwnerSignUpForm
-                userId={userId}
-                handleChangeUserId={handleChangeUserId}
-                nickname={nickname}
-                handleChangeNickname={handleChangeNickname}
-                password={password}
-                handleChangePassword={handleChangePassword}
-                passwordCheck={passwordCheck}
-                handleChangePasswordCheck={handleChangePasswordCheck}
-                passwordCheckError={passwordCheckError}
-              />
-            ) : (
-              <>
-                <label
-                  htmlFor="idInput"
-                  className="text-sm text-gray-600 pb-1 block"
-                >
-                  <div className="font-semibold mb-1">아이디</div>
-                  <div className="flex items-center gap-2">
-                    <input
-                      value={userId}
-                      onChange={handleChangeUserId}
-                      ref={idRef}
-                      id="idInput"
-                      type="text"
-                      placeholder="아이디 입력(5~12자)"
-                      className="border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full"
-                    />
-                    <button
-                      type="button"
-                      onClick={idCheckBtnClick}
-                      className="transition duration-200 bg-primary-color-salgu hover:bg-primary-color-orange text-white w-[10rem] py-2 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
-                    >
-                      <span className="inline-block">중복확인</span>
-                    </button>
-                  </div>
-                </label>
-                <label
-                  htmlFor="nkInput"
-                  className="text-sm text-gray-600 pb-1 block"
-                >
-                  <div className="font-semibold mb-1">닉네임</div>
-                  <input
-                    value={nickname}
-                    onChange={handleChangeNickname}
-                    ref={nicknameRef}
-                    id="nkInput"
-                    type="text"
-                    placeholder="닉네임을 입력하세요."
-                    className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
-                  />
-                </label>
-
-                <label
-                  htmlFor="pwInput"
-                  className="text-sm text-gray-600 pb-1 block"
-                >
-                  <div className="font-semibold mb-1">비밀번호</div>
-                  <input
-                    value={password}
-                    onChange={handleChangePassword}
-                    ref={PasswordRef}
-                    id="pwInput"
-                    type="password"
-                    placeholder="비밀번호 입력(영문,숫자 조합 최소8자)"
-                    className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
-                  />
-                </label>
-                <div className="relative flex flex-col">
-                  <label
-                    htmlFor="pwCheckInput"
-                    className="text-sm text-gray-600 pb-1 block"
                   >
+<<<<<<< HEAD
                     <div>
                       <div className="font-semibold mb-1">비밀번호 확인</div>
                       <input
@@ -267,10 +242,149 @@ const SignUp = () => {
                     tracking-tighter"
                   >
                     로그인 하러 가기
+=======
+                    사장님 회원 등록
+>>>>>>> fef45d4cdc41b3cb17920f993aca955a9f48963a
                   </button>
                 </div>
-              </>
-            )}
+                {active ? (
+                  <OwnerSignUpForm
+                    userId={userId}
+                    handleChangeUserId={handleChangeUserId}
+                    nickname={nickname}
+                    handleChangeNickname={handleChangeNickname}
+                    password={password}
+                    handleChangePassword={handleChangePassword}
+                    passwordCheck={passwordCheck}
+                    handleChangePasswordCheck={handleChangePasswordCheck}
+                    passwordCheckError={passwordCheckError}
+                  />
+                ) : (
+                  <div className="w-[350px]">
+                    <label
+                      htmlFor="idInput"
+                      className="text-sm text-gray-600 pb-1 block"
+                    >
+                      <div className="font-semibold mb-1">아이디</div>
+                      <div className="flex items-center gap-2">
+                        <input
+                          value={userId}
+                          onChange={handleChangeUserId}
+                          ref={idRef}
+                          id="idInput"
+                          type="text"
+                          placeholder="아이디 입력(5~12자)"
+                          className="border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full"
+                        />
+                        <button
+                          type="button"
+                          onClick={idCheckBtnClick}
+                          className="transition duration-200 bg-primary-color-salgu hover:bg-primary-color-orange text-white w-[10rem] py-2 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
+                        >
+                          <span className="inline-block">중복확인</span>
+                        </button>
+                      </div>
+                    </label>
+                    <label
+                      htmlFor="nkInput"
+                      className="text-sm text-gray-600 pb-1 block"
+                    >
+                      <div className="font-semibold mb-1">닉네임</div>
+                      <input
+                        value={nickname}
+                        onChange={handleChangeNickname}
+                        ref={nicknameRef}
+                        id="nkInput"
+                        type="text"
+                        placeholder="닉네임을 입력하세요."
+                        className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                      />
+                    </label>
+
+                    <label
+                      htmlFor="pwInput"
+                      className="text-sm text-gray-600 pb-1 block"
+                    >
+                      <div className="font-semibold mb-1">비밀번호</div>
+                      <input
+                        value={password}
+                        onChange={handleChangePassword}
+                        ref={PasswordRef}
+                        id="pwInput"
+                        type="password"
+                        placeholder="비밀번호 입력(영문,숫자 조합 최소8자)"
+                        className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                      />
+                    </label>
+                    <div className="relative flex flex-col">
+                      <label
+                        htmlFor="pwCheckInput"
+                        className="text-sm text-gray-600 pb-1 block"
+                      >
+                        <div>
+                          <div className="font-semibold mb-1">
+                            비밀번호 확인
+                          </div>
+                          <input
+                            value={passwordCheck}
+                            onChange={handleChangePasswordCheck}
+                            ref={PasswordCheckRef}
+                            id="pwCheckInput"
+                            type="password"
+                            placeholder="비밀번호를 다시 입력하세요."
+                            className={`${
+                              passwordCheckError
+                                ? 'ring-red-500 ring-1 border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full'
+                                : 'border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full'
+                            }`}
+                          />
+                        </div>
+                      </label>
+                      {passwordCheckError && (
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs text-red-500 flex items-center">
+                            {passwordCheckError}
+                          </p>
+                          <img
+                            src={errorIcon}
+                            className="w-[18px] flex items-center"
+                            alt=""
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    <button
+                      type="submit"
+                      onClick={signupBtnClick}
+                      className="transition duration-200 bg-primary-color-salgu hover:bg-primary-color-orange text-white w-full py-2.5 mt-2 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
+                    >
+                      <span className="inline-block mr-2">회원가입 하기</span>
+                    </button>
+                    <div className="border-t border-gray-200 my-5 mt-10" />
+                    <button
+                      type="button"
+                      className="transition duration-200 bg-yellow-400 hover:bg-yellow-600 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
+                    >
+                      카카오톡 간편 가입하기
+                    </button>
+                    <div className="mt-10 text-center">
+                      <span className="font-semibold text-sm">
+                        이미 커핑 회원이세요?
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => navigate('/login')}
+                        className="font-semibold text-sm ml-2 text-primary-color-orange
+                    tracking-tighter"
+                      >
+                        로그인 하러 가기
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

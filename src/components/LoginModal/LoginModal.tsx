@@ -16,7 +16,11 @@ const Modal: React.FC<ModalProps> = ({ isOpen, closeModal }) => {
 
   return (
     <div style={{ display: isOpen ? 'block' : 'none' }}>
-      <div className={styles.modalWrapper} onClick={handleOverlayClick}>
+      <div
+        className={styles.modalWrapper}
+        onClick={handleOverlayClick}
+        role="presentation"
+      >
         <div className={styles.modalCotent}>
           <div className="ContentArea mx-[74px] my-[24px]">
             <div className="textArea mb-[24px]">
@@ -29,13 +33,15 @@ const Modal: React.FC<ModalProps> = ({ isOpen, closeModal }) => {
               <div
                 onClick={closeModal}
                 className="font-semibold border-[.1rem] rounded-[12px]
-                py-[8px] px-[28px] mr-[33px] text-primaryColor border-primaryColor cursor-pointer"
+                py-[8px] px-[28px] mr-[33px] text-primary-color-orange
+                border-primary-color-orange cursor-pointer"
+                role="presentation"
               >
                 취소
               </div>
               <div
                 className="font-semibold border-[.1rem] rounded-[12px]
-              py-[8px] px-[28px] mr-[33px] bg-primaryColor text-white border-primaryColor cursor-pointer"
+              py-[8px] px-[28px] mr-[33px] bg-primary-color-orange text-white border-primary-color-orange cursor-pointer"
               >
                 확인
               </div>
