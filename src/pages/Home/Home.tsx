@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 import Cookies from 'js-cookie';
+import { Link, useParams } from 'react-router-dom';
 import pinIcon from '../../assets/pin.svg';
 import styles from './Home.module.css';
 import LoginModal from '../../components/LoginModal/LoginModal';
@@ -262,10 +263,12 @@ const Home: React.FC = () => {
             {/* // ----- Card ----- // */}
             {isAllSelected &&
               cards.map(card => (
-                <div
+                <Link
+                  to={`/details/${card.id}`}
                   key={card.id}
                   className="card m-4 shadow-md border border-gray-300 rounded-[12px] cursor-pointer"
                 >
+                  {/* <div>{console.log(card)}</div> */}
                   <div className="card-picture overflow-hidden">
                     <img
                       src={card.beanImage}
@@ -323,7 +326,7 @@ const Home: React.FC = () => {
                       {card.hashTag}
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
           </div>
         </div>

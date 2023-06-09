@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
 import Header from '../../components/Header/Header';
 import beanImage from '../../assets/bean-image.png';
 import beanDetail from '../../assets/detail.png';
 import profileImage from '../../assets/detail-profile-card.png';
 import Kakaomap from '../../components/KakaoMap/Kakaomap';
+import heartFill from '../../assets/heartFill.png';
+import coffeeGraph from '../../assets/coffee-graph.png';
 
 const Details: React.FC = () => {
   // 로그인이 되었는지 확인
@@ -13,7 +18,7 @@ const Details: React.FC = () => {
   // 메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
   useEffect(() => {
     const checkLoginStatus = () => {
-      const accessToken = Cookies.get('accessToken');
+      const accessToken = Cookies.get('ACCESS_KEY');
       if (accessToken) {
         setLoggedin(true);
       } else {
@@ -23,6 +28,28 @@ const Details: React.FC = () => {
 
     checkLoginStatus();
   }, []);
+
+  const { id } = useParams();
+  const [card, setCard] = useState();
+
+  console.log(id);
+
+  // 상세 데이터 가져오기
+  const { isLoading, data } = useQuery(['cardDetail', id], async () => {
+    const response = await axios.get(
+      `${import.meta.env.VITE_BE_SERVER}/main/bean/${id}?address=`,
+    );
+    console.log(response.data.data);
+    return response.data.data;
+  });
+
+  useEffect(() => {
+    if (data) {
+      setCard(data);
+    }
+  }, [data]);
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="container w-full">
@@ -34,25 +61,41 @@ const Details: React.FC = () => {
           <div className="top-image w-full grid grid-cols-2 mx-auto mb-[50px]">
             {/* ----- top-left ----- */}
             <div className="top-left mx-auto">
-              <img src={beanImage} alt="원두이미지" className="w-[41.25rem]" />
+              <img
+                src={data.bean.beanImage}
+                alt="원두이미지"
+                className="w-[41.25rem] h-auto max-h-[41.25rem]"
+                style={{ objectFit: 'contain' }}
+              />
+              <div />
             </div>
             {/* ----- top-right ----- */}
             <div className="top-right mx-auto">
-              <img src={beanDetail} alt="원두이미지" className="w-[546px]" />
+              <div
+                className="border-[1px] border-black flex justify-center
+              rounded-[0.5rem] px-[0.3rem] text-[1.4rem]"
+              >
+                {data.bean.hashTag}
+              </div>
+              <div className="grid grid-cols-2 my-[1rem]">
+                <div className="flex text-[2.5rem] font-semibold">
+                  {data.bean.origin} {data.bean.beanName}
+                </div>
+                <div className="flex justify-end items-center">
+                  <img
+                    src={heartFill}
+                    className="w-[1.4rem] h-[1.4rem] mx-[0.4rem]"
+                    alt=""
+                  />
+                  <div>{data.bean.likesCount}</div>
+                </div>
+              </div>
+              <div className="flex">
+                <img className="" src={coffeeGraph} alt="" />
+              </div>
             </div>
           </div>
-          <div className="top-text text-[30px] mb-7">
-            버본(Bourbon)은 아라비카(Arabica)의 가장 오래된 변종 중 하나이고
-            산토스(Santos)는 브라질 상파울루 항구 이름으로 주로 커피를 무역하던
-            곳이다. 열매를 맺기 시작한지 3년~4년된 커피나무에서는 작고 단단한
-            생두를 생산하는데 이 때 수확한 것을 버본 산토스(Bourbon Santos)라고
-            한다. 주로 5월~9월에 수확하며 자연 당도의 유지를 위해 건식법(Dry
-            Method)을 이용한다. 결점두가 4개 이하일 때 최고 등급인 No.2로
-            구분한다. 생두는 노란빛을 띠는 황색이며 로스팅(Roasting)은
-            시티(City)와 풀 시티(Full City) 로스팅 중간쯤으로 하는 것이
-            일반적이다. 향이 뛰어나고 단맛과 신맛, 쓴맛이 골고루 조화를 이루며
-            식었을 때 신맛이 더욱 강해진다.
-          </div>
+          <div className="top-text text-[30px] mb-7">{data.bean.beanInfo}</div>
           <button
             className="moreText border-2 rounded-lg w-full text-[22px] text-gray-500 p-1.5 "
             type="button"
