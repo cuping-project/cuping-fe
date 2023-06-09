@@ -6,14 +6,14 @@ export default {
       tablet: '640px',
       // => @media (min-width: 640px) { ... }
 
-      laptop: '1024px',
+      d1024: '1024px',
       // => @media (min-width: 1024px) { ... }
 
-      desktop1700: '1700px',
-      // => @media (min-width: 1700px) { ... }
-
-      desktop1440: '14400px',
+      d1440: '1440px',
       // => @media (min-width: 1600px) { ... }
+
+      d1920: '1920px',
+      // => @media (min-width: 1700px) { ... }
     },
     extend: {
       colors: {
