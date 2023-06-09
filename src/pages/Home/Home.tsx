@@ -19,21 +19,21 @@ interface Card {
 
 const Home: React.FC = () => {
   // 로그인이 되었는지 확인
-  const [loggedin, setLoggedin] = useState(false);
+  const [loggedin, setLoggedin] = useState(true);
 
-  // 메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
-  useEffect(() => {
-    const checkLoginStatus = () => {
-      const accessToken = Cookies.get('ACCESS_KEY');
-      if (accessToken) {
-        setLoggedin(true);
-      } else {
-        setLoggedin(false);
-      }
-    };
+  // // 메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
+  // useEffect(() => {
+  //   const checkLoginStatus = () => {
+  //     const accessToken = Cookies.get('ACCESS_KEY');
+  //     if (accessToken) {
+  //       setLoggedin(true);
+  //     } else {
+  //       setLoggedin(false);
+  //     }
+  //   };
 
-    checkLoginStatus();
-  }, []);
+  //   checkLoginStatus();
+  // }, []);
 
   // 로그인 모달 관련된 변수
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -282,7 +282,7 @@ const Home: React.FC = () => {
                       {loggedin ? (
                         isHeartPressed ? (
                           <div
-                            className="heart mx-2 cursor-pointer"
+                            className="heart mx-2 cursor-pointer w-[1.2rem]"
                             onClick={heartHandler}
                             role="presentation"
                           >
@@ -294,7 +294,7 @@ const Home: React.FC = () => {
                           </div>
                         ) : (
                           <div
-                            className="heart mx-2 cursor-pointer"
+                            className="heart mx-2 cursor-pointer w-[1.2rem]"
                             onClick={heartHandler}
                             role="presentation"
                           >
@@ -306,7 +306,7 @@ const Home: React.FC = () => {
                           <button
                             type="submit"
                             onClick={openModal}
-                            className="w-[18px]"
+                            className="w-[1.2rem]"
                           >
                             <img src={heart} className="m-[0.2rem]" alt="" />
                           </button>
