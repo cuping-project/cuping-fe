@@ -30,7 +30,7 @@ const Login = () => {
     navigate('/signup');
   };
 
-  console.log({ userId: userIdInput, password: passwordInput });
+  // console.log({ userId: userIdInput, password: passwordInput });
   const mutation = useMutation(async (user: IUser) => {
     try {
       const tokens = await loginUser(user); // Fetch the tokens
@@ -85,18 +85,18 @@ const Login = () => {
     mutation.mutate({ userId: userIdInput, password: passwordInput });
   };
 
-  // const kakaoLoginHandler = () => {
-  //   const REST_API_KEY = import.meta.env.VITE_KAKAO_API_KEY;
-  //   const REDIRECT_URI = `${import.meta.env.VITE_BE_SERVER}/users/oauth/kakao`;
-  //   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  const kakaoLoginHandler = () => {
+    const REST_API_KEY = import.meta.env.VITE_KAKAO_API_KEY;
+    const REDIRECT_URI = `${import.meta.env.VITE_BE_SERVER}/users/oauth/kakao`;
+    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
-  //   navigate(`${kakaoURL}`);
+    navigate(`${kakaoURL}`);
 
-  //   window.location.href = kakaoURL;
+    window.location.href = kakaoURL;
 
-  //   const redirectCode = new URL(window.location.href).searchParams.get('code');
-  //   console.log('너왔니코드?', redirectCode);
-  // };
+    const redirectCode = new URL(window.location.href).searchParams.get('code');
+    console.log('너왔니코드?', redirectCode);
+  };
 
   return (
     <div className="bg-secondary-color-light w-full h-[100vh] flex justify-center items-center">
@@ -183,7 +183,7 @@ const Login = () => {
                           focus:ring-opacity-50 w-full py-2.5 rounded-lg text-sm shadow-sm 
                           hover:shadow-md font-semibold text-center inline-block"
                         >
-                          카카오 로그인
+                          카카오 로그인 (비활성화)
                         </button>
                         <div className="flex justify-center mt-4">
                           <p className="text-sm mr-2 test-9">

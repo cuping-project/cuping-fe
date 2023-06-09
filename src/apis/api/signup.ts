@@ -17,6 +17,7 @@ const userSignup = async (users: Users) => {
     const response = await instance.post(
       `${import.meta.env.VITE_BE_SERVER}/users/signup/user`,
       users,
+      { withCredentials: true },
     );
     // console.log(response);
     return response;
