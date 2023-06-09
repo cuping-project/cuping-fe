@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
 import React, { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 import useInput from '../../hooks/useInput';
 import { userSignup, checkUserId } from '../../apis/api/signup';
 import OwnerSignUpForm from './OwnerSignUpForm';
@@ -20,6 +21,23 @@ const SignUp = () => {
   const [userIdError, setUserIdError] = useState('');
   const [passwordCheckError, setPasswordCheckError] = useState('');
   const [isIdUnique, setIsIdUnique] = useToggle();
+
+  // 로그인이 되었는지 확인
+  const [loggedin, setLoggedin] = useState(false);
+
+  // 로그인이 되어있다면 메인 페이지로 라우팅
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const accessToken = Cookies.get('ACCESS_KEY');
+      if (accessToken) {
+        navigate('/');
+      } else {
+        setLoggedin(false);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
 
   const signup = useMutation(userSignup, {
     onSuccess: (response: any) => {

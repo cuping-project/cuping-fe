@@ -1,4 +1,5 @@
 import React from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import styles from './LoginModal.module.css';
 
 interface ModalProps {
@@ -14,34 +15,38 @@ const Modal: React.FC<ModalProps> = ({ isOpen, closeModal }) => {
     }
   };
 
+  const navigate = useNavigate();
+  const homeHandler = () => {
+    navigate('/login');
+  };
+
   return (
-    <div style={{ display: isOpen ? 'block' : 'none' }}>
+    <div
+      className={`${styles.modalContainer} ${isOpen ? 'visible' : 'hidden'}`}
+    >
       <div
         className={styles.modalWrapper}
         onClick={handleOverlayClick}
         role="presentation"
       >
-        <div className={styles.modalCotent}>
-          <div className="ContentArea mx-[74px] my-[24px]">
-            <div className="textArea mb-[24px]">
-              <p className="text-[20px] font-semibold">
-                로그인이 필요한 서비스 입니다.
-              </p>
-              <p className="text-[20px] font-semibold">로그인 하시겠습니까?</p>
+        <div className={styles.modalContent}>
+          <div className={styles.contentArea}>
+            <div className={styles.textArea}>
+              <p className={styles.textLogin}>로그인이 필요한 서비스 입니다.</p>
+              <p className={styles.textLoginQuestion}>로그인 하시겠습니까?</p>
             </div>
-            <div className="flex justify-center">
+            <div className={styles.loginAnswer}>
               <div
                 onClick={closeModal}
-                className="font-semibold border-[.1rem] rounded-[12px]
-                py-[8px] px-[28px] mr-[33px] text-primary-color-orange
-                border-primary-color-orange cursor-pointer"
+                className={styles.loginCancel}
                 role="presentation"
               >
                 취소
               </div>
               <div
-                className="font-semibold border-[.1rem] rounded-[12px]
-              py-[8px] px-[28px] mr-[33px] bg-primary-color-orange text-white border-primary-color-orange cursor-pointer"
+                onClick={homeHandler}
+                role="presentation"
+                className={styles.loginOk}
               >
                 확인
               </div>

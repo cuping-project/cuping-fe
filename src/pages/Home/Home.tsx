@@ -6,6 +6,8 @@ import pinIcon from '../../assets/pin.svg';
 import styles from './Home.module.css';
 import LoginModal from '../../components/LoginModal/LoginModal';
 import Header from '../../components/Header/Header';
+import heart from '../../assets/heart.png';
+import heartFill from '../../assets/heartFill.png';
 
 interface Card {
   id: number;
@@ -22,7 +24,7 @@ const Home: React.FC = () => {
   // 메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
   useEffect(() => {
     const checkLoginStatus = () => {
-      const accessToken = Cookies.get('accessToken');
+      const accessToken = Cookies.get('ACCESS_KEY');
       if (accessToken) {
         setLoggedin(true);
       } else {
@@ -42,6 +44,12 @@ const Home: React.FC = () => {
 
   const closeModal = () => {
     setIsLoginModalOpen(false);
+  };
+
+  // heart 관련된 기능
+  const [isHeartPressed, setIsHeartPressed] = useState(false);
+  const heartHandler = () => {
+    setIsHeartPressed(!isHeartPressed);
   };
 
   // 카드를 받아와서 저장하는 곳
@@ -256,7 +264,7 @@ const Home: React.FC = () => {
               cards.map(card => (
                 <div
                   key={card.id}
-                  className="card m-4 shadow-md border border-gray-300 rounded-[12px]"
+                  className="card m-4 shadow-md border border-gray-300 rounded-[12px] cursor-pointer"
                 >
                   <div className="card-picture overflow-hidden">
                     <img
@@ -273,9 +281,25 @@ const Home: React.FC = () => {
                       <div className="stars mx-2">⭐️ 3</div>
                       {loggedin ? (
                         isHeartPressed ? (
-                          <div className="heart mx-2 cursor-pointer">❤️</div>
+                          <div
+                            className="heart mx-2 cursor-pointer"
+                            onClick={heartHandler}
+                            role="presentation"
+                          >
+                            <img
+                              src={heartFill}
+                              className="m-[0.2rem]"
+                              alt=""
+                            />
+                          </div>
                         ) : (
-                          <div className="heart mx-2 cursor-pointer">♡</div>
+                          <div
+                            className="heart mx-2 cursor-pointer"
+                            onClick={heartHandler}
+                            role="presentation"
+                          >
+                            <img src={heart} className="m-[0.2rem]" alt="" />
+                          </div>
                         )
                       ) : (
                         <div>
@@ -284,7 +308,7 @@ const Home: React.FC = () => {
                             onClick={openModal}
                             className="w-[18px]"
                           >
-                            ♡
+                            <img src={heart} className="m-[0.2rem]" alt="" />
                           </button>
                           <LoginModal
                             isOpen={isLoginModalOpen}
