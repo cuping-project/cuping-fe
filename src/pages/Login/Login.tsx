@@ -52,34 +52,34 @@ const Login = () => {
     try {
       const tokens = await loginUser(user); // Fetch the tokens
 
-      // Check if tokens are received successfully
-      if (!tokens || typeof tokens === 'number') {
-        // Check for error messages
-        console.log('Server response: ', tokens);
-        if (tokens === 400) {
-          setLoginError('아이디가 일치하지 않습니다.');
-        } else if (tokens === 403) {
-          setLoginError('비밀번호가 일치하지 않습니다.');
-        } else {
-          setLoginError('Unknown error occurred.');
-        }
+      // // Check if tokens are received successfully
+      // if (!tokens || typeof tokens === 'number') {
+      //   // Check for error messages
+      //   console.log('Server response: ', tokens);
+      //   if (tokens === 400) {
+      //     setLoginError('아이디가 일치하지 않습니다.');
+      //   } else if (tokens === 403) {
+      //     setLoginError('비밀번호가 일치하지 않습니다.');
+      //   } else {
+      //     setLoginError('Unknown error occurred.');
+      //   }
 
-        throw new Error('Failed to fetch tokens');
-      }
+      //   throw new Error('Failed to fetch tokens');
+      // }
 
-      // Save the tokens in cookies
-      Cookies.set('accessToken', tokens.accessToken, {
-        expires: tokens.accessTokenExpirationTime,
-      });
-      Cookies.set('refreshToken', tokens.refreshToken, {
-        expires: tokens.refreshTokenExpirationTime,
-      });
+      // // Save the tokens in cookies
+      // Cookies.set('accessToken', tokens.accessToken, {
+      //   expires: tokens.accessTokenExpirationTime,
+      // });
+      // Cookies.set('refreshToken', tokens.refreshToken, {
+      //   expires: tokens.refreshTokenExpirationTime,
+      // });
 
-      // Save tokens in the state
-      setToken({
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
-      });
+      // // Save tokens in the state
+      // setToken({
+      //   accessToken: tokens.accessToken,
+      //   refreshToken: tokens.refreshToken,
+      // });
 
       navigate('/'); // Redirect to home page
     } catch (error) {
