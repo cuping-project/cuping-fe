@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
@@ -21,6 +21,23 @@ const Login = () => {
   const [passwordInput, setPasswordInput] = React.useState('');
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
+
+  // 로그인이 되었는지 확인
+  const [loggedin, setLoggedin] = useState(false);
+
+  // 로그인이 되어있다면 메인 페이지로 라우팅
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const accessToken = Cookies.get('ACCESS_KEY');
+      if (accessToken) {
+        navigate('/');
+      } else {
+        setLoggedin(false);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
 
   const handleHomePage = () => {
     navigate('/');
@@ -183,7 +200,7 @@ const Login = () => {
                           focus:ring-opacity-50 w-full py-2.5 rounded-lg text-sm shadow-sm 
                           hover:shadow-md font-semibold text-center inline-block"
                         >
-                          카카오 로그인 (비활성화)
+                          카카오 로그인
                         </button>
                         <div className="flex justify-center mt-4">
                           <p className="text-sm mr-2 test-9">
