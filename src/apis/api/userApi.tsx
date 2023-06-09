@@ -28,7 +28,9 @@ type AxiosError = Error & Partial<ErrorResponse>;
 // User login
 const loginUser = async (user: IUser): Promise<Tokens | number> => {
   try {
-    const response: AxiosResponse = await userApi.post('/users/login', user);
+    const response: AxiosResponse = await userApi.post('/users/login', user, {
+      withCredentials: true,
+    });
     const { authorization: tokenOrigin } = response.headers;
     const tokens = tokenOrigin; // Split the tokens if they are comma-separated
     console.log('이게 뤼스펀스 헤더야', response.headers);
