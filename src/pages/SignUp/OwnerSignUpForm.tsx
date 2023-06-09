@@ -1,6 +1,11 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import DaumPostcode from 'react-daum-postcode';
+import { useMutation } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 import Post from '../../components/Modal/Post';
+import { ownerSignup } from '../../apis/api/signup';
+import useInput from '../../hooks/useInput';
+import errorIcon from '../../assets/warning.svg';
 
 const OwnerSignUpForm = ({
   userId,
@@ -13,20 +18,45 @@ const OwnerSignUpForm = ({
   handleChangePasswordCheck,
   passwordCheckError,
 }) => {
+  const navigate = useNavigate();
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [formattedPhoneNumber, setFormattedPhoneNumber] = useState('');
+  const [storeName, storeNameRef, handleChangeStoreName] = useInput();
+  const [detailAddress, detailAddressRef, setDetailAddress] = useInput();
+  const insertHyphen = phoneNumber => {
+    let formattedNumber = phoneNumber;
+    if (formattedNumber.length > 3 && formattedNumber.length <= 7) {
+      formattedNumber = `${formattedNumber.slice(0, 3)}-${formattedNumber.slice(
+        3,
+      )}`;
+    } else if (formattedNumber.length > 7) {
+      formattedNumber = `${formattedNumber.slice(0, 3)}-${formattedNumber.slice(
+        3,
+        7,
+      )}-${formattedNumber.slice(7)}`;
+    }
+    return formattedNumber;
+  };
+  const handleChangeStoreNumber = e => {
+    const inputPhoneNumber = e.target.value;
+    // 하이픈 제거
+    const processedPhoneNumber = inputPhoneNumber.replace(/-/g, '');
+    // 하이픈 삽입
+    const formattedNumber = insertHyphen(processedPhoneNumber);
+    setPhoneNumber(processedPhoneNumber); // 하이픈이 없는 숫자만 저장
+    setFormattedPhoneNumber(formattedNumber); // 하이픈이 있는 형식화된 번호 저장
+  };
   const [enrollCompany, setEnrollCompany] = useState({
     address: '',
     zonecode: '',
   });
-
   const [showPopup, setShowPopup] = useState(false);
-
   const handleInput = e => {
     setEnrollCompany({
       ...enrollCompany,
       [e.target.name]: e.target.value,
     });
   };
-
   const handleComplete = data => {
     setShowPopup(false);
     setEnrollCompany({
@@ -35,8 +65,8 @@ const OwnerSignUpForm = ({
       zonecode: data.zonecode,
     });
   };
-
   const [fileName, setFileName] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef();
   const handleFileAddButton = () => {
     fileInputRef.current.click();
@@ -44,7 +74,32 @@ const OwnerSignUpForm = ({
   const handleFileChangeName = e => {
     setFileName(e.target.files[0].name);
   };
-
+  const handleFileChange = e => {
+    const file = e.target.files[0];
+    setSelectedFile(file);
+    setFileName(file.name);
+  };
+  const SignupMutation = useMutation(ownerSignup, {
+    onSuccess: (response: any) => {
+      alert('회원가입이 완료되었습니다!');
+      navigate('/login');
+    },
+    onError: error => {
+      console.error('failed', error);
+    },
+  });
+  const handleSubmit = e => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('userId', userId);
+    formData.append('nickname', nickname);
+    formData.append('password', password);
+    formData.append('storeName', storeName);
+    formData.append('storeAddress', `${enrollCompany.address}${detailAddress}`);
+    formData.append('storeNumber', phoneNumber);
+    formData.append('authImage', selectedFile);
+    SignupMutation.mutate(formData);
+  };
   return (
     <>
       <label htmlFor="idInput" className="text-sm text-gray-600 pb-1 block">
@@ -52,7 +107,7 @@ const OwnerSignUpForm = ({
         <div className="flex items-center gap-2">
           <input
             value={userId}
-            // onChange={handleChangeUserId}
+            onChange={handleChangeUserId}
             id="idInput"
             type="text"
             placeholder="아이디 입력(5~12자)"
@@ -71,7 +126,7 @@ const OwnerSignUpForm = ({
         <div className="flex items-center gap-2">
           <input
             value={nickname}
-            // onChange={handleChangeNickname}
+            onChange={handleChangeNickname}
             id="nkInput"
             type="text"
             placeholder="닉네임을 입력하세요."
@@ -110,31 +165,37 @@ const OwnerSignUpForm = ({
             placeholder="비밀번호를 다시 입력하세요."
             className={`${
               passwordCheckError
-                ? 'ring-red-500 ring-1 border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full'
+                ? 'ring-red-500 ring-1 border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full'
                 : 'border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full'
             }`}
           />
         </label>
         {passwordCheckError && (
-          <>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="15"
-              height="15"
-              fill="currentColor"
-              className="absolute text-red-500 right-1 bottom-1"
-              viewBox="0 0 1792 1792"
-            >
-              <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z" />
-            </svg>
-            <p className="absolute text-xs text-red-500 -bottom-[0.001rem]">
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-red-500 flex items-center">
               {passwordCheckError}
             </p>
-          </>
+            <img
+              src={errorIcon}
+              className="w-[18px] flex items-center"
+              alt=""
+            />
+          </div>
         )}
       </div>
+      <label htmlFor="shopnameInput" className="text-sm text-gray-600 pb-1">
+        <div className="font-semibold mb-1 mt-6">가게 이름</div>
+        <input
+          value={storeName}
+          onChange={handleChangeStoreName}
+          id="shopnameInput"
+          type="text"
+          placeholder="가게 이름을 입력해주세요."
+          className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+        />
+      </label>
       <label htmlFor="addressInput" className="text-sm text-gray-600 pb-1">
-        <div className="font-semibold mb-1">가게 주소</div>
+        <div className="font-semibold mb-1 mt-2">가게 주소</div>
         <div className="flex items-center gap-2">
           <input
             id="addressInput"
@@ -146,7 +207,6 @@ const OwnerSignUpForm = ({
             value={enrollCompany.zonecode}
             className="border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full"
           />
-
           <button
             type="button"
             onClick={() => setShowPopup(true)}
@@ -172,14 +232,17 @@ const OwnerSignUpForm = ({
         />
         <input
           type="text"
+          value={detailAddress}
+          onChange={setDetailAddress}
           placeholder="상세주소"
           className="border rounded-lg px-3 py-2 mt-1 mb-4 text-sm w-full"
         />
       </label>
       <label htmlFor="shopnumberInput" className="text-sm text-gray-600 pb-1">
-        <div className="font-semibold mb-1">가게 전화번호</div>
+        <div className="font-semibold mb-1 mt-2">가게 전화번호</div>
         <input
-          // value={}
+          value={formattedPhoneNumber}
+          onChange={handleChangeStoreNumber}
           id="shopnumberInput"
           type="text"
           placeholder="가게 전화번호를 입력해주세요."
@@ -190,14 +253,15 @@ const OwnerSignUpForm = ({
         htmlFor="licenseInput"
         className="text-sm text-gray-600 pb-1 block"
       >
-        <div className="font-semibold mb-1">사업자등록증</div>
+        <div className="font-semibold mb-1 mt-2">사업자등록증</div>
         <div className="flex items-center gap-2">
           <input
             ref={fileInputRef}
+            // value={selectedFile}
             id="licenseInput"
             type="file"
             hidden
-            onChange={handleFileChangeName}
+            onChange={handleFileChange}
             className="border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full"
           />
           <input
@@ -218,15 +282,13 @@ const OwnerSignUpForm = ({
       </label>
       <button
         type="submit"
-        // onClick={}
-        className="transition duration-200 bg-primary-color-salgu hover:bg-primary-color-orange text-white w-full py-2.5 mt-2 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
+        onClick={handleSubmit}
+        className="transition duration-200 bg-primary-color-salgu hover:bg-primary-color-orange text-white w-full py-2.5 mt-6 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
       >
         <span className="inline-block mr-2">회원가입 하기</span>
       </button>
     </>
-
     // 나머지 사장님 회원 등록 폼 요소들
   );
 };
-
 export default OwnerSignUpForm;

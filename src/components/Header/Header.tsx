@@ -23,13 +23,13 @@ const Header: React.FC<HeaderProps> = ({ loggedin }) => {
   };
 
   return (
-    <div className="container w-full p-10">
-      <div className="header w-[1440px] flex justify-between mx-auto">
+    <div className="main-container w-full p-10">
+      <div className="header w-full flex justify-between mx-auto">
         <div className="logo m-2 relative z-10 flex justify-center items-center">
           <button type="button" onClick={handleHomePage}>
             <img
               src={cuppingLogo}
-              className="w-[12rem] desktop1440:w-[8rem]"
+              className="w-[4rem] d1920:w-[14rem] d1440:w-[10rem] d1024:w-[6rem]"
               alt="커핑로고"
             />
           </button>

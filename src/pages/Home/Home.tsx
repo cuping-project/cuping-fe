@@ -150,184 +150,187 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="main-container w-[1440px] flex flex-col">
-      <Header loggedin={loggedin} />
-      <hr />
-      <div className="main-contents w-full flex justify-center items-center flex-col mt-[-5rem]">
-        {/* ---------- 검색 네비게이터 ---------- */}
-        <div className="search-bar mb-[4rem] relative">
-          <div className="text-primary-color-orange pb-4 pl-2 flex space-x-2">
-            <img src={pinIcon} alt="" className="w-[14px]" />
-            <button type="submit">서울특별시 강남구</button>
-          </div>
-          {/* ---------- 검색창 ---------- */}
-          <input
-            type="text"
-            className="search-bar-input w-[50rem] my-2 p-4 border-2 rounded-[15px] border-black"
-            placeholder="찾으시는 원두를 입력해 주세요."
-            value={searchKeyword}
-            onChange={e => setSearchKeyword(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter') {
-                handleSearch();
-              }
-            }}
-          />
-          <button
-            className="search-btn absolute right-[1.5rem] bottom-[1.7rem]"
-            onClick={handleSearch}
-            type="submit"
-          >
-            검색
-          </button>
-        </div>
-        <div className="content-text flex text-5xl mb-[4rem]">
-          <div>지금&nbsp;</div>
-          <div className="text-primary-color-orange">여기, 내 취향&nbsp;</div>
-          <div>으로 찾는 원두</div>
-        </div>
-        <div className="card-contents w-full">
-          <div className="sorting-btn-area w-full grid grid-cols-2">
-            <div className="sorting-btn-right flex">
-              <button
-                type="submit"
-                className={`sorting-btn bg-primary-color-orange text-white border-1 m-2 px-2 py-1 rounded-[10px] ${
-                  isAllSelected ? '' : 'opacity-30'
-                }`}
-                onClick={handleToggleAll}
-              >
-                전체
-              </button>
+    <div className="main-container w-full">
+      <div className="flex flex-col mx-[5rem]">
+        <Header loggedin={loggedin} />
+        <hr />
+        <div className="main-contents w-full flex justify-center items-center flex-col mt-[-5rem]">
+          {/* ---------- 검색 네비게이터 ---------- */}
+          <div className="search-bar mb-[4rem] relative">
+            <div className="text-primary-color-orange pb-4 pl-2 flex space-x-2 d1024:justify-start justify-center">
+              <img src={pinIcon} alt="" className="w-[14px] " />
+              <button type="submit">서울특별시 강남구</button>
             </div>
-
-            <div className="sorting-btn-left flex justify-end">
-              <button
-                type="submit"
-                className={`m-2 px-4 py-1 border-2 rounded-[10px] text-[12px] cursor-pointer ${
-                  isSshinSelected
-                    ? 'bg-primary-color-orange text-white'
-                    : 'border-black opacity-20'
-                }`}
-                onClick={handleToggleShin}
-              >
-                신맛
-              </button>
-              <button
-                type="submit"
-                className={`m-2 px-4 py-1 border-2 rounded-[10px] text-[12px] cursor-pointer ${
-                  isSsunSelected
-                    ? 'bg-primary-color-orange text-white'
-                    : 'border-black opacity-20'
-                }`}
-                onClick={handleToggleSsun}
-              >
-                쓴맛
-              </button>
-              <button
-                type="submit"
-                className={`m-2 px-4 py-1 border-2 rounded-[10px] text-[12px] cursor-pointer ${
-                  isTanSelected
-                    ? 'bg-primary-color-orange text-white'
-                    : 'border-black opacity-20'
-                }`}
-                onClick={handleToggleTan}
-              >
-                탄맛
-              </button>
-              <button
-                type="submit"
-                className={`m-2 px-4 py-1 border-2 rounded-[10px] text-[12px] cursor-pointer ${
-                  isDanSelected
-                    ? 'bg-primary-color-orange text-white'
-                    : 'border-black opacity-20'
-                }`}
-                onClick={handleToggleDan}
-              >
-                단맛
-              </button>
-              <button
-                type="submit"
-                className={`m-2 px-4 py-1 border-2 rounded-[10px] text-[12px] cursor-pointer ${
-                  isDeSelected
-                    ? 'bg-primary-color-orange text-white'
-                    : 'border-black opacity-20'
-                }`}
-                onClick={handleToggleDe}
-              >
-                디카페인
-              </button>
-            </div>
+            {/* ---------- 검색창 ---------- */}
+            <input
+              type="text"
+              className="search-bar-input my-2 p-4 border-2 rounded-[15px] border-black
+              flex justify-center d1440:w-[50rem] d1024:w-[30rem]"
+              placeholder="찾으시는 원두를 입력해 주세요."
+              value={searchKeyword}
+              onChange={e => setSearchKeyword(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  handleSearch();
+                }
+              }}
+            />
+            <button
+              className="search-btn absolute right-[1.5rem] bottom-[1.7rem]"
+              onClick={handleSearch}
+              type="submit"
+            >
+              검색
+            </button>
           </div>
-
-          <div className="cards grid grid-cols-3">
-            {/* // ----- Card ----- // */}
-            {isAllSelected &&
-              cards.map(card => (
-                <Link
-                  to={`/details/${card.id}`}
-                  key={card.id}
-                  className="card m-4 shadow-md border border-gray-300 rounded-[12px] cursor-pointer"
+          <div className="content-text flex text-5xl mb-[4rem]">
+            <div>지금&nbsp;</div>
+            <div className="text-primary-color-orange">여기, 내 취향&nbsp;</div>
+            <div>으로 찾는 원두</div>
+          </div>
+          <div className="card-contents w-full">
+            <div className="sorting-btn-area w-full grid grid-cols-2">
+              <div className="sorting-btn-right flex">
+                <button
+                  type="submit"
+                  className={`sorting-btn bg-primary-color-orange text-white border-1 m-2 px-2 py-1 rounded-[10px] ${
+                    isAllSelected ? '' : 'opacity-30'
+                  }`}
+                  onClick={handleToggleAll}
                 >
-                  {/* <div>{console.log(card)}</div> */}
-                  <div className="card-picture overflow-hidden">
-                    <img
-                      src={card.beanImage}
-                      alt=""
-                      className="w-full h-[14rem] object-cover rounded-[12px]"
-                    />
-                  </div>
-                  <div className="card-name grid grid-cols-2">
-                    <div className="bean-name text-xl p-2 ml-3">
-                      {card.beanOriginName} {card.beanName}
+                  전체
+                </button>
+              </div>
+
+              <div className="sorting-btn-left flex justify-end">
+                <button
+                  type="submit"
+                  className={`m-2 px-4 py-1 border-2 rounded-[10px] text-[12px] cursor-pointer ${
+                    isSshinSelected
+                      ? 'bg-primary-color-orange text-white'
+                      : 'border-black opacity-20'
+                  }`}
+                  onClick={handleToggleShin}
+                >
+                  신맛
+                </button>
+                <button
+                  type="submit"
+                  className={`m-2 px-4 py-1 border-2 rounded-[10px] text-[12px] cursor-pointer ${
+                    isSsunSelected
+                      ? 'bg-primary-color-orange text-white'
+                      : 'border-black opacity-20'
+                  }`}
+                  onClick={handleToggleSsun}
+                >
+                  쓴맛
+                </button>
+                <button
+                  type="submit"
+                  className={`m-2 px-4 py-1 border-2 rounded-[10px] text-[12px] cursor-pointer ${
+                    isTanSelected
+                      ? 'bg-primary-color-orange text-white'
+                      : 'border-black opacity-20'
+                  }`}
+                  onClick={handleToggleTan}
+                >
+                  탄맛
+                </button>
+                <button
+                  type="submit"
+                  className={`m-2 px-4 py-1 border-2 rounded-[10px] text-[12px] cursor-pointer ${
+                    isDanSelected
+                      ? 'bg-primary-color-orange text-white'
+                      : 'border-black opacity-20'
+                  }`}
+                  onClick={handleToggleDan}
+                >
+                  단맛
+                </button>
+                <button
+                  type="submit"
+                  className={`m-2 px-4 py-1 border-2 rounded-[10px] text-[12px] cursor-pointer ${
+                    isDeSelected
+                      ? 'bg-primary-color-orange text-white'
+                      : 'border-black opacity-20'
+                  }`}
+                  onClick={handleToggleDe}
+                >
+                  디카페인
+                </button>
+              </div>
+            </div>
+
+            <div className="cards grid grid-cols-3">
+              {/* // ----- Card ----- // */}
+              {isAllSelected &&
+                cards.map(card => (
+                  <Link
+                    to={`/details/${card.id}`}
+                    key={card.id}
+                    className="card m-4 shadow-md border border-gray-300 rounded-[12px] cursor-pointer"
+                  >
+                    {/* <div>{console.log(card)}</div> */}
+                    <div className="card-picture overflow-hidden">
+                      <img
+                        src={card.beanImage}
+                        alt=""
+                        className="w-full h-[14rem] object-cover rounded-[12px]"
+                      />
                     </div>
-                    <div className="flex justify-end p-2">
-                      <div className="stars mx-2">⭐️ 3</div>
-                      {loggedin ? (
-                        isHeartPressed ? (
-                          <div
-                            className="heart mx-2 cursor-pointer w-[1.2rem]"
-                            onClick={heartHandler}
-                            role="presentation"
-                          >
-                            <img
-                              src={heartFill}
-                              className="m-[0.2rem]"
-                              alt=""
+                    <div className="card-name grid grid-cols-2">
+                      <div className="bean-name text-xl p-2 ml-3">
+                        {card.beanOriginName} {card.beanName}
+                      </div>
+                      <div className="flex justify-end p-2">
+                        <div className="stars mx-2">⭐️ 3</div>
+                        {loggedin ? (
+                          isHeartPressed ? (
+                            <div
+                              className="heart mx-2 cursor-pointer w-[1.2rem]"
+                              onClick={heartHandler}
+                              role="presentation"
+                            >
+                              <img
+                                src={heartFill}
+                                className="m-[0.2rem]"
+                                alt=""
+                              />
+                            </div>
+                          ) : (
+                            <div
+                              className="heart mx-2 cursor-pointer w-[1.2rem]"
+                              onClick={heartHandler}
+                              role="presentation"
+                            >
+                              <img src={heart} className="m-[0.2rem]" alt="" />
+                            </div>
+                          )
+                        ) : (
+                          <div>
+                            <button
+                              type="submit"
+                              onClick={openModal}
+                              className="w-[1.2rem]"
+                            >
+                              <img src={heart} className="m-[0.2rem]" alt="" />
+                            </button>
+                            <LoginModal
+                              isOpen={isLoginModalOpen}
+                              closeModal={closeModal}
                             />
                           </div>
-                        ) : (
-                          <div
-                            className="heart mx-2 cursor-pointer w-[1.2rem]"
-                            onClick={heartHandler}
-                            role="presentation"
-                          >
-                            <img src={heart} className="m-[0.2rem]" alt="" />
-                          </div>
-                        )
-                      ) : (
-                        <div>
-                          <button
-                            type="submit"
-                            onClick={openModal}
-                            className="w-[1.2rem]"
-                          >
-                            <img src={heart} className="m-[0.2rem]" alt="" />
-                          </button>
-                          <LoginModal
-                            isOpen={isLoginModalOpen}
-                            closeModal={closeModal}
-                          />
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <div className="card-labels p-2 flex">
-                    <div className="card-label border-2 rounded-[5px] px-2 m-2 text-[1rem]">
-                      {card.hashTag}
+                    <div className="card-labels p-2 flex">
+                      <div className="card-label border-2 rounded-[5px] px-2 m-2 text-[1rem]">
+                        {card.hashTag}
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                ))}
+            </div>
           </div>
         </div>
       </div>
