@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import cuppingLogo from '../../assets/cupping-logo.svg';
 import beniImg from '../../assets/beni.svg';
 
@@ -7,11 +8,38 @@ interface HeaderProps {
   loggedin: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ loggedin }) => {
+interface Card {
+  id: number;
+  beanImage: string;
+  beanOriginName: string;
+  beanName: string;
+  hashTag: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ loggedin, setCards }) => {
   const navigate = useNavigate();
 
-  const handleHomePage = () => {
-    navigate('/');
+  // 검색 결과 가져오기
+  const getSearchResults = async () => {
+    try {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_BE_SERVER}/main/beans/search?keyword=`,
+      );
+      return data.data;
+    } catch (err) {
+      console.log('✨ ‣ getSearchResults ‣ err:', err);
+    }
+  };
+
+  // 로고 버튼 눌렀을때 이벤트 처리
+  const handleHomePage = async () => {
+    try {
+      const searchResults = await getSearchResults();
+      setCards(searchResults);
+      navigate('/');
+    } catch (err) {
+      console.log('✨ ‣ handleSearch ‣ err:', err);
+    }
   };
 
   const handleSignupPage = () => {
@@ -25,8 +53,12 @@ const Header: React.FC<HeaderProps> = ({ loggedin }) => {
   return (
     <div className="main-container w-full p-10">
       <div className="header w-full flex justify-between mx-auto">
-        <div className="logo m-2 relative z-10 flex justify-center items-center">
-          <button type="button" onClick={handleHomePage}>
+        <div
+          className="logo m-2 relative z-10 flex justify-center items-center"
+          onClick={handleHomePage}
+          role="presentation"
+        >
+          <button type="button">
             <img
               src={cuppingLogo}
               className="w-[4rem] d1920:w-[14rem] d1440:w-[10rem] d1024:w-[6rem]"
