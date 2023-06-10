@@ -20,7 +20,7 @@ interface Card {
 
 const Home: React.FC = () => {
   // 로그인이 되었는지 확인
-  const [loggedin, setLoggedin] = useState(true);
+  const [loggedin, setLoggedin] = useState(false);
 
   //  메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
   useEffect(() => {
