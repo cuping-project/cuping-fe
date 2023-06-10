@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import Header from '../../components/Header/Header';
 import beanImage from '../../assets/bean-image.png';
@@ -17,6 +17,7 @@ import cafe3 from '../../assets/cafe3.jpg';
 import cafe4 from '../../assets/cafe4.jpg';
 
 const Details: React.FC = () => {
+  const navigate = useNavigate();
   // 로그인이 되었는지 확인
   const [loggedin, setLoggedin] = useState(false);
 
@@ -68,9 +69,11 @@ const Details: React.FC = () => {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="main-container w-full">
-      <div className="flex flex-col mx-[5rem]">
-        <Header loggedin={loggedin} />
+    <div className="main-container">
+      <div className="flex flex-col mx-[5rem] max-w-[1440px]">
+        <div onClick={() => navigate('/')} role="presentation">
+          <Header loggedin={loggedin} />
+        </div>
         <hr />
         <div className="inner-container w-full justify-center mx-auto">
           {/* ----- top ----- */}

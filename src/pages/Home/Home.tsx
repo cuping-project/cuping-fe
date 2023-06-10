@@ -113,7 +113,7 @@ const Home: React.FC = () => {
   };
 
   // 검색 결과 가져오기
-  const getSearchResults = async (): Promise<Card[]> => {
+  const getSearchResults = async () => {
     try {
       const { data } = await axios.get(
         `${
@@ -144,15 +144,16 @@ const Home: React.FC = () => {
     try {
       const searchResults = await getSearchResults();
       setCards(searchResults);
+      setSearchKeyword('');
     } catch (err) {
       console.log('✨ ‣ handleSearch ‣ err:', err);
     }
   };
 
   return (
-    <div className="main-container w-full">
-      <div className="flex flex-col mx-[5rem]">
-        <Header loggedin={loggedin} />
+    <div className="main-container">
+      <div className="flex flex-col mx-[5rem] max-w-[1440px]">
+        <Header loggedin={loggedin} setCards={setCards} />
         <hr />
         <div className="main-contents w-full flex justify-center items-center flex-col mt-[-5rem]">
           {/* ---------- 검색 네비게이터 ---------- */}
