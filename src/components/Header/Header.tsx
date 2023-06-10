@@ -53,7 +53,9 @@ const Header: React.FC<HeaderProps> = ({ loggedin, setCards, setLoggedin }) => {
   };
 
   const logoutHandler = () => {
-    Cookies.remove('ACCESS_KEY', { path: '/' });
+    const accessToken = Cookies.get('ACCESS_KEY');
+    console.log('✨ ‣ logoutHandler ‣ accessToken:', accessToken);
+    Cookies.remove('ACCESS_KEY');
     console.log(Cookies);
     setLoggedin(false);
   };
