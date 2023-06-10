@@ -13,8 +13,8 @@ import coffeeGraph from '../../assets/coffee-graph.png';
 import LoginModal from '../../components/LoginModal/LoginModal';
 import cafe1 from '../../assets/cafe1.jpg';
 import cafe2 from '../../assets/cafe2.jpg';
-import cafe3 from '../../assets/cafe3.jpg';
-import cafe4 from '../../assets/cafe4.jpg';
+// import cafe3 from '../../assets/cafe3.jpg';
+// import cafe4 from '../../assets/cafe4.jpg';
 
 const Details: React.FC = () => {
   const navigate = useNavigate();
@@ -243,15 +243,31 @@ const Details: React.FC = () => {
           <div className="mb-[6rem]">
             <div className="flex justify-between mt-[2rem] mb-[2rem] text-xl font-bold">
               <div>
-                <span className="text-primary-color-orange">34</span>
+                <span className="text-primary-color-orange">2</span>
                 개의 카페가 있습니다.
               </div>
-              <button
-                type="button"
-                className="border border-primary-color-orange text-primary-color-orange py-[0.5rem] px-[1.25rem] rounded-xl"
-              >
-                + 더보기
-              </button>
+              {loggedin ? (
+                <button
+                  type="button"
+                  className="border border-primary-color-orange text-primary-color-orange py-[0.5rem] px-[1.25rem] rounded-xl"
+                >
+                  + 더보기
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={openModal}
+                    type="button"
+                    className="border border-primary-color-orange text-primary-color-orange py-[0.5rem] px-[1.25rem] rounded-xl"
+                  >
+                    + 더보기
+                  </button>
+                  <LoginModal
+                    isOpen={isLoginModalOpen}
+                    closeModal={closeModal}
+                  />
+                </>
+              )}
             </div>
             <div className="cardBox grid grid-cols-4 gap-[0.8125rem]">
               <div className="cafeCard object-cover shadow-lg h-[20.825rem] rounded-2xl">
@@ -281,36 +297,6 @@ const Details: React.FC = () => {
                   </p>
                   <p className="text-[#868A91] leading-[1.3rem]">
                     서울 강서구 마곡동로 56 1층 103호
-                  </p>
-                </div>
-              </div>
-              <div className="cafeCard object-cover shadow-lg h-[20.825rem] rounded-2xl">
-                <img
-                  src={cafe3}
-                  alt=""
-                  className="w-full h-[14.825rem] rounded-2xl"
-                />
-                <div className="px-[1.4375rem] pt-[0.9rem] pb-[1.28125rem] ">
-                  <p className="text-xl font-bold h-[2.25rem] leading-[1.625rem]">
-                    더데이디
-                  </p>
-                  <p className="text-[#868A91] leading-[1.3rem]">
-                    서울 강서구 마곡서로 152 B동 1층 118호
-                  </p>
-                </div>
-              </div>
-              <div className="cafeCard object-cover shadow-lg h-[20.825rem] rounded-2xl">
-                <img
-                  src={cafe4}
-                  alt=""
-                  className="w-full h-[14.825rem] rounded-2xl"
-                />
-                <div className="px-[1.4375rem] pt-[0.9rem] pb-[1.28125rem] ">
-                  <p className="text-xl font-bold h-[2.25rem] leading-[1.625rem]">
-                    혜례커피 마곡나루점
-                  </p>
-                  <p className="text-[#868A91] leading-[1.3rem]">
-                    서울 강서구 마곡중앙로 161-1 캐슬파크 2층
                   </p>
                 </div>
               </div>
