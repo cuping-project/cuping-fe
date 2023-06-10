@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import cuppingLogo from '../../assets/cupping-logo.svg';
 import beniImg from '../../assets/beni.svg';
+import logout from '../../assets/logout.png';
 
 interface HeaderProps {
   loggedin: boolean;
@@ -16,7 +18,7 @@ interface Card {
   hashTag: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ loggedin, setCards }) => {
+const Header: React.FC<HeaderProps> = ({ loggedin, setCards, setLoggedin }) => {
   const navigate = useNavigate();
 
   // 검색 결과 가져오기
@@ -50,9 +52,15 @@ const Header: React.FC<HeaderProps> = ({ loggedin, setCards }) => {
     navigate('/login');
   };
 
+  const logoutHandler = () => {
+    console.log('눌림');
+    Cookies.remove('ACCESS_KEY');
+    setLoggedin(false);
+  };
+
   return (
     <div className="main-container w-full p-10">
-      <div className="header w-full flex justify-between mx-auto">
+      <div className="header w-full flex justify-between items-center mx-auto">
         <div
           className="logo m-2 relative z-10 flex justify-center items-center"
           onClick={handleHomePage}
@@ -67,12 +75,19 @@ const Header: React.FC<HeaderProps> = ({ loggedin, setCards }) => {
           </button>
         </div>
         {loggedin ? (
-          <div className="function-bar flex">
+          <div className="function-bar flex items-center">
             <div className="profile-img">
-              <img src={beniImg} alt="" className="w-8 mr-2" />
+              <img src={beniImg} alt="" className="w-[2rem] mr-2" />
             </div>
-            <div className="mypage text-primary-color-orange font-bold relative z-10">
+            <div className="mypage text-primary-color-orange font-bold relative z-10 mr-[3rem]">
               <button type="button">마이 페이지</button>
+            </div>
+            <div
+              className="logout w-[2rem]"
+              onClick={logoutHandler}
+              role="presentation"
+            >
+              <img src={logout} className="cursor-pointer" alt="" />
             </div>
           </div>
         ) : (

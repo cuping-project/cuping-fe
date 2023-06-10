@@ -22,7 +22,7 @@ const Home: React.FC = () => {
   // 로그인이 되었는지 확인
   const [loggedin, setLoggedin] = useState(true);
 
-  // 메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
+  //  메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
   useEffect(() => {
     const checkLoginStatus = () => {
       const accessToken = Cookies.get('ACCESS_KEY');
@@ -153,7 +153,11 @@ const Home: React.FC = () => {
   return (
     <div className="main-container">
       <div className="flex flex-col mx-[5rem] max-w-[1440px]">
-        <Header loggedin={loggedin} setCards={setCards} />
+        <Header
+          loggedin={loggedin}
+          setCards={setCards}
+          setLoggedin={setLoggedin}
+        />
         <hr />
         <div className="main-contents w-full flex justify-center items-center flex-col mt-[-5rem]">
           {/* ---------- 검색 네비게이터 ---------- */}
