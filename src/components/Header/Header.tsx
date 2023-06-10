@@ -82,13 +82,13 @@ const Header: React.FC<HeaderProps> = ({ loggedin, setCards, setLoggedin }) => {
             <div className="mypage text-primary-color-orange font-bold relative z-10 mr-[3rem]">
               <button type="button">마이 페이지</button>
             </div>
-            <div
-              className="logout w-[2rem]"
+            <button
+              className="logout w-[2rem] relative z-10"
               onClick={logoutHandler}
-              role="presentation"
+              type="submit"
             >
               <img src={logout} className="cursor-pointer" alt="" />
-            </div>
+            </button>
           </div>
         ) : (
           <div className="function-bar flex">
