@@ -2,9 +2,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import React from 'react';
 import Home from '../pages/Home/Home';
 import Login from '../pages/Login/Login';
-import OwnerPage from '../pages/OwnerPage';
-import SignUp from '../pages/SignUp/SignUp';
-import Bean from '../pages/Bean/Bean';
+import OwnerPage from '../pages/OwnerPage/OwnerPage';
+import UserSignup from '../pages/Signup/UserSignup/UserSignup';
+import BeanStats from '../components/BeanStats/BeanStats';
 import Details from '../pages/Details/Details';
 
 const Router = () => {
@@ -14,8 +14,8 @@ const Router = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/ownerpage" element={<OwnerPage />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/bean" element={<Bean />} />
+        <Route path="/signup" element={<UserSignup />} />
+        <Route path="/bean" element={<BeanStats />} />
         <Route path="/details/:id" element={<Details />} />
       </Routes>
     </BrowserRouter>
