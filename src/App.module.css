@@ -1,0 +1,3 @@
+.containerLayout {
+  @apply flex justify-center w-full m-auto h-full
+}

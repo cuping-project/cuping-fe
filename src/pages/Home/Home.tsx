@@ -1,60 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useQuery } from 'react-query';
 import Cookies from 'js-cookie';
-import { Link, useParams } from 'react-router-dom';
-import pinIcon from '../../assets/pin.svg';
+import { Link } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import pinIcon from '../../assets/img/pin.svg';
 import styles from './Home.module.css';
-import LoginModal from '../../components/LoginModal/LoginModal';
+import LoginModal from '../../components/Modal/LoginModal/LoginModal';
 import Header from '../../components/Header/Header';
-import heart from '../../assets/heart.png';
-import heartFill from '../../assets/heartFill.png';
-
-interface Card {
-  id: number;
-  beanImage: string;
-  beanOriginName: string;
-  beanName: string;
-  hashTag: string;
-}
+import heart from '../../assets/img/heart.png';
+import heartFill from '../../assets/img/heart-fill.png';
+import { ICard } from './types';
+import { cardState } from '../../recoil/atom/cardState';
+import {
+  searchBeanCardApi,
+  getBeanCardApi,
+} from '../../apis/api/beanCardApi/beanCardApi';
+import { searchKeywordState } from '../../recoil/atom/searchKeywordState';
+import { loginState } from '../../recoil/atom/loginState';
+import { GetBeanCardService } from '../../apis/services/BeanCardService/BeanCardService';
 
 const Home: React.FC = () => {
-  // 로그인이 되었는지 확인
-  const [loggedin, setLoggedin] = useState(false);
+  // 로그인 상태 변수
+  const [loggedin, setLoggedin] = useRecoilState(loginState);
 
-  //  메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
-  useEffect(() => {
-    const checkLoginStatus = () => {
-      const accessToken = Cookies.get('ACCESS_KEY');
-      if (accessToken) {
-        setLoggedin(true);
-      } else {
-        setLoggedin(false);
-      }
-    };
+  // 카드 상태 변수
+  const [cards, setCards] = useRecoilState(cardState);
 
-    checkLoginStatus();
-  }, []);
+  // 검색어 상태 변수
+  const [searchKeyword, setSearchKeyword] = useRecoilState(searchKeywordState);
 
   // 로그인 모달 관련된 변수
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
-  const openModal = () => {
-    setIsLoginModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsLoginModalOpen(false);
-  };
 
   // heart 관련된 기능
   const [isHeartPressed, setIsHeartPressed] = useState(false);
   const heartHandler = () => {
     setIsHeartPressed(!isHeartPressed);
   };
-
-  // 카드를 받아와서 저장하는 곳
-  const [cards, setCards] = useState<Card[]>([]);
 
   // 전체, 위치 버튼 클릭 시 토글
   const [isAllSelected, setIsAllSelected] = useState(true);
@@ -65,6 +46,20 @@ const Home: React.FC = () => {
   const [isTanSelected, setIsTanSelected] = useState(false); // 탄맛
   const [isDanSelected, setIsDanSelected] = useState(false); // 단맛
   const [isDeSelected, setIsDeSelected] = useState(false); // 디카페인
+
+  // 메인페이지를 처음 로딩 되었을때 카드를 받아옴
+  const { isLoading, isError } = GetBeanCardService();
+  if (isLoading) return <div>로딩중...!!!</div>;
+  if (isError) return <div>에러 발생함 !!!</div>;
+
+  // 모달 상태 함수
+  const openModal = () => {
+    setIsLoginModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsLoginModalOpen(false);
+  };
 
   // 신맛 태그 클릭 토글
   const handleToggleShin = () => {
@@ -91,73 +86,52 @@ const Home: React.FC = () => {
     setIsDeSelected(!isDeSelected);
   };
 
-  // 검색어 상태 변수
-  const [searchKeyword, setSearchKeyword] = useState('');
-
   // "전체" 버튼 클릭 시 토글
   const handleToggleAll = () => {
     setIsAllSelected(!isAllSelected);
   };
 
-  // 전체 원두 카드를 가져오는 axios 함수
-  const getCard = async (): Promise<Card[]> => {
-    try {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_BE_SERVER}/main/beans/search?keyword=`,
-      );
-      return data;
-    } catch (err) {
-      console.log('✨ ‣ getCard ‣ err:', err);
-      return [];
-    }
-  };
-
-  // 검색 결과 가져오기
-  const getSearchResults = async () => {
-    try {
-      const { data } = await axios.get(
-        `${
-          import.meta.env.VITE_BE_SERVER
-        }/main/beans/search?keyword=${searchKeyword}`,
-      );
-      return data.data;
-    } catch (err) {
-      console.log('✨ ‣ getSearchResults ‣ err:', err);
-    }
-  };
-
-  // react-query로 axios로 받아온 데이터 정제
-  const { data, isLoading, isError } = useQuery<Card[]>('cards', getCard, {
-    onSuccess: data => {
-      setCards(data.data);
-    },
-    onError: error => {
-      console.log(error);
-    },
-  });
-
-  if (isLoading) return <h2>로딩중...</h2>;
-  if (isError) return <h2>에러...</h2>;
-
-  // 검색 버튼 클릭 이벤트 처리
+  // 검색버튼 클릭 시 필터링
   const handleSearch = async () => {
     try {
-      const searchResults = await getSearchResults();
-      setCards(searchResults);
+      const response = await searchBeanCardApi(searchKeyword);
+      setCards(response);
       setSearchKeyword('');
-    } catch (err) {
-      console.log('✨ ‣ handleSearch ‣ err:', err);
+    } catch (error) {
+      console.log(error);
     }
   };
+
+  // const handleSearch = async () => {};
+
+  //  메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const accessToken = Cookies.get('ACCESS_KEY');
+      if (accessToken) {
+        setLoggedin(true);
+      } else {
+        setLoggedin(false);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
+
+  // 메인페이지가 처음 로딩되었을때 카드를 받아옴
+  // useEffect(() => {
+  //   const fetchCard = async () => {
+  //     const response = await getBeanCardApi();
+  //     setCards(response.data);
+  //   };
+
+  //   fetchCard();
+  // }, []);
 
   return (
     <div className="main-container">
       <div className="flex flex-col mx-[5rem] max-w-[1440px]">
-        <Header
-          loggedin={loggedin}
-          setCards={setCards}
-          setLoggedin={setLoggedin}
-        />
+        <Header />
         <hr />
         <div className="main-contents w-full flex justify-center items-center flex-col mt-[-5rem]">
           {/* ---------- 검색 네비게이터 ---------- */}

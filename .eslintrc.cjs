@@ -26,6 +26,7 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
     'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
     'no-alert': 'off', // alert 끄기
+    'no-useless-catch': 'off', // catch에서 error를 사용하지 않을 때 경고 표시
 
     // TypeScript 관련 규칙
     '@typescript-eslint/no-unused-vars': 'warn', // 사용하지 않는 변수에 대해 경고 표시

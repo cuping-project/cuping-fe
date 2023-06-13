@@ -4,17 +4,13 @@ import axios from 'axios';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import Header from '../../components/Header/Header';
-import beanImage from '../../assets/bean-image.png';
-import beanDetail from '../../assets/detail.png';
-import profileImage from '../../assets/detail-profile-card.png';
+import profileImage from '../../assets/img/detail-profile-card.png';
 import Kakaomap from '../../components/KakaoMap/Kakaomap';
-import heartFill from '../../assets/heartFill.png';
-import coffeeGraph from '../../assets/coffee-graph.png';
-import LoginModal from '../../components/LoginModal/LoginModal';
-import cafe1 from '../../assets/cafe1.jpg';
-import cafe2 from '../../assets/cafe2.jpg';
-// import cafe3 from '../../assets/cafe3.jpg';
-// import cafe4 from '../../assets/cafe4.jpg';
+import heartFill from '../../assets/img/heart-fill.png';
+import coffeeGraph from '../../assets/img/coffee-graph.png';
+import LoginModal from '../../components/Modal/LoginModal/LoginModal';
+import cafe1 from '../../assets/img/cafe-image01.jpg';
+import cafe2 from '../../assets/img/cafe-image02.jpg';
 
 const Details: React.FC = () => {
   const navigate = useNavigate();
