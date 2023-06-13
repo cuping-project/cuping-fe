@@ -1,29 +1,20 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
 import Cookies from 'js-cookie';
-import tokenState from '../../recoil/tokenState/atom';
-import loginUser from '../../apis/api/userApi';
-import styles from './Login.module.css';
-import login from '../../assets/login.png';
-import cupingLogo from '../../img/Group.png';
-import bini from '../../img/kong.png';
-
-interface IUser {
-  userId: string;
-  password: string;
-}
+import LoginService from '../../apis/services/LoginService/LoginService';
+import cupingLogo from '../../assets/img/cupping-logo-icon02.svg';
+import bini from '../../assets/img/beni.svg';
+import { IUser } from './types';
 
 const Login = () => {
-  const [token, setToken] = useRecoilState(tokenState);
-  const [userIdInput, setUserIdInput] = React.useState('');
-  const [passwordInput, setPasswordInput] = React.useState('');
+  const [userIdInput, setUserIdInput] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
 
   // 로그인이 되었는지 확인
-  const [loggedin, setLoggedin] = useState(false);
+  const [loggedin, setLoggedin] = useState(true);
 
   // 로그인이 되어있다면 메인 페이지로 라우팅
   useEffect(() => {
@@ -47,45 +38,6 @@ const Login = () => {
     navigate('/signup');
   };
 
-  // console.log({ userId: userIdInput, password: passwordInput });
-  const mutation = useMutation(async (user: IUser) => {
-    try {
-      const tokens = await loginUser(user); // Fetch the tokens
-
-      // // Check if tokens are received successfully
-      // if (!tokens || typeof tokens === 'number') {
-      //   // Check for error messages
-      //   console.log('Server response: ', tokens);
-      //   if (tokens === 400) {
-      //     setLoginError('아이디가 일치하지 않습니다.');
-      //   } else if (tokens === 403) {
-      //     setLoginError('비밀번호가 일치하지 않습니다.');
-      //   } else {
-      //     setLoginError('Unknown error occurred.');
-      //   }
-
-      //   throw new Error('Failed to fetch tokens');
-      // }
-
-      // // Save the tokens in cookies
-      // Cookies.set('accessToken', tokens.accessToken, {
-      //   expires: tokens.accessTokenExpirationTime,
-      // });
-      // Cookies.set('refreshToken', tokens.refreshToken, {
-      //   expires: tokens.refreshTokenExpirationTime,
-      // });
-
-      // // Save tokens in the state
-      // setToken({
-      //   accessToken: tokens.accessToken,
-      //   refreshToken: tokens.refreshToken,
-      // });
-
-      navigate('/'); // Redirect to home page
-    } catch (error) {
-      console.error(error);
-    }
-  });
   const userIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setUserIdInput(e.target.value);
   };
@@ -94,12 +46,28 @@ const Login = () => {
     setPasswordInput(e.target.value);
   };
 
-  const submitHandler = (e: FormEvent) => {
+  // 로그인 로직
+  const { mutate, isLoading, isError } = LoginService();
+
+  if (isLoading) {
+    return <div>로딩중...</div>;
+  }
+
+  if (isError) {
+    return <div>에러가 발생했습니다.</div>;
+  }
+
+  // 로그인 핸들러
+  const loginHandler = (e: FormEvent) => {
     e.preventDefault();
+
+    // 정규식 검사
+    // 앞뒤 공백이 있는지 체크
     if (userIdInput.trim() === '' || passwordInput.trim() === '') {
       return;
     }
-    mutation.mutate({ userId: userIdInput, password: passwordInput });
+
+    mutate({ userId: userIdInput, password: passwordInput });
   };
 
   const kakaoLoginHandler = () => {
@@ -146,7 +114,7 @@ const Login = () => {
                   <div className="w-full bg-white border-4 border-primary-color-salgu shadow divide-y divide-gray-200">
                     <div className="">
                       <div className="p-[39px] w-[350px]">
-                        <form onSubmit={submitHandler}>
+                        <form onSubmit={loginHandler}>
                           <p>아이디</p>
                           <input
                             type="text"

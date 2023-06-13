@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import cuppingLogo from '../../assets/cupping-logo.svg';
-import beniImg from '../../assets/beni.svg';
-import logout from '../../assets/logout.png';
-
-interface HeaderProps {
-  loggedin: boolean;
-}
+import { useRecoilState } from 'recoil';
+import cuppingLogo from '../../assets/img/cupping-logo-word.svg';
+import beniImg from '../../assets/img/beni.svg';
+import logout from '../../assets/img/logout.png';
+import { loginState } from '../../recoil/atom/loginState';
+import { cardState } from '../../recoil/atom/cardState';
 
 interface Card {
   id: number;
@@ -18,7 +17,9 @@ interface Card {
   hashTag: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ loggedin, setCards, setLoggedin }) => {
+const Header: React.FC = () => {
+  const [loggined, setLoggedin] = useRecoilState(loginState);
+  const [cards, setCards] = useRecoilState(cardState);
   const navigate = useNavigate();
 
   // 검색 결과 가져오기
@@ -76,7 +77,7 @@ const Header: React.FC<HeaderProps> = ({ loggedin, setCards, setLoggedin }) => {
             />
           </button>
         </div>
-        {loggedin ? (
+        {loggined ? (
           <div className="function-bar flex items-center">
             <div className="profile-img">
               <img src={beniImg} alt="" className="w-[2rem] mr-2" />
