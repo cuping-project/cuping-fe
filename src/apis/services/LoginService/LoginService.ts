@@ -15,12 +15,13 @@ const LoginService = () => {
   const navigate = useNavigate();
   const loginMutation = useMutation(loginApi, {
     onSuccess: data => {
-      Cookies.set('accessToken', data.accessToken);
-      Cookies.set('refreshToken', data.refreshToken);
+      // Cookies.set('accessToken', data.accessToken);
+      // Cookies.set('refreshToken', data.refreshToken);
+      console.log(data);
       navigate('/');
     },
     onError: error => {
-      console.log(error);
+      alert(error.response.data.message);
     },
   });
 

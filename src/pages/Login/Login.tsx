@@ -46,16 +46,8 @@ const Login = () => {
     setPasswordInput(e.target.value);
   };
 
-  // 로그인 로직
-  const { mutate, isLoading, isError } = LoginService();
-
-  if (isLoading) {
-    return <div>로딩중...</div>;
-  }
-
-  if (isError) {
-    return <div>에러가 발생했습니다.</div>;
-  }
+  // 로그인 mutate
+  const { mutate: loginMutate } = LoginService();
 
   // 로그인 핸들러
   const loginHandler = (e: FormEvent) => {
@@ -67,7 +59,7 @@ const Login = () => {
       return;
     }
 
-    mutate({ userId: userIdInput, password: passwordInput });
+    loginMutate({ userId: userIdInput, password: passwordInput });
   };
 
   const kakaoLoginHandler = () => {
