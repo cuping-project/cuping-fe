@@ -268,45 +268,11 @@ const Home: React.FC = () => {
                       <div className="bean-name text-xl p-2 ml-3">
                         {card.beanOriginName} {card.beanName}
                       </div>
-                      <div className="flex justify-end p-2">
-                        <div className="stars mx-2">⭐️ 3</div>
-                        {loggedin ? (
-                          isHeartPressed ? (
-                            <div
-                              className="heart mx-2 cursor-pointer w-[1.2rem]"
-                              onClick={heartHandler}
-                              role="presentation"
-                            >
-                              <img
-                                src={heartFill}
-                                className="m-[0.2rem]"
-                                alt=""
-                              />
-                            </div>
-                          ) : (
-                            <div
-                              className="heart mx-2 cursor-pointer w-[1.2rem]"
-                              onClick={heartHandler}
-                              role="presentation"
-                            >
-                              <img src={heart} className="m-[0.2rem]" alt="" />
-                            </div>
-                          )
-                        ) : (
-                          <div>
-                            <button
-                              type="submit"
-                              onClick={openModal}
-                              className="w-[1.2rem]"
-                            >
-                              <img src={heart} className="m-[0.2rem]" alt="" />
-                            </button>
-                            <LoginModal
-                              isOpen={isLoginModalOpen}
-                              closeModal={closeModal}
-                            />
-                          </div>
-                        )}
+                      <div className="flex items-center justify-end p-2">
+                        <div className="heart mx-2 cursor-pointer w-[1rem]">
+                          <img src={heartFill} className="m-[0.2rem]" alt="" />
+                        </div>
+                        <div>{card.likesCount}</div>
                       </div>
                     </div>
                     <div className="card-labels p-2 flex">

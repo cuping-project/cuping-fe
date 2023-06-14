@@ -72,7 +72,7 @@ const Header: React.FC = () => {
             </div>
             <button
               className="logout w-[2rem] relative z-10"
-              onClick={logoutHandler}
+              // onClick={logoutHandler}
               type="submit"
             >
               <img src={logout} className="cursor-pointer" alt="" />
