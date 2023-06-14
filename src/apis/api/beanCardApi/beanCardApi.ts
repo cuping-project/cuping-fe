@@ -8,7 +8,6 @@ const getBeanCardApi = async () => {
     const { data } = await axiosInstance.get(
       `${import.meta.env.VITE_BE_SERVER}/main/beans/search?keyword=`,
     );
-    console.log('✨ ‣ getBeanCardApi ‣ data:', data);
     return data;
   } catch (error) {
     console.log('✨ ‣ getBeanCardApi ‣ error:', error);
@@ -16,12 +15,10 @@ const getBeanCardApi = async () => {
   }
 };
 
-const searchBeanCardApi = async searchKeyword => {
+const searchBeanCardApi = async keyword => {
   try {
-    const { data } = await axios.get(
-      `${
-        import.meta.env.VITE_BE_SERVER
-      }/main/beans/search?keyword=${searchKeyword}`,
+    const { data } = await axiosInstance.get(
+      `${import.meta.env.VITE_BE_SERVER}/main/beans/search?keyword=${keyword}`,
     );
     return data.data;
   } catch (error) {

@@ -16,7 +16,10 @@ import {
 } from '../../apis/api/beanCardApi/beanCardApi';
 import { searchKeywordState } from '../../recoil/atom/searchKeywordState';
 import { loginState } from '../../recoil/atom/loginState';
-import { GetBeanCardService } from '../../apis/services/BeanCardService/BeanCardService';
+import {
+  GetBeanCardService,
+  SearchBeanCardService,
+} from '../../apis/services/BeanCardService/BeanCardService';
 
 const Home: React.FC = () => {
   // 로그인 상태 변수
@@ -46,11 +49,6 @@ const Home: React.FC = () => {
   const [isTanSelected, setIsTanSelected] = useState(false); // 탄맛
   const [isDanSelected, setIsDanSelected] = useState(false); // 단맛
   const [isDeSelected, setIsDeSelected] = useState(false); // 디카페인
-
-  // 메인페이지를 처음 로딩 되었을때 카드를 받아옴
-  const { isLoading, isError } = GetBeanCardService();
-  if (isLoading) return <div>로딩중...!!!</div>;
-  if (isError) return <div>에러 발생함 !!!</div>;
 
   // 모달 상태 함수
   const openModal = () => {
@@ -91,19 +89,6 @@ const Home: React.FC = () => {
     setIsAllSelected(!isAllSelected);
   };
 
-  // 검색버튼 클릭 시 필터링
-  const handleSearch = async () => {
-    try {
-      const response = await searchBeanCardApi(searchKeyword);
-      setCards(response);
-      setSearchKeyword('');
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // const handleSearch = async () => {};
-
   //  메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
   useEffect(() => {
     const checkLoginStatus = () => {
@@ -118,15 +103,37 @@ const Home: React.FC = () => {
     checkLoginStatus();
   }, []);
 
-  // 메인페이지가 처음 로딩되었을때 카드를 받아옴
-  // useEffect(() => {
-  //   const fetchCard = async () => {
-  //     const response = await getBeanCardApi();
-  //     setCards(response.data);
-  //   };
+  // 메인페이지를 처음 로딩 되었을때 카드를 받아옴
+  // const { isLoading, isError } = GetBeanCardService();
+  // if (isLoading) return <div>로딩중...!!!</div>;
+  // if (isError) return <div>에러 발생함 !!!</div>;
+  useEffect(() => {
+    const fetchBeanCard = async () => {
+      try {
+        const { data } = await getBeanCardApi();
+        setCards(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchBeanCard();
+  }, []);
 
-  //   fetchCard();
-  // }, []);
+  // 검색버튼 클릭 시 검색어를 통해 카드를 받아옴
+  // const searchHandler = () => {
+  //   SearchBeanCardService();
+  // };
+
+  // 검색버튼 클릭 시 검색어를 통해 카드를 받아옴
+  const searchHandler = async () => {
+    try {
+      const response = await searchBeanCardApi(searchKeyword);
+      setCards(response);
+      setSearchKeyword('');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="main-container">
@@ -150,13 +157,13 @@ const Home: React.FC = () => {
               onChange={e => setSearchKeyword(e.target.value)}
               onKeyDown={e => {
                 if (e.key === 'Enter') {
-                  handleSearch();
+                  searchHandler();
                 }
               }}
             />
             <button
               className="search-btn absolute right-[1.5rem] bottom-[1.7rem]"
-              onClick={handleSearch}
+              onClick={searchHandler}
               type="submit"
             >
               검색

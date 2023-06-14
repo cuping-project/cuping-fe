@@ -8,14 +8,7 @@ import beniImg from '../../assets/img/beni.svg';
 import logout from '../../assets/img/logout.png';
 import { loginState } from '../../recoil/atom/loginState';
 import { cardState } from '../../recoil/atom/cardState';
-
-interface Card {
-  id: number;
-  beanImage: string;
-  beanOriginName: string;
-  beanName: string;
-  hashTag: string;
-}
+import { ICard } from './types';
 
 const Header: React.FC = () => {
   const [loggined, setLoggedin] = useRecoilState(loginState);
@@ -34,7 +27,7 @@ const Header: React.FC = () => {
     }
   };
 
-  // 로고 버튼 눌렀을때 이벤트 처리
+  // 로고 클릭시 메인 페이지로 이동
   const handleHomePage = async () => {
     try {
       const searchResults = await getSearchResults();
@@ -45,28 +38,20 @@ const Header: React.FC = () => {
     }
   };
 
-  const handleSignupPage = () => {
-    navigate('/signup');
-  };
-
-  const handleLoginPage = () => {
-    navigate('/login');
-  };
-
-  const logoutHandler = () => {
-    const accessToken = Cookies.get('ACCESS_KEY');
-    console.log('✨ ‣ logoutHandler ‣ accessToken:', accessToken);
-    Cookies.remove('ACCESS_KEY');
-    console.log(Cookies);
-    setLoggedin(false);
-  };
+  // const logoutHandler = () => {
+  //   const accessToken = Cookies.get('ACCESS_KEY');
+  //   console.log('✨ ‣ logoutHandler ‣ accessToken:', accessToken);
+  //   Cookies.remove('ACCESS_KEY');
+  //   console.log(Cookies);
+  //   setLoggedin(false);
+  // };
 
   return (
     <div className="main-container w-full p-10">
       <div className="header w-full flex justify-between items-center mx-auto">
         <div
           className="logo m-2 relative z-10 flex justify-center items-center"
-          onClick={handleHomePage}
+          onClick={() => navigate('/')}
           role="presentation"
         >
           <button type="button">
@@ -98,7 +83,7 @@ const Header: React.FC = () => {
             <div
               className="signup text-primary-color-orange
           m-2 p-2 relative z-10 cursor-pointer"
-              onClick={handleSignupPage}
+              onClick={() => navigate('/signup')}
               role="presentation"
             >
               회원가입
@@ -107,7 +92,7 @@ const Header: React.FC = () => {
               className="login bg-primary-color-orange
             m-2 px-4 py-2 rounded-lg relative z-10
             cursor-pointer text-white"
-              onClick={handleLoginPage}
+              onClick={() => navigate('/login')}
               role="presentation"
             >
               로그인
