@@ -1,6 +1,9 @@
 import { useQuery } from 'react-query';
 import { useRecoilState } from 'recoil';
-import { getBeanCardApi } from '../../api/beanCardApi/beanCardApi';
+import {
+  getBeanCardApi,
+  searchBeanCardApi,
+} from '../../api/beanCardApi/beanCardApi';
 import { cardState } from '../../../recoil/atom/cardState';
 import { searchKeywordState } from '../../../recoil/atom/searchKeywordState';
 
@@ -10,25 +13,17 @@ const GetBeanCardService = () => {
     onSuccess: data => {
       setCards(data.data);
     },
-    onError: error => {
-      console.log(error);
+  });
+};
+
+const SearchBeanCardService = () => {
+  const [cards, setCards] = useRecoilState(cardState);
+  const [searchKeyword, setSearchKeyword] = useRecoilState(searchKeywordState);
+  return useQuery('searchBeanCard', () => searchBeanCardApi(searchKeyword), {
+    onSuccess: data => {
+      setCards(data.data);
     },
   });
 };
 
-// const SearchBeanCardService = () => {
-//   const [cards, setCards] = useRecoilState(cardState);
-//   const [searchKeyword, setSearchKeyword] = useRecoilState(searchKeywordState);
-//   return useQuery('searchBeanCard', SearchBeanCardApi, {
-//     onSuccess: data => {
-//       setCards(data);
-//       setSearchKeyword('');
-//     },
-//     onError: error => {
-//       console.log(error);
-//     },
-//     enabled: true,
-//   });
-// };
-
-export { GetBeanCardService };
+export { GetBeanCardService, SearchBeanCardService };
