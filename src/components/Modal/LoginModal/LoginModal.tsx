@@ -1,28 +1,32 @@
 import React from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 import styles from './LoginModal.module.css';
+import { isLoginModalState } from '../../../recoil/atom/modalState';
 
-interface ModalProps {
-  isOpen: boolean;
-  closeModal: () => void;
-}
+const LoginModal: React.FC = () => {
+  const navigate = useNavigate();
+  const [isLoginModalOpen, setIsLoginModalOpen] =
+    useRecoilState(isLoginModalState);
 
-const Modal: React.FC<ModalProps> = ({ isOpen, closeModal }) => {
   // 외부영역을 클릭했을 때 모달창 꺼짐
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      closeModal();
+      setIsLoginModalOpen(false);
     }
   };
 
-  const navigate = useNavigate();
-  const homeHandler = () => {
+  // 로그인 페이지로 이동
+  const loginHandler = () => {
+    setIsLoginModalOpen(false);
     navigate('/login');
   };
 
   return (
     <div
-      className={`${styles.modalContainer} ${isOpen ? 'visible' : 'hidden'}`}
+      className={`${styles.modalContainer} ${
+        isLoginModalOpen ? 'visible' : 'hidden'
+      }`}
     >
       <div
         className={styles.modalWrapper}
@@ -37,14 +41,14 @@ const Modal: React.FC<ModalProps> = ({ isOpen, closeModal }) => {
             </div>
             <div className={styles.loginAnswer}>
               <div
-                onClick={closeModal}
+                onClick={handleOverlayClick}
                 className={styles.loginCancel}
                 role="presentation"
               >
                 취소
               </div>
               <div
-                onClick={homeHandler}
+                onClick={loginHandler}
                 role="presentation"
                 className={styles.loginOk}
               >
@@ -58,4 +62,4 @@ const Modal: React.FC<ModalProps> = ({ isOpen, closeModal }) => {
   );
 };
 
-export default Modal;
+export default LoginModal;

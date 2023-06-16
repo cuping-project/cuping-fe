@@ -1,21 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import { useRecoilState } from 'recoil';
 import Header from '../../components/Header/Header';
 import profileImage from '../../assets/img/detail-profile-card.png';
 import Kakaomap from '../../components/KakaoMap/Kakaomap';
 import heartFill from '../../assets/img/heart-fill.png';
+import heart from '../../assets/img/heart.png';
 import coffeeGraph from '../../assets/img/coffee-graph.png';
 import LoginModal from '../../components/Modal/LoginModal/LoginModal';
 import cafe1 from '../../assets/img/cafe-image01.jpg';
 import cafe2 from '../../assets/img/cafe-image02.jpg';
+import { loginState } from '../../recoil/atom/loginState';
+import { likeStatusState, likesCountState } from '../../recoil/atom/likeState';
+import { LikeMutation } from '../../apis/services/LikeService/LikeService';
+import CommentModal from '../../components/Modal/CommentModal/CommentModal';
+import {
+  isCommentModalState,
+  isLoginModalState,
+  isMoreCafeModalState,
+} from '../../recoil/atom/modalState';
+import MoreCafeModal from '../../components/Modal/MoreCafeModal/MoreCafeModal';
+import myPageApi from '../../apis/api/myPageApi/myPageApi';
+import ViewHeartService from '../../apis/services/viewHeratService/ViewHeartServce';
 
 const Details: React.FC = () => {
   const navigate = useNavigate();
-  // 로그인이 되었는지 확인
-  const [loggedin, setLoggedin] = useState(false);
+  // 로그인이 되었는지 확인하기 위한 상태 변수
+  const [loggedin, setLoggedin] = useRecoilState(loginState);
+
+  // 좋아요 버튼 상태를 담기 위한 상태 변수
+  const [likeStatus, setLikeStatus] = useRecoilState(likeStatusState);
+  const [likesCount, setLikesCount] = useRecoilState(likesCountState);
+
+  // 현재 URL의 파라미터를 가져오기 위한 상태 변수
+  const { id: pageId } = useParams();
+
+  // 카드를 담기 위한 상태 변수
+  const [card, setCard] = useState([]);
 
   // 메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
   useEffect(() => {
@@ -32,27 +56,52 @@ const Details: React.FC = () => {
   }, []);
 
   // 로그인 모달 관련된 변수
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] =
+    useRecoilState(isLoginModalState);
 
-  const openModal = () => {
+  const openLoginModal = () => {
     setIsLoginModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsLoginModalOpen(false);
+  // 댓글 모달 관련된 변수
+  const [isCommentModalOpen, setIsCommentModalOpen] =
+    useRecoilState(isCommentModalState);
+
+  const openCommentModal = () => {
+    setIsCommentModalOpen(true);
   };
 
-  const { id } = useParams();
-  const [card, setCard] = useState();
+  // 카페 더보기 모달 관련된 변수
+  const [isMoreCafeModalOpen, setIsMoreCafeModalOpen] =
+    useRecoilState(isMoreCafeModalState);
 
-  // console.log(id);
+  const openMoreCafeModal = () => {
+    setIsMoreCafeModalOpen(true);
+  };
+
+  // 좋아요 기능
+  const likeMutation = LikeMutation();
+  const handleLike = cardId => {
+    // 로그인 상태 체크
+    if (!loggedin) {
+      openLoginModal();
+    }
+
+    // 현재 좋아요 상태 반전
+    const newLikeStatus = !likeStatus;
+    likeMutation.mutate(cardId, {
+      onSuccess: data => {
+        setLikeStatus(newLikeStatus);
+      },
+    });
+  };
 
   // 상세 데이터 가져오기
-  const { isLoading, data } = useQuery(['cardDetail', id], async () => {
+  const { isLoading, data } = useQuery(['cardDetail', pageId], async () => {
     const response = await axios.get(
-      `${import.meta.env.VITE_BE_SERVER}/main/bean/${id}?address=`,
+      `${import.meta.env.VITE_BE_SERVER}/main/bean/${pageId}?address=`,
     );
-    // console.log(response.data.data);
+    console.log(response.data.data);
     return response.data.data;
   });
 
@@ -62,13 +111,24 @@ const Details: React.FC = () => {
     }
   }, [data]);
 
+  // 현재 좋아요 상태를 가져오기 위한 useEffect
+  useEffect(() => {
+    const fetchLikeStatus = async () => {
+      const response = await myPageApi();
+      const { heartList } = response?.data.data;
+      setLikeStatus(heartList.includes(parseInt(pageId)));
+    };
+
+    fetchLikeStatus();
+  }, [pageId]);
+
   if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="main-container">
       <div className="flex flex-col mx-[5rem] max-w-[1440px]">
         <div onClick={() => navigate('/')} role="presentation">
-          <Header loggedin={loggedin} />
+          <Header />
         </div>
         <hr />
         <div className="inner-container w-full justify-center mx-auto">
@@ -97,13 +157,24 @@ const Details: React.FC = () => {
                   <div className="flex text-[2.5rem] font-semibold">
                     {data.bean.origin} {data.bean.beanName}
                   </div>
-                  <div className="flex justify-end items-center">
-                    <img
-                      src={heartFill}
-                      className="w-[1.4rem] h-[1.4rem] mx-[0.4rem]"
-                      alt=""
-                    />
-                    <div>{data.bean.likesCount}</div>
+                  <div
+                    className="flex justify-end items-center cursor-pointer"
+                    onClick={() => handleLike(pageId)}
+                    role="presentation"
+                  >
+                    {likeStatus ? (
+                      <img
+                        src={heartFill}
+                        className="w-[1.4rem] h-[1.4rem] mx-[0.4rem]"
+                        alt=""
+                      />
+                    ) : (
+                      <img
+                        src={heart}
+                        className="w-[1.4rem] h-[1.4rem] mx-[0.4rem]"
+                        alt=""
+                      />
+                    )}
                   </div>
                 </div>
                 <div className="flex">
@@ -130,26 +201,28 @@ const Details: React.FC = () => {
                 <div>건의 커핑 노트</div>
               </div>
               {loggedin ? (
-                <div
-                  className="middle-review-button cursor-pointer border-[0.07rem] flex items-center font-semibold
+                <>
+                  <div
+                    className="middle-review-button cursor-pointer border-[0.07rem] flex items-center font-semibold
               border-primary-color-orange rounded-xl m-2 py-1 px-4 text-primary-color-orange text-[1.25rem]"
-                >
-                  + 리뷰 추가하기
-                </div>
+                    onClick={openCommentModal}
+                    role="presentation"
+                  >
+                    + 리뷰 추가하기
+                  </div>
+                  <CommentModal />
+                </>
               ) : (
                 <>
                   <div
                     className="middle-review-button cursor-pointer border-[0.07rem] flex items-center font-semibold
               border-primary-color-orange rounded-xl m-2 py-1 px-4 text-primary-color-orange text-[1.25rem]"
-                    onClick={openModal}
+                    onClick={openLoginModal}
                     role="presentation"
                   >
                     + 리뷰 추가하기
                   </div>
-                  <LoginModal
-                    isOpen={isLoginModalOpen}
-                    closeModal={closeModal}
-                  />
+                  <LoginModal />
                 </>
               )}
             </div>
@@ -162,7 +235,6 @@ const Details: React.FC = () => {
                 <div className="card-contents">
                   <div className="card-nickname">커핑커핑닉네임</div>
                   <div className="flex mb-2">
-                    <div className="card-star mr-4">⭐️⭐️⭐️⭐️⭐️</div>
                     <div className="card-days text-[0.8rem] flex items-end">
                       2023. 06. 01
                     </div>
@@ -180,7 +252,6 @@ const Details: React.FC = () => {
                 <div className="card-contents">
                   <div className="card-nickname">커핑커핑닉네임</div>
                   <div className="flex mb-2">
-                    <div className="card-star mr-4">⭐️⭐️⭐️⭐️⭐️</div>
                     <div className="card-days text-[0.8rem] flex items-end">
                       2023. 06. 01
                     </div>
@@ -199,7 +270,6 @@ const Details: React.FC = () => {
                 <div className="card-contents">
                   <div className="card-nickname">커핑커핑닉네임</div>
                   <div className="flex mb-2">
-                    <div className="card-star mr-4">⭐️⭐️⭐️⭐️⭐️</div>
                     <div className="card-days text-[0.8rem] flex items-end">
                       2023. 06. 01
                     </div>
@@ -242,28 +312,15 @@ const Details: React.FC = () => {
                 <span className="text-primary-color-orange">2</span>
                 개의 카페가 있습니다.
               </div>
-              {loggedin ? (
-                <button
-                  type="button"
-                  className="border border-primary-color-orange text-primary-color-orange py-[0.5rem] px-[1.25rem] rounded-xl"
-                >
-                  + 더보기
-                </button>
-              ) : (
-                <>
-                  <button
-                    onClick={openModal}
-                    type="button"
-                    className="border border-primary-color-orange text-primary-color-orange py-[0.5rem] px-[1.25rem] rounded-xl"
-                  >
-                    + 더보기
-                  </button>
-                  <LoginModal
-                    isOpen={isLoginModalOpen}
-                    closeModal={closeModal}
-                  />
-                </>
-              )}
+              <div
+                className="border border-primary-color-orange text-primary-color-orange
+                py-[0.5rem] px-[1.25rem] rounded-xl cursor-pointer"
+                onClick={openMoreCafeModal}
+                role="presentation"
+              >
+                + 더보기
+              </div>
+              <MoreCafeModal />
             </div>
             <div className="cardBox grid grid-cols-4 gap-[0.8125rem]">
               <div className="cafeCard object-cover shadow-lg h-[20.825rem] rounded-2xl">
