@@ -6,6 +6,8 @@ import OwnerPage from '../pages/OwnerPage/OwnerPage';
 import UserSignup from '../pages/Signup/UserSignup/UserSignup';
 import BeanStats from '../components/BeanStats/BeanStats';
 import Details from '../pages/Details/Details';
+import AdminLogin from '../pages/Admin/AdminLogin/AdminLogin';
+import AdminMain from '../pages/Admin/AdminMain/AdminMain';
 
 const Router = () => {
   return (
@@ -17,6 +19,8 @@ const Router = () => {
         <Route path="/signup" element={<UserSignup />} />
         <Route path="/bean" element={<BeanStats />} />
         <Route path="/details/:id" element={<Details />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminMain />} />
       </Routes>
     </BrowserRouter>
   );

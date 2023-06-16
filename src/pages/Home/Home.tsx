@@ -4,22 +4,16 @@ import { Link } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import pinIcon from '../../assets/img/pin.svg';
 import styles from './Home.module.css';
-import LoginModal from '../../components/Modal/LoginModal/LoginModal';
 import Header from '../../components/Header/Header';
-import heart from '../../assets/img/heart.png';
 import heartFill from '../../assets/img/heart-fill.png';
-import { ICard } from './types';
 import { cardState } from '../../recoil/atom/cardState';
-import {
-  searchBeanCardApi,
-  getBeanCardApi,
-} from '../../apis/api/beanCardApi/beanCardApi';
 import { searchKeywordState } from '../../recoil/atom/searchKeywordState';
 import { loginState } from '../../recoil/atom/loginState';
 import {
   GetBeanCardService,
   SearchBeanCardService,
 } from '../../apis/services/BeanCardService/BeanCardService';
+import showCardState from '../../recoil/atom/showCardState';
 
 const Home: React.FC = () => {
   // 로그인 상태 변수
@@ -49,6 +43,9 @@ const Home: React.FC = () => {
   const [isTanSelected, setIsTanSelected] = useState(false); // 탄맛
   const [isDanSelected, setIsDanSelected] = useState(false); // 단맛
   const [isDeSelected, setIsDeSelected] = useState(false); // 디카페인
+
+  // 상태변수
+  const [showCard, setShowCard] = useRecoilState(showCardState);
 
   // 모달 상태 함수
   const openModal = () => {
@@ -104,36 +101,37 @@ const Home: React.FC = () => {
   }, []);
 
   // 메인페이지를 처음 로딩 되었을때 카드를 받아옴
-  // const { isLoading, isError } = GetBeanCardService();
-  // if (isLoading) return <div>로딩중...!!!</div>;
-  // if (isError) return <div>에러 발생함 !!!</div>;
-  useEffect(() => {
-    const fetchBeanCard = async () => {
-      try {
-        const { data } = await getBeanCardApi();
-        setCards(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchBeanCard();
-  }, []);
+  GetBeanCardService();
 
-  // 검색버튼 클릭 시 검색어를 통해 카드를 받아옴
-  // const searchHandler = () => {
-  //   SearchBeanCardService();
-  // };
-
-  // 검색버튼 클릭 시 검색어를 통해 카드를 받아옴
-  const searchHandler = async () => {
-    try {
-      const response = await searchBeanCardApi(searchKeyword);
-      setCards(response);
-      setSearchKeyword('');
-    } catch (error) {
-      console.log(error);
-    }
+  // 검색버튼 클릭 시 검색어를 통해 카드를 받아 옴
+  const searchHandler = () => {
+    setShowCard(true);
   };
+  SearchBeanCardService();
+
+  // 메인페이지를 처음 로딩 되었을때 카드를 받아옴
+  // useEffect(() => {
+  //   const fetchBeanCard = async () => {
+  //     try {
+  //       const { data } = await getBeanCardApi();
+  //       setCards(data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchBeanCard();
+  // }, []);
+
+  // 검색버튼 클릭 시 검색어를 통해 카드를 받아옴
+  // const searchHandler = async () => {
+  //   try {
+  //     const response = await searchBeanCardApi(searchKeyword);
+  //     setCards(response);
+  //     setSearchKeyword('');
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <div className="main-container">
@@ -264,11 +262,11 @@ const Home: React.FC = () => {
                         className="w-full h-[14rem] object-cover rounded-[12px]"
                       />
                     </div>
-                    <div className="card-name grid grid-cols-2">
-                      <div className="bean-name text-xl p-2 ml-3">
+                    <div className="card-name grid grid-cols-10">
+                      <div className="bean-name text-xl p-2 ml-3 col-span-7">
                         {card.beanOriginName} {card.beanName}
                       </div>
-                      <div className="flex items-center justify-end p-2">
+                      <div className="flex items-center justify-end p-2 col-span-3">
                         <div className="heart mx-2 cursor-pointer w-[1rem]">
                           <img src={heartFill} className="m-[0.2rem]" alt="" />
                         </div>
