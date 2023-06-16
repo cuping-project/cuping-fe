@@ -15,9 +15,8 @@ const LoginService = () => {
   const navigate = useNavigate();
   const loginMutation = useMutation(loginApi, {
     onSuccess: data => {
-      // Cookies.set('accessToken', data.accessToken);
-      // Cookies.set('refreshToken', data.refreshToken);
-      console.log(data);
+      Cookies.set('ACCESS_KEY', data.access_key);
+      Cookies.set('REFRESH_KEY', data.refresh_key);
       navigate('/');
     },
     onError: error => {
