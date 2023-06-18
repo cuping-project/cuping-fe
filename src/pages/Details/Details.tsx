@@ -25,6 +25,7 @@ import {
 import MoreCafeModal from '../../components/Modal/MoreCafeModal/MoreCafeModal';
 import myPageApi from '../../apis/api/myPageApi/myPageApi';
 import ViewHeartService from '../../apis/services/viewHeratService/ViewHeartServce';
+import beanPageIdState from '../../recoil/atom/beanPageIdState';
 
 const Details: React.FC = () => {
   const navigate = useNavigate();
@@ -40,6 +41,9 @@ const Details: React.FC = () => {
 
   // 카드를 담기 위한 상태 변수
   const [card, setCard] = useState([]);
+
+  // 댓글을 담기 위한 변수
+  const [commentList, setCommentList] = useState('');
 
   // 메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
   useEffect(() => {
@@ -101,7 +105,6 @@ const Details: React.FC = () => {
     const response = await axios.get(
       `${import.meta.env.VITE_BE_SERVER}/main/bean/${pageId}?address=`,
     );
-    console.log(response.data.data);
     return response.data.data;
   });
 
@@ -121,6 +124,22 @@ const Details: React.FC = () => {
 
     fetchLikeStatus();
   }, [pageId]);
+
+  // 댓글 가져오기
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BE_SERVER}/main/bean/${pageId}?address=`,
+        );
+        setCommentList(response.data.data.commentList);
+      } catch (error) {
+        throw error;
+      }
+    };
+
+    fetchComments();
+  }, []);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -153,8 +172,8 @@ const Details: React.FC = () => {
                 >
                   {data.bean.hashTag}
                 </div>
-                <div className="grid grid-cols-2 my-[1rem]">
-                  <div className="flex text-[2.5rem] font-semibold">
+                <div className="flex justify-between my-[1rem]">
+                  <div className="flex text-[2rem] font-semibold">
                     {data.bean.origin} {data.bean.beanName}
                   </div>
                   <div
@@ -182,7 +201,7 @@ const Details: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="top-text text-[30px] mb-7">
+            <div className="top-text text-[1.4rem] mb-7">
               {data.bean.beanInfo}
             </div>
             <button
