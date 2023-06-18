@@ -6,6 +6,7 @@ import SearchAddress from '../../../components/Modal/SearchAddress/SearchAddress
 import { ownerSignupApi } from '../../../apis/api/signupApi/signupApi';
 import useInput from '../../../hooks/useInput';
 import errorIcon from '../../../assets/img/warning.svg';
+import checkIcon from '../../../assets/img/check.svg';
 import { SignupOwnerService } from '../../../apis/services/SignupService/SignupService';
 
 // todo recoil로 상태관리 하기
@@ -175,13 +176,25 @@ const OwnerSignup = ({
             }`}
           />
         </label>
-        {passwordCheckError && (
+        {passwordCheckError &&
+        passwordCheckError === '비밀번호가 일치하지 않습니다.' ? (
           <div className="flex items-center justify-between">
             <p className="text-xs text-red-500 flex items-center">
               {passwordCheckError}
             </p>
             <img
               src={errorIcon}
+              className="w-[18px] flex items-center"
+              alt=""
+            />
+          </div>
+        ) : (
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-green-500 flex items-center">
+              {passwordCheckError}
+            </p>
+            <img
+              src={checkIcon}
               className="w-[18px] flex items-center"
               alt=""
             />

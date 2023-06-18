@@ -7,6 +7,7 @@ import OwnerSignup from '../OwnerSignup/OwnerSignup';
 import errorIcon from '../../../assets/img/warning.svg';
 import cupingLogo from '../../../assets/img/cupping-logo-icon02.svg';
 import bini from '../../../assets/img/beni.svg';
+import checkIcon from '../../../assets/img/check.svg';
 import {
   CheckUserIdService,
   SignupUserService,
@@ -41,16 +42,23 @@ const UserSignup = () => {
 
   // 비밀번호 일치 검사
   useEffect(() => {
-    if (!!passwordCheck && passwordCheck !== password) {
+    if (!passwordCheck) {
+      setPasswordCheckError('비밀번호를 입력해주세요.');
+    } else if (!!passwordCheck && passwordCheck !== password) {
       setPasswordCheckError('비밀번호가 일치하지 않습니다.');
     } else {
-      setPasswordCheckError(null);
+      setPasswordCheckError('비밀번호가 일치합니다.');
     }
   }, [password, passwordCheck]);
 
   // 아이디 중복 검사
   const { mutate: CheckUserMutate } = CheckUserIdService();
   const idCheckBtnClick = () => {
+    if (!userId) {
+      alert('아이디를 입력하세요.');
+      return;
+    }
+
     CheckUserMutate({ userId });
   };
 
@@ -58,26 +66,36 @@ const UserSignup = () => {
   const { mutate: SignupUserMutate } = SignupUserService();
   const signupBtnClick = (e: any) => {
     e.preventDefault();
-    const usernameRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d_]{5,12}$/;
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!?_]{8,12}$/;
+    const nicknameRegex = /^[a-z0-9]{5,12}$/i;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,12}$/;
 
     if (!nickname || !password || !userId) {
       alert('아이디,닉네임과 비밀번호를 모두 입력하세요.');
-    } else if (!usernameRegex.test(nickname)) {
+      return;
+    }
+
+    if (!nicknameRegex.test(nickname)) {
       alert('닉네임은 최소 5~12자, 알파벳 소문자 및 숫자로 구성되어야 합니다.');
-    } else if (!passwordRegex.test(password)) {
+      return;
+    }
+
+    if (!passwordRegex.test(password)) {
       alert(
         '비밀번호는 최소 8~12자, 알파벳 대소문자 및 숫자로 구성되어야 합니다.',
       );
-    } else if (password !== passwordCheck) {
-      alert('비밀번호가 일치하지 않습니다.');
-    } else {
-      SignupUserMutate({
-        userId,
-        nickname,
-        password,
-      });
+      return;
     }
+
+    if (password !== passwordCheck) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    SignupUserMutate({
+      userId,
+      nickname,
+      password,
+    });
   };
 
   // 일반/사장 가입 스위칭
@@ -191,7 +209,7 @@ const UserSignup = () => {
                         ref={nicknameRef}
                         id="nkInput"
                         type="text"
-                        placeholder="닉네임을 입력하세요."
+                        placeholder="닉네임은 최소 5~12자, 알파벳 소문자 및 숫자"
                         className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                       />
                     </label>
@@ -207,7 +225,7 @@ const UserSignup = () => {
                         ref={PasswordRef}
                         id="pwInput"
                         type="password"
-                        placeholder="비밀번호 입력(영문,숫자 조합 최소8자)"
+                        placeholder="비밀번호는 최소 8~12자, 알파벳 대소문자 및 숫자"
                         className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                       />
                     </label>
@@ -228,20 +246,33 @@ const UserSignup = () => {
                             type="password"
                             placeholder="비밀번호를 다시 입력하세요."
                             className={`${
-                              passwordCheckError
+                              passwordCheckError ===
+                              '비밀번호가 일치하지 않습니다.'
                                 ? 'ring-red-500 ring-1 border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full'
-                                : 'border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full'
+                                : 'ring-green-500 ring-1 border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full'
                             }`}
                           />
                         </div>
                       </label>
-                      {passwordCheckError && (
+                      {passwordCheckError ===
+                      '비밀번호가 일치하지 않습니다.' ? (
                         <div className="flex items-center justify-between">
                           <p className="text-xs text-red-500 flex items-center">
                             {passwordCheckError}
                           </p>
                           <img
                             src={errorIcon}
+                            className="w-[18px] flex items-center"
+                            alt=""
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs text-green-500 flex items-center">
+                            {passwordCheckError}
+                          </p>
+                          <img
+                            src={checkIcon}
                             className="w-[18px] flex items-center"
                             alt=""
                           />

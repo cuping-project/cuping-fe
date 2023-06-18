@@ -30,6 +30,7 @@ const SignupUserService = () => {
   return useMutation(userSignupApi, {
     onSuccess: (data: any) => {
       alert(data.data.message);
+      navigate('/login');
     },
     onError: error => {
       console.log(error);

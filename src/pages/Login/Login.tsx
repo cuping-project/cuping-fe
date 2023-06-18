@@ -30,14 +30,6 @@ const Login = () => {
     checkLoginStatus();
   }, []);
 
-  const handleHomePage = () => {
-    navigate('/');
-  };
-
-  const handleSignupPage = () => {
-    navigate('/signup');
-  };
-
   const userIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setUserIdInput(e.target.value);
   };
@@ -56,7 +48,7 @@ const Login = () => {
     // 정규식 검사
     // 앞뒤 공백이 있는지 체크
     if (userIdInput.trim() === '' || passwordInput.trim() === '') {
-      return;
+      alert(`아이디와 비밀번호를 입력해주세요.`);
     }
 
     loginMutate({ userId: userIdInput, password: passwordInput });
@@ -86,7 +78,7 @@ const Login = () => {
                   src={cupingLogo}
                   alt="Logo"
                   className="w-[10rem] cursor-pointer mb-10"
-                  onClick={handleHomePage}
+                  onClick={() => navigate('/')}
                   role="presentation"
                 />
                 <div className="mb-20">
@@ -169,7 +161,7 @@ const Login = () => {
                           <button
                             type="button"
                             className="text-primary-color-orange inline-block mr-2 text-sm"
-                            onClick={handleSignupPage}
+                            onClick={() => navigate('/signup')}
                           >
                             회원가입 하러 가기
                           </button>

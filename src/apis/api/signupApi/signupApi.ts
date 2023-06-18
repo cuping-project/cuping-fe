@@ -1,5 +1,5 @@
 import axiosInstance from '../../utils/axiosInstance';
-import { IUsers, IOwner, UserId } from './types';
+import { IUsers, IOwner } from './types';
 
 /**
  * 일반회원의 회원가입을 시도하는 함수
