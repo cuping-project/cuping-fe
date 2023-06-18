@@ -6,6 +6,7 @@ import pinIcon from '../../assets/img/pin.svg';
 import styles from './Home.module.css';
 import Header from '../../components/Header/Header';
 import heartFill from '../../assets/img/heart-fill.png';
+import searchNone from '../../assets/img/search-none.png';
 import { cardState } from '../../recoil/atom/cardState';
 import { searchKeywordState } from '../../recoil/atom/searchKeywordState';
 import { loginState } from '../../recoil/atom/loginState';
@@ -14,6 +15,12 @@ import {
   SearchBeanCardService,
 } from '../../apis/services/BeanCardService/BeanCardService';
 import showCardState from '../../recoil/atom/showCardState';
+import myPageApi from '../../apis/api/myPageApi/myPageApi';
+import nicknameState from '../../recoil/atom/nicknameState';
+import {
+  getBeanCardApi,
+  searchBeanCardApi,
+} from '../../apis/api/beanCardApi/beanCardApi';
 
 const Home: React.FC = () => {
   // 로그인 상태 변수
@@ -24,6 +31,9 @@ const Home: React.FC = () => {
 
   // 검색어 상태 변수
   const [searchKeyword, setSearchKeyword] = useRecoilState(searchKeywordState);
+
+  // nickname 받아오기 위한 상태 변수
+  const [nickname, setNickname] = useRecoilState(nicknameState);
 
   // 로그인 모달 관련된 변수
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -100,38 +110,52 @@ const Home: React.FC = () => {
     checkLoginStatus();
   }, []);
 
-  // 메인페이지를 처음 로딩 되었을때 카드를 받아옴
-  GetBeanCardService();
+  // nickname 받아오기
+  useEffect(() => {
+    const fetchNickname = async () => {
+      try {
+        const response = await myPageApi();
+        setNickname(response.data.data.nickname);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-  // 검색버튼 클릭 시 검색어를 통해 카드를 받아 옴
-  const searchHandler = () => {
-    setShowCard(true);
-  };
-  SearchBeanCardService();
+    fetchNickname();
+  }, [nickname]);
 
   // 메인페이지를 처음 로딩 되었을때 카드를 받아옴
-  // useEffect(() => {
-  //   const fetchBeanCard = async () => {
-  //     try {
-  //       const { data } = await getBeanCardApi();
-  //       setCards(data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchBeanCard();
-  // }, []);
+  useEffect(() => {
+    const fetchBeanCard = async () => {
+      try {
+        const { data } = await getBeanCardApi();
+        setCards(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchBeanCard();
+  }, []);
 
   // 검색버튼 클릭 시 검색어를 통해 카드를 받아옴
-  // const searchHandler = async () => {
-  //   try {
-  //     const response = await searchBeanCardApi(searchKeyword);
-  //     setCards(response);
-  //     setSearchKeyword('');
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
+  const searchHandler = async () => {
+    try {
+      const response = await searchBeanCardApi(searchKeyword);
+      console.log(response.data);
+      setCards(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // 메인페이지를 처음 로딩 되었을때 카드를 받아옴
+  // GetBeanCardService();
+
+  // 검색버튼 클릭 시 검색어를 통해 카드를 받아 옴
+  // const searchHandler = () => {
+  //   setShowCard(true);
   // };
+  // SearchBeanCardService();
 
   return (
     <div className="main-container">
@@ -167,11 +191,21 @@ const Home: React.FC = () => {
               검색
             </button>
           </div>
-          <div className="content-text flex text-5xl mb-[4rem]">
-            <div>지금&nbsp;</div>
-            <div className="text-primary-color-orange">여기, 내 취향&nbsp;</div>
-            <div>으로 찾는 원두</div>
-          </div>
+          {cards.length === 0 ? (
+            <div className="content-text flex text-5xl mb-[4rem] content-none">
+              <div className="text-primary-color-orange">`{searchKeyword}`</div>
+              <div>에 대한 검색결과가 없습니다.</div>
+            </div>
+          ) : (
+            <div className="content-text flex text-5xl mb-[4rem] content-none">
+              <div>지금&nbsp;</div>
+              <div className="text-primary-color-orange">
+                여기, 내 취향&nbsp;
+              </div>
+              <div>으로 찾는 원두</div>
+            </div>
+          )}
+
           <div className="card-contents w-full">
             <div className="sorting-btn-area w-full grid grid-cols-2">
               <div className="sorting-btn-right flex">
@@ -245,16 +279,19 @@ const Home: React.FC = () => {
               </div>
             </div>
 
-            <div className="cards grid grid-cols-3">
+            <div className="cards grid grid-cols-3 min-w-[1440px]">
               {/* // ----- Card ----- // */}
-              {isAllSelected &&
+              {cards.length === 0 ? (
+                <div className="col-start-2 row-start-2">
+                  <img src={searchNone} alt="" />
+                </div>
+              ) : (
                 cards.map(card => (
                   <Link
                     to={`/details/${card.id}`}
                     key={card.id}
                     className="card m-4 shadow-md border border-gray-300 rounded-[12px] cursor-pointer"
                   >
-                    {/* <div>{console.log(card)}</div> */}
                     <div className="card-picture overflow-hidden">
                       <img
                         src={card.beanImage}
@@ -262,11 +299,11 @@ const Home: React.FC = () => {
                         className="w-full h-[14rem] object-cover rounded-[12px]"
                       />
                     </div>
-                    <div className="card-name grid grid-cols-10">
-                      <div className="bean-name text-xl p-2 ml-3 col-span-7">
+                    <div className="card-name flex justify-between">
+                      <div className="bean-name text-xl p-2 ml-3">
                         {card.beanOriginName} {card.beanName}
                       </div>
-                      <div className="flex items-center justify-end p-2 col-span-3">
+                      <div className="flex items-center justify-end p-2">
                         <div className="heart mx-2 cursor-pointer w-[1rem]">
                           <img src={heartFill} className="m-[0.2rem]" alt="" />
                         </div>
@@ -279,7 +316,8 @@ const Home: React.FC = () => {
                       </div>
                     </div>
                   </Link>
-                ))}
+                ))
+              )}
             </div>
           </div>
         </div>

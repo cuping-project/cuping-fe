@@ -38,26 +38,23 @@ const Header: React.FC = () => {
     }
   };
 
-  // const logoutHandler = () => {
-  //   const accessToken = Cookies.get('ACCESS_KEY');
-  //   console.log('✨ ‣ logoutHandler ‣ accessToken:', accessToken);
-  //   Cookies.remove('ACCESS_KEY');
-  //   console.log(Cookies);
-  //   setLoggedin(false);
-  // };
+  // 로그아웃 버튼 클릭 시
+  const logoutHandler = () => {
+    Cookies.remove('ACCESS_KEY');
+    setLoggedin(false);
+    alert('로그아웃 되었습니다.');
+  };
 
   return (
     <div className="main-container w-full p-10">
       <div className="header w-full flex justify-between items-center mx-auto">
-        <div
-          className="logo m-2 relative z-10 flex justify-center items-center"
-          onClick={() => navigate('/')}
-          role="presentation"
-        >
+        <div className="logo m-2 relative z-10 flex justify-center items-center">
           <button type="button">
             <img
               src={cuppingLogo}
               className="w-[4rem] d1920:w-[14rem] d1440:w-[10rem] d1024:w-[6rem]"
+              onClick={handleHomePage}
+              role="presentation"
               alt="커핑로고"
             />
           </button>
@@ -72,7 +69,7 @@ const Header: React.FC = () => {
             </div>
             <button
               className="logout w-[2rem] relative z-10"
-              // onClick={logoutHandler}
+              onClick={logoutHandler}
               type="submit"
             >
               <img src={logout} className="cursor-pointer" alt="" />

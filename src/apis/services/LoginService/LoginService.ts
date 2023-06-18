@@ -2,7 +2,6 @@ import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import loginApi from '../../api/loginApi/loginApi';
-import { IUser } from './types';
 
 /**
  * 로그인을 시도하는 함수
@@ -18,6 +17,7 @@ const LoginService = () => {
       Cookies.set('ACCESS_KEY', data.access_key);
       Cookies.set('REFRESH_KEY', data.refresh_key);
       navigate('/');
+      alert('로그인 완료!');
     },
     onError: error => {
       alert(error.response.data.message);

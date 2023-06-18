@@ -1,10 +1,14 @@
 import React from 'react';
 import { useRecoilState } from 'recoil';
 import { isCommentModalState } from '../../../recoil/atom/modalState';
+import nicknameState from '../../../recoil/atom/nicknameState';
+import closeIcon from '../../../assets/img/close.svg';
 
 const CommentModal = () => {
   const [isCommentModalOpen, setIsCommentModalOpen] =
     useRecoilState(isCommentModalState);
+
+  const [nickname, setNickname] = useRecoilState(nicknameState);
 
   // 외부영역을 클릭했을 때 모달창 꺼짐
   const handleOverlayClick = e => {
@@ -26,17 +30,21 @@ const CommentModal = () => {
       >
         <div
           className="absolute border-[1px] border-gray-100 p-[14px] rounded-[5px] w-[55.5rem]
-  overflow-y-auto bg-white top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2"
+        overflow-y-auto bg-white top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2"
         >
           <div className="contentsArea w-full">
             <div className="top flex justify-between m-3">
-              <div className="text-[1.2rem]">닉네임</div>
-              <div
-                className="cursor-pointer"
-                onClick={handleOverlayClick}
-                role="presentation"
-              >
-                x
+              <div className="flex items-center">
+                <div className="text-[1.2rem] font-semibold">{nickname}</div>
+                <div>님 안녕하세요.</div>
+              </div>
+              <div className="cursor-pointer w-[1.2rem]">
+                <img
+                  src={closeIcon}
+                  onClick={handleOverlayClick}
+                  role="presentation"
+                  alt=""
+                />
               </div>
             </div>
             <hr />

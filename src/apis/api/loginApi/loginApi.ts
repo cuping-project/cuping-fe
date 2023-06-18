@@ -12,7 +12,6 @@ const loginApi = async (user: IUser) => {
       withCredentials: true,
     });
 
-    console.log(headers);
     return headers;
   } catch (error) {
     throw error;
