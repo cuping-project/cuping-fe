@@ -6,15 +6,11 @@ import pinIcon from '../../assets/img/pin.svg';
 import styles from './Home.module.css';
 import Header from '../../components/Header/Header';
 import heartFill from '../../assets/img/heart-fill.png';
-import heart from '../../assets/img/heart.png';
 import searchNone from '../../assets/img/search-none.png';
 import { cardState } from '../../recoil/atom/cardState';
 import { searchKeywordState } from '../../recoil/atom/searchKeywordState';
 import { loginState } from '../../recoil/atom/loginState';
-import {
-  GetBeanCardService,
-  SearchBeanCardService,
-} from '../../apis/services/BeanCardService/BeanCardService';
+import { locationState } from '../../recoil/atom/locationState';
 import showCardState from '../../recoil/atom/showCardState';
 import myPageApi from '../../apis/api/myPageApi/myPageApi';
 import nicknameState from '../../recoil/atom/nicknameState';
@@ -49,6 +45,7 @@ const Home: React.FC = () => {
     setIsHeartPressed(!isHeartPressed);
   };
 
+  const [location, setLocation] = useRecoilState(locationState);
   // 좋아요 버튼 상태를 담기 위한 상태 변수
   const [likeStatus, setLikeStatus] = useRecoilState(likeStatusState);
   const [likesCount, setLikesCount] = useRecoilState(likesCountState);
