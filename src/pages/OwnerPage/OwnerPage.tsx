@@ -5,7 +5,6 @@ import Header from '../../components/Header/Header';
 import Menu from './components/Menu';
 import UserHeader from './components/UserHeader';
 import CafeInfo from './components/cafeInfo/CafeInfo';
-import CafeEdit from './components/cafeInfo/CafeEdit';
 
 const OwnerPage = () => {
   const [selected, setSelected] = useState<string>('내 정보 관리');
