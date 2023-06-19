@@ -20,6 +20,7 @@ import {
   GetBeanCardService,
   SearchBeanCardService,
 } from '../../apis/services/BeanCardService/BeanCardService';
+import { locationState } from '../../recoil/atom/locationState';
 
 const Home: React.FC = () => {
   // 로그인 상태 변수
@@ -39,6 +40,8 @@ const Home: React.FC = () => {
   const heartHandler = () => {
     setIsHeartPressed(!isHeartPressed);
   };
+
+  const [location, setLocation] = useRecoilState(locationState);
 
   // 전체, 위치 버튼 클릭 시 토글
   const [isAllSelected, setIsAllSelected] = useState(true);
