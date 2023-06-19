@@ -8,10 +8,11 @@ import axiosInstance from '../../utils/axiosInstance';
  */
 const loginApi = async (user: IUser) => {
   try {
-    const { data } = await axiosInstance.post('/users/login', user, {
+    const { headers } = await axiosInstance.post('/users/login', user, {
       withCredentials: true,
     });
-    return data;
+
+    return headers;
   } catch (error) {
     throw error;
   }

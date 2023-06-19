@@ -4,22 +4,23 @@ import { Link } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import pinIcon from '../../assets/img/pin.svg';
 import styles from './Home.module.css';
-import LoginModal from '../../components/Modal/LoginModal/LoginModal';
 import Header from '../../components/Header/Header';
-import heart from '../../assets/img/heart.png';
 import heartFill from '../../assets/img/heart-fill.png';
-import { ICard } from './types';
+import searchNone from '../../assets/img/search-none.png';
 import { cardState } from '../../recoil/atom/cardState';
-import {
-  searchBeanCardApi,
-  getBeanCardApi,
-} from '../../apis/api/beanCardApi/beanCardApi';
 import { searchKeywordState } from '../../recoil/atom/searchKeywordState';
 import { loginState } from '../../recoil/atom/loginState';
+import { locationState } from '../../recoil/atom/locationState';
+import showCardState from '../../recoil/atom/showCardState';
+import myPageApi from '../../apis/api/myPageApi/myPageApi';
+import nicknameState from '../../recoil/atom/nicknameState';
 import {
-  GetBeanCardService,
-  SearchBeanCardService,
-} from '../../apis/services/BeanCardService/BeanCardService';
+  getBeanCardApi,
+  searchBeanCardApi,
+} from '../../apis/api/beanCardApi/beanCardApi';
+import { LikeMutation } from '../../apis/services/LikeService/LikeService';
+import { likeStatusState, likesCountState } from '../../recoil/atom/likeState';
+import { isLoginModalState } from '../../recoil/atom/modalState';
 
 const Home: React.FC = () => {
   // 로그인 상태 변수
@@ -31,13 +32,27 @@ const Home: React.FC = () => {
   // 검색어 상태 변수
   const [searchKeyword, setSearchKeyword] = useRecoilState(searchKeywordState);
 
+  // nickname 받아오기 위한 상태 변수
+  const [nickname, setNickname] = useRecoilState(nicknameState);
+
   // 로그인 모달 관련된 변수
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] =
+    useRecoilState(isLoginModalState);
 
   // heart 관련된 기능
   const [isHeartPressed, setIsHeartPressed] = useState(false);
   const heartHandler = () => {
     setIsHeartPressed(!isHeartPressed);
+  };
+
+  const [location, setLocation] = useRecoilState(locationState);
+  // 좋아요 버튼 상태를 담기 위한 상태 변수
+  const [likeStatus, setLikeStatus] = useRecoilState(likeStatusState);
+  const [likesCount, setLikesCount] = useRecoilState(likesCountState);
+
+  // 로그인 모달 상태 변수
+  const openLoginModal = () => {
+    setIsLoginModalOpen(true);
   };
 
   // 전체, 위치 버튼 클릭 시 토글
@@ -49,6 +64,9 @@ const Home: React.FC = () => {
   const [isTanSelected, setIsTanSelected] = useState(false); // 탄맛
   const [isDanSelected, setIsDanSelected] = useState(false); // 단맛
   const [isDeSelected, setIsDeSelected] = useState(false); // 디카페인
+
+  // 상태변수
+  const [showCard, setShowCard] = useRecoilState(showCardState);
 
   // 모달 상태 함수
   const openModal = () => {
@@ -103,10 +121,21 @@ const Home: React.FC = () => {
     checkLoginStatus();
   }, []);
 
+  // nickname 받아오기
+  useEffect(() => {
+    const fetchNickname = async () => {
+      try {
+        const response = await myPageApi();
+        setNickname(response.data.data.nickname);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchNickname();
+  }, [nickname]);
+
   // 메인페이지를 처음 로딩 되었을때 카드를 받아옴
-  // const { isLoading, isError } = GetBeanCardService();
-  // if (isLoading) return <div>로딩중...!!!</div>;
-  // if (isError) return <div>에러 발생함 !!!</div>;
   useEffect(() => {
     const fetchBeanCard = async () => {
       try {
@@ -120,20 +149,43 @@ const Home: React.FC = () => {
   }, []);
 
   // 검색버튼 클릭 시 검색어를 통해 카드를 받아옴
-  // const searchHandler = () => {
-  //   SearchBeanCardService();
-  // };
-
-  // 검색버튼 클릭 시 검색어를 통해 카드를 받아옴
   const searchHandler = async () => {
     try {
       const response = await searchBeanCardApi(searchKeyword);
-      setCards(response);
-      setSearchKeyword('');
+      console.log(response.data);
+      setCards(response.data);
     } catch (error) {
       console.log(error);
     }
   };
+
+  // 좋아요 기능
+  const likeMutation = LikeMutation();
+  const handleLike = cardId => {
+    // 로그인 상태 체크
+    if (!loggedin) {
+      openLoginModal();
+    }
+
+    // 현재 좋아요 상태 반전
+    const newLikeStatus = !likeStatus;
+    likeMutation.mutate(cardId, {
+      onSuccess: data => {
+        console.log(data.data.likeCount);
+        setLikesCount(data.data.likeCount);
+        setLikeStatus(newLikeStatus);
+      },
+    });
+  };
+
+  // 메인페이지를 처음 로딩 되었을때 카드를 받아옴
+  // GetBeanCardService();
+
+  // 검색버튼 클릭 시 검색어를 통해 카드를 받아 옴
+  // const searchHandler = () => {
+  //   setShowCard(true);
+  // };
+  // SearchBeanCardService();
 
   return (
     <div className="main-container">
@@ -169,11 +221,21 @@ const Home: React.FC = () => {
               검색
             </button>
           </div>
-          <div className="content-text flex text-5xl mb-[4rem]">
-            <div>지금&nbsp;</div>
-            <div className="text-primary-color-orange">여기, 내 취향&nbsp;</div>
-            <div>으로 찾는 원두</div>
-          </div>
+          {cards.length === 0 ? (
+            <div className="content-text flex text-5xl mb-[4rem] content-none">
+              <div className="text-primary-color-orange">`{searchKeyword}`</div>
+              <div>에 대한 검색결과가 없습니다.</div>
+            </div>
+          ) : (
+            <div className="content-text flex text-5xl mb-[4rem] content-none">
+              <div>지금&nbsp;</div>
+              <div className="text-primary-color-orange">
+                여기, 내 취향&nbsp;
+              </div>
+              <div>으로 찾는 원두</div>
+            </div>
+          )}
+
           <div className="card-contents w-full">
             <div className="sorting-btn-area w-full grid grid-cols-2">
               <div className="sorting-btn-right flex">
@@ -247,16 +309,19 @@ const Home: React.FC = () => {
               </div>
             </div>
 
-            <div className="cards grid grid-cols-3">
+            <div className="cards grid grid-cols-3 min-w-[1440px]">
               {/* // ----- Card ----- // */}
-              {isAllSelected &&
+              {cards.length === 0 ? (
+                <div className="col-start-2 row-start-2">
+                  <img src={searchNone} alt="" />
+                </div>
+              ) : (
                 cards.map(card => (
                   <Link
                     to={`/details/${card.id}`}
                     key={card.id}
                     className="card m-4 shadow-md border border-gray-300 rounded-[12px] cursor-pointer"
                   >
-                    {/* <div>{console.log(card)}</div> */}
                     <div className="card-picture overflow-hidden">
                       <img
                         src={card.beanImage}
@@ -264,15 +329,19 @@ const Home: React.FC = () => {
                         className="w-full h-[14rem] object-cover rounded-[12px]"
                       />
                     </div>
-                    <div className="card-name grid grid-cols-2">
+                    <div className="card-name flex justify-between">
                       <div className="bean-name text-xl p-2 ml-3">
-                        {card.beanOriginName} {card.beanName}
+                        {card.origin} {card.beanName}
                       </div>
                       <div className="flex items-center justify-end p-2">
-                        <div className="heart mx-2 cursor-pointer w-[1rem]">
-                          <img src={heartFill} className="m-[0.2rem]" alt="" />
+                        <div className="heart mx-2 cursor-pointer w-full flex items-center pr-[0.5rem] mr-[0.8rem]">
+                          <img
+                            src={heartFill}
+                            className="mr-[0.5rem] w-[1.2rem] cursor-pointer"
+                            alt="하트이미지"
+                          />
+                          <div className="text-[1.2rem]">{card.likesCount}</div>
                         </div>
-                        <div>{card.likesCount}</div>
                       </div>
                     </div>
                     <div className="card-labels p-2 flex">
@@ -281,7 +350,8 @@ const Home: React.FC = () => {
                       </div>
                     </div>
                   </Link>
-                ))}
+                ))
+              )}
             </div>
           </div>
         </div>
