@@ -6,6 +6,7 @@ import pinIcon from '../../assets/img/pin.svg';
 import styles from './Home.module.css';
 import Header from '../../components/Header/Header';
 import heartFill from '../../assets/img/heart-fill.png';
+import heart from '../../assets/img/heart.png';
 import searchNone from '../../assets/img/search-none.png';
 import { cardState } from '../../recoil/atom/cardState';
 import { searchKeywordState } from '../../recoil/atom/searchKeywordState';
@@ -21,6 +22,9 @@ import {
   getBeanCardApi,
   searchBeanCardApi,
 } from '../../apis/api/beanCardApi/beanCardApi';
+import { LikeMutation } from '../../apis/services/LikeService/LikeService';
+import { likeStatusState, likesCountState } from '../../recoil/atom/likeState';
+import { isLoginModalState } from '../../recoil/atom/modalState';
 
 const Home: React.FC = () => {
   // 로그인 상태 변수
@@ -36,12 +40,22 @@ const Home: React.FC = () => {
   const [nickname, setNickname] = useRecoilState(nicknameState);
 
   // 로그인 모달 관련된 변수
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] =
+    useRecoilState(isLoginModalState);
 
   // heart 관련된 기능
   const [isHeartPressed, setIsHeartPressed] = useState(false);
   const heartHandler = () => {
     setIsHeartPressed(!isHeartPressed);
+  };
+
+  // 좋아요 버튼 상태를 담기 위한 상태 변수
+  const [likeStatus, setLikeStatus] = useRecoilState(likeStatusState);
+  const [likesCount, setLikesCount] = useRecoilState(likesCountState);
+
+  // 로그인 모달 상태 변수
+  const openLoginModal = () => {
+    setIsLoginModalOpen(true);
   };
 
   // 전체, 위치 버튼 클릭 시 토글
@@ -146,6 +160,25 @@ const Home: React.FC = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  // 좋아요 기능
+  const likeMutation = LikeMutation();
+  const handleLike = cardId => {
+    // 로그인 상태 체크
+    if (!loggedin) {
+      openLoginModal();
+    }
+
+    // 현재 좋아요 상태 반전
+    const newLikeStatus = !likeStatus;
+    likeMutation.mutate(cardId, {
+      onSuccess: data => {
+        console.log(data.data.likeCount);
+        setLikesCount(data.data.likeCount);
+        setLikeStatus(newLikeStatus);
+      },
+    });
   };
 
   // 메인페이지를 처음 로딩 되었을때 카드를 받아옴
@@ -301,13 +334,17 @@ const Home: React.FC = () => {
                     </div>
                     <div className="card-name flex justify-between">
                       <div className="bean-name text-xl p-2 ml-3">
-                        {card.beanOriginName} {card.beanName}
+                        {card.origin} {card.beanName}
                       </div>
                       <div className="flex items-center justify-end p-2">
-                        <div className="heart mx-2 cursor-pointer w-[1rem]">
-                          <img src={heartFill} className="m-[0.2rem]" alt="" />
+                        <div className="heart mx-2 cursor-pointer w-full flex items-center pr-[0.5rem] mr-[0.8rem]">
+                          <img
+                            src={heartFill}
+                            className="mr-[0.5rem] w-[1.2rem] cursor-pointer"
+                            alt="하트이미지"
+                          />
+                          <div className="text-[1.2rem]">{card.likesCount}</div>
                         </div>
-                        <div>{card.likesCount}</div>
                       </div>
                     </div>
                     <div className="card-labels p-2 flex">

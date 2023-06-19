@@ -18,6 +18,7 @@ const searchBeanCardApi = async keyword => {
     const { data } = await axiosInstance.get(
       `${import.meta.env.VITE_BE_SERVER}/main/beans/search?keyword=${keyword}`,
     );
+
     return data;
   } catch (error) {
     console.log('✨ ‣ SearchBeanCardApi ‣ error:', error);

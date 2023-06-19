@@ -2,10 +2,14 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import jwtDecode from 'jwt-decode';
+import { useRecoilState } from 'recoil';
 import LoginService from '../../apis/services/LoginService/LoginService';
 import cupingLogo from '../../assets/img/cupping-logo-icon02.svg';
 import bini from '../../assets/img/beni.svg';
 import { IUser } from './types';
+import loginApi from '../../apis/api/loginApi/loginApi';
+import { loginState } from '../../recoil/atom/loginState';
 
 const Login = () => {
   const [userIdInput, setUserIdInput] = useState('');
@@ -14,7 +18,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   // 로그인이 되었는지 확인
-  const [loggedin, setLoggedin] = useState(true);
+  const [loggedin, setLoggedin] = useRecoilState(loginState);
 
   // 로그인이 되어있다면 메인 페이지로 라우팅
   useEffect(() => {
@@ -22,6 +26,7 @@ const Login = () => {
       const accessToken = Cookies.get('ACCESS_KEY');
       if (accessToken) {
         navigate('/');
+        alert('이미 로그인 되어있습니다. 로그 아웃 후 이용해주세요.');
       } else {
         setLoggedin(false);
       }
@@ -30,16 +35,26 @@ const Login = () => {
     checkLoginStatus();
   }, []);
 
-  const userIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setUserIdInput(e.target.value);
-  };
+  // 로그인 api
+  const loginMutation = useMutation(loginApi, {
+    onSuccess: data => {
+      const decoded = jwtDecode(data.access_key);
+      const accessExpirationDate = new Date(decoded.exp * 1000); // 1시간
+      const refreshExpirationDate = new Date(decoded.exp * 10000); // 10시간
 
-  const passwordInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setPasswordInput(e.target.value);
-  };
-
-  // 로그인 mutate
-  const { mutate: loginMutate } = LoginService();
+      Cookies.set('ACCESS_KEY', data.access_key, {
+        expires: accessExpirationDate,
+      });
+      Cookies.set('REFRESH_KEY', data.refresh_key, {
+        expires: refreshExpirationDate,
+      });
+      navigate('/');
+      alert('로그인 성공');
+    },
+    onError: error => {
+      alert(error.response.data.message);
+    },
+  });
 
   // 로그인 핸들러
   const loginHandler = (e: FormEvent) => {
@@ -51,7 +66,7 @@ const Login = () => {
       alert(`아이디와 비밀번호를 입력해주세요.`);
     }
 
-    loginMutate({ userId: userIdInput, password: passwordInput });
+    loginMutation.mutate({ userId: userIdInput, password: passwordInput });
   };
 
   const kakaoLoginHandler = () => {
@@ -104,7 +119,7 @@ const Login = () => {
                             type="text"
                             placeholder="아이디를 입력하세요"
                             value={userIdInput}
-                            onChange={userIdInputHandler}
+                            onChange={e => setUserIdInput(e.target.value)}
                             className={`border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full ${
                               loginError === '아이디가 일치하지 않습니다.'
                                 ? 'border-red-500'
@@ -121,7 +136,7 @@ const Login = () => {
                             type="password"
                             placeholder="비밀번호 입력(영문, 숫자 조합 최소 8자)"
                             value={passwordInput}
-                            onChange={passwordInputHandler}
+                            onChange={e => setPasswordInput(e.target.value)}
                             className={`border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full ${
                               loginError === '비밀번호가 일치하지 않습니다.'
                                 ? 'border-red-500'
