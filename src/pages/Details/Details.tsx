@@ -3,14 +3,14 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import Header from '../../components/Header/Header';
 import Kakaomap from '../../components/KakaoMap/Kakaomap';
 import heartFill from '../../assets/img/heart-fill.png';
 import heart from '../../assets/img/heart.png';
 import coffeeGraph from '../../assets/img/coffee-graph.png';
-import cafe1 from '../../assets/img/cafe-image01.jpg';
-import cafe2 from '../../assets/img/cafe-image02.jpg';
+import { cardIdMapState } from '../../recoil/atom/cardIdMapState';
+import { visibleCafesState } from '../../recoil/atom/visibleCafesState';
 import { loginState } from '../../recoil/atom/loginState';
 import { likeStatusState, likesCountState } from '../../recoil/atom/likeState';
 import { LikeMutation } from '../../apis/services/LikeService/LikeService';
@@ -69,6 +69,9 @@ const Details: React.FC = () => {
     setIsMoreCafeModalOpen(true);
   };
 
+  const { id } = useParams();
+  const [cardId, setCardId] = useRecoilState(cardIdMapState);
+  setCardId(id);
   // 좋아요 기능
   const likeMutation = LikeMutation();
   const handleLike = cardId => {
@@ -104,6 +107,10 @@ const Details: React.FC = () => {
     }
   }, [data]);
 
+  const visibleCafes = useRecoilValue(visibleCafesState);
+  const count = visibleCafes.length;
+
+  console.log('🍩 💛 visibleCafes:', visibleCafes);
   // 현재 좋아요 상태를 가져오기 위한 useEffect
   useEffect(() => {
     const fetchLikeStatus = async () => {
@@ -204,7 +211,7 @@ const Details: React.FC = () => {
           <div className="mb-[6rem]">
             <div className="flex justify-between mt-[2rem] mb-[2rem] text-xl font-bold">
               <div>
-                <span className="text-primary-color-orange">2</span>
+                <span className="text-primary-color-orange">{count}</span>
                 개의 카페가 있습니다.
               </div>
               <div
@@ -218,36 +225,23 @@ const Details: React.FC = () => {
               <MoreCafeModal />
             </div>
             <div className="cardBox grid grid-cols-4 gap-[0.8125rem]">
-              <div className="cafeCard object-cover shadow-lg h-[20.825rem] rounded-2xl">
-                <img
-                  src={cafe1}
-                  alt=""
-                  className="w-full h-[14.825rem] rounded-2xl"
-                />
-                <div className="px-[1.4375rem] pt-[0.9rem] pb-[1.28125rem] ">
-                  <p className="text-xl font-bold h-[2.25rem] leading-[1.625rem]">
-                    카페우드진
-                  </p>
-                  <p className="text-[#868A91] leading-[1.3rem]">
-                    마곡중앙6로 45 리더스퀘어 113호 A ,B동 사이
-                  </p>
+              {visibleCafes.slice(0, 4).map(cafe => (
+                <div className="cafeCard object-cover shadow-lg h-[20.825rem] rounded-2xl">
+                  <img
+                    src={cafe.cafeImage}
+                    alt=""
+                    className="w-full h-[14.825rem] rounded-2xl"
+                  />
+                  <div className="px-[1.4375rem] pt-[0.9rem] pb-[1.28125rem] ">
+                    <p className="text-xl font-bold h-[2.25rem] leading-[1.625rem]">
+                      {cafe.cafeName}
+                    </p>
+                    <p className="text-[#868A91] leading-[1.3rem]">
+                      {cafe.cafeAddress}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="cafeCard object-cover shadow-lg h-[20.825rem] rounded-2xl">
-                <img
-                  src={cafe2}
-                  alt=""
-                  className="w-full h-[14.825rem] rounded-2xl"
-                />
-                <div className="px-[1.4375rem] pt-[0.9rem] pb-[1.28125rem] ">
-                  <p className="text-xl font-bold h-[2.25rem] leading-[1.625rem]">
-                    소카크
-                  </p>
-                  <p className="text-[#868A91] leading-[1.3rem]">
-                    서울 강서구 마곡동로 56 1층 103호
-                  </p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
