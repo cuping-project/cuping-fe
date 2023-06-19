@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
+import { useRecoilState } from 'recoil';
 import useInput from '../../../hooks/useInput';
 import OwnerSignup from '../OwnerSignup/OwnerSignup';
 import errorIcon from '../../../assets/img/warning.svg';
@@ -13,6 +14,7 @@ import {
   SignupUserService,
 } from '../../../apis/services/SignupService/SignupService';
 import styles from './UserSignup.module.css';
+import { loginState } from '../../../recoil/atom/loginState';
 
 const UserSignup = () => {
   const navigate = useNavigate();
@@ -24,7 +26,7 @@ const UserSignup = () => {
   const [passwordCheckError, setPasswordCheckError] = useState('');
 
   // 로그인이 되었는지 확인
-  const [loggedin, setLoggedin] = useState(false);
+  const [loggedin, setLoggedin] = useRecoilState(loginState);
 
   // 로그인이 되어있다면 메인 페이지로 라우팅
   useEffect(() => {
@@ -32,6 +34,7 @@ const UserSignup = () => {
       const accessToken = Cookies.get('ACCESS_KEY');
       if (accessToken) {
         navigate('/');
+        alert('이미 로그인 되어있습니다. 로그 아웃 후 이용해주세요.');
       } else {
         setLoggedin(false);
       }
