@@ -1,6 +1,8 @@
-import React from 'react';
-import { useRecoilState } from 'recoil';
+import React, { useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { isMoreCafeModalState } from '../../../recoil/atom/modalState';
+import { visibleCafesState } from '../../../recoil/atom/visibleCafesState';
+import beni from '../../../assets/img/beni02.png';
 
 const MoreCafeModal = () => {
   const [isMoreCafeModalOpen, setIsMoreCafeModalOpen] =
@@ -12,6 +14,35 @@ const MoreCafeModal = () => {
       setIsMoreCafeModalOpen(false);
     }
   };
+
+  // 카페 데이터 가져오기
+  const visibleCafes = useRecoilValue(visibleCafesState);
+  const extraCafes = visibleCafes.slice(4);
+
+  // ---페이지네이션---
+  const [page, setPage] = useState(1);
+
+  // 페이지 처리 함수
+  const cafesPerPage = 5;
+
+  const getVisibleCafes = cafes => {
+    const startIndex = (page - 1) * cafesPerPage;
+    return cafes.slice(startIndex, startIndex + cafesPerPage);
+  };
+  const displayedCafes = getVisibleCafes(extraCafes);
+
+  // 페이지 변경 함수
+  const handlePageChange = pageNumber => {
+    setPage(pageNumber);
+  };
+
+  const totalPages = Math.ceil(extraCafes.length / cafesPerPage);
+
+  // 페이지 번호 생성
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
 
   return (
     <div
@@ -40,51 +71,41 @@ const MoreCafeModal = () => {
             </div>
             <div className="middle w-full">
               <div className="cards p-2 w-full">
-                <div className="card bg-white rounded-[0.5rem] p-2 flex my-3">
-                  <div className="left flex justify-center items-center">
-                    <div className="border-2 w-[6rem] h-[6rem] m-2">사진</div>
-                  </div>
-                  <div className="right m-2">
-                    <div className="text-[2rem] my-1">카페명입니다.</div>
-                    <div className="text-[1rem]">
-                      주소: 서울시 강동구 양재대로 123456
+                {displayedCafes.map(cafe => (
+                  <div className="card bg-white rounded-[0.5rem] p-2 flex my-3">
+                    <div className="left flex justify-center items-center">
+                      <div className="border-2 w-[6rem] h-[6rem] m-2 ">
+                        <img
+                          src={cafe.cafeImage}
+                          alt=""
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
                     </div>
-                    <div className="text-[1rem]">
-                      시간: 평일 08:00~22:00 | 주말 09:00~20:00{' '}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="card bg-white rounded-[0.5rem] p-2 flex my-3">
-                  <div className="left flex justify-center items-center">
-                    <div className="border-2 w-[6rem] h-[6rem] m-2">사진</div>
-                  </div>
-                  <div className="right m-2">
-                    <div className="text-[2rem] my-1">카페명입니다.</div>
-                    <div className="text-[1rem]">
-                      주소: 서울시 강동구 양재대로 123456
-                    </div>
-                    <div className="text-[1rem]">
-                      시간: 평일 08:00~22:00 | 주말 09:00~20:00{' '}
+                    <div className="right m-2">
+                      <div className="text-[1.8rem] my-1">{cafe.cafeName}</div>
+                      <div className="text-[1rem]">{cafe.cafeAddress}</div>
+                      <div className="text-[1rem]">{cafe.cafePhoneNumber}</div>
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
             <div className="bottom flex justify-center">
               <div className="page-nation w-full flex justify-center">
-                <div
-                  className="page-number flex items-center justify-center w-[2rem] h-[2rem] border-[0.07rem]
-          border-black m-2 rounded-[50%] text-center"
-                >
-                  1
-                </div>
-                <div
-                  className="page-number flex items-center justify-center w-[2rem] h-[2rem] border-[0.07rem]
-          border-black m-2 rounded-[50%] text-center"
-                >
-                  2
-                </div>
+                {pageNumbers.map(number => (
+                  <button
+                    type="button"
+                    key={number}
+                    onClick={() => handlePageChange(number)}
+                    className={`page-number flex items-center justify-center w-[2rem] h-[2rem] border-[0.07rem]
+          border-black m-2 rounded-[50%] text-center ${
+            page === number ? 'bg-[#F45A00] text-white' : 'bg-white'
+          }`}
+                  >
+                    {number}
+                  </button>
+                ))}
               </div>
             </div>
           </div>

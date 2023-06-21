@@ -214,14 +214,17 @@ const Details: React.FC = () => {
                 <span className="text-primary-color-orange">{count}</span>
                 개의 카페가 있습니다.
               </div>
-              <div
-                className="border border-primary-color-orange text-primary-color-orange
+              {visibleCafes.length > 4 && (
+                <div
+                  className="border border-primary-color-orange text-primary-color-orange
                 py-[0.5rem] px-[1.25rem] rounded-xl cursor-pointer"
-                onClick={openMoreCafeModal}
-                role="presentation"
-              >
-                + 더보기
-              </div>
+                  onClick={openMoreCafeModal}
+                  role="presentation"
+                >
+                  + 더보기
+                </div>
+              )}
+
               <MoreCafeModal />
             </div>
             <div className="cardBox grid grid-cols-4 gap-[0.8125rem]">
@@ -230,7 +233,7 @@ const Details: React.FC = () => {
                   <img
                     src={cafe.cafeImage}
                     alt=""
-                    className="w-full h-[14.825rem] rounded-2xl"
+                    className="w-full h-[14.825rem] rounded-2xl object-cover"
                   />
                   <div className="px-[1.4375rem] pt-[0.9rem] pb-[1.28125rem] ">
                     <p className="text-xl font-bold h-[2.25rem] leading-[1.625rem]">
