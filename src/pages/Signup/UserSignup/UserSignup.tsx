@@ -69,8 +69,9 @@ const UserSignup = () => {
   const { mutate: SignupUserMutate } = SignupUserService();
   const signupBtnClick = (e: any) => {
     e.preventDefault();
-    const nicknameRegex = /^[a-z0-9]{5,12}$/i;
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,12}$/;
+    const nicknameRegex = /^[a-zA-Z가-힣]{2,8}$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*\d)(?=.*[~!?_@#$%^&*()+|=])[a-z\d~!?_@#$%^&*()+|=]{8,16}$/;
 
     if (!nickname || !password || !userId) {
       alert('아이디,닉네임과 비밀번호를 모두 입력하세요.');
@@ -78,7 +79,7 @@ const UserSignup = () => {
     }
 
     if (!nicknameRegex.test(nickname)) {
-      alert('닉네임은 최소 5~12자, 알파벳 소문자 및 숫자로 구성되어야 합니다.');
+      alert('닉네임은 최소 2~8자, 알파벳 소문자 및 한글 닉네임이어야 합니다.');
       return;
     }
 
@@ -212,7 +213,7 @@ const UserSignup = () => {
                         ref={nicknameRef}
                         id="nkInput"
                         type="text"
-                        placeholder="닉네임은 최소 5~12자, 알파벳 소문자 및 숫자"
+                        placeholder="닉네임은 2~8자, 알파벳 소문자 및 한글"
                         className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                       />
                     </label>
@@ -294,6 +295,9 @@ const UserSignup = () => {
                     <button
                       type="button"
                       className="transition duration-200 bg-yellow-400 hover:bg-yellow-600 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
+                      onClick={() => {
+                        alert('준비중입니다.');
+                      }}
                     >
                       카카오톡 간편 가입하기
                     </button>
