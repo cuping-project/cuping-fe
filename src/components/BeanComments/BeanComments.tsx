@@ -47,6 +47,26 @@ const BeanComments = () => {
     getCommentApi(beanPageId),
   );
 
+  // 페이지네이션을 위한 로직
+  const [page, setPage] = useState(1);
+  const commentPerPage = 4;
+
+  const getVisibleComments = () => {
+    const indexOfLastComment = page * commentPerPage;
+    const indexOfFirstComment = indexOfLastComment - commentPerPage;
+    return commentList.slice(indexOfFirstComment, indexOfLastComment);
+  };
+
+  const handlePageClick = pageNumber => {
+    setPage(pageNumber);
+  };
+
+  const tatalPages = Math.ceil(commentList.length / commentPerPage);
+  const pageNumbers = [];
+  for (let i = 1; i <= tatalPages; i += 1) {
+    pageNumbers.push(i);
+  }
+
   // 메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
   useEffect(() => {
     const checkLoginStatus = () => {

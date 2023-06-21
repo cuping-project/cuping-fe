@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { QueryClient, useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { isCommentModalState } from '../../../recoil/atom/modalState';
 import nicknameState from '../../../recoil/atom/nicknameState';
 import closeIcon from '../../../assets/img/close.svg';
@@ -29,15 +29,15 @@ const CommentModal = () => {
     () => postCommentApi(beanPageId, inputComment),
     {
       onSuccess: data => {
-        setInputComment('');
         queryClient.invalidateQueries('comments');
         alert('댓글이 등록되었습니다.');
+        setInputComment('');
+        setIsCommentModalOpen(false);
       },
     },
   );
 
   const postCommentHandler = () => {
-    setIsCommentModalOpen(false);
     postCommentMutation.mutate();
   };
 
@@ -87,6 +87,7 @@ const CommentModal = () => {
                 className="w-full h-[8rem] m-auto p-3"
                 placeholder="원두와 무관한 리뷰는 사전고지 없이 삭제 처리 될 수 있습니다."
                 onChange={e => setInputComment(e.target.value)}
+                value={inputComment}
               />
             </div>
             <hr />

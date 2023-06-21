@@ -22,6 +22,7 @@ import MoreCafeModal from '../../components/Modal/MoreCafeModal/MoreCafeModal';
 import myPageApi from '../../apis/api/myPageApi/myPageApi';
 import BeanComments from '../../components/BeanComments/BeanComments';
 import beanPageIdState from '../../recoil/atom/beanPageIdState';
+import { cardDetailApi } from '../../apis/api/cardDetailApi/cardDetailApi';
 
 const Details: React.FC = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const Details: React.FC = () => {
     };
 
     checkLoginStatus();
-  }, []);
+  }, [loggedin]);
 
   // 로그인 모달 관련된 변수
   const [isLoginModalOpen, setIsLoginModalOpen] =
@@ -69,15 +70,17 @@ const Details: React.FC = () => {
     setIsMoreCafeModalOpen(true);
   };
 
-  const { id } = useParams();
-  const [cardId, setCardId] = useRecoilState(cardIdMapState);
-  setCardId(id);
+  // const { id } = useParams();
+  const [, setCardId] = useRecoilState(cardIdMapState);
+  setCardId(pageId);
+
   // 좋아요 기능
   const likeMutation = LikeMutation();
   const handleLike = cardId => {
     // 로그인 상태 체크
     if (!loggedin) {
       openLoginModal();
+      return;
     }
 
     // 현재 좋아요 상태 반전
@@ -92,12 +95,10 @@ const Details: React.FC = () => {
 
   // 상세 데이터 가져오기
   const { isLoading, data } = useQuery(['cardDetail', pageId], async () => {
-    const response = await axios.get(
-      `${import.meta.env.VITE_BE_SERVER}/main/bean/${pageId}?address=`,
-    );
+    const beanData = await cardDetailApi(pageId);
 
-    setLikesCount(response.data.data.bean.likesCount);
-    return response.data.data;
+    setLikesCount(beanData.data.bean.likesCount);
+    return beanData.data.bean;
   });
 
   useEffect(() => {
@@ -105,18 +106,17 @@ const Details: React.FC = () => {
       setCard(data);
       setBeanPageId(pageId);
     }
-  }, [data]);
+  }, [data, likesCount]);
 
   const visibleCafes = useRecoilValue(visibleCafesState);
   const count = visibleCafes.length;
 
-  console.log('🍩 💛 visibleCafes:', visibleCafes);
   // 현재 좋아요 상태를 가져오기 위한 useEffect
   useEffect(() => {
     const fetchLikeStatus = async () => {
       const response = await myPageApi();
-      const { heartList } = response?.data.data;
-      // console.log(heartList);
+      const heartList = response.data.data.heartList.map(bean => bean.id);
+
       setLikeStatus(heartList.includes(parseInt(pageId)));
     };
 
@@ -126,20 +126,20 @@ const Details: React.FC = () => {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="main-container">
-      <div className="flex flex-col mx-[5rem] max-w-[1440px]">
-        <div onClick={() => navigate('/')} role="presentation">
+    <div className="full-conainer w-full h-[100vh]">
+      <div className="body-container">
+        <div className="Header">
           <Header />
         </div>
         <hr />
-        <div className="inner-container w-full justify-center mx-auto">
+        <div className="contents-area max-w-[1440px] mx-auto pt-[12rem]">
           {/* ----- top ----- */}
           <div className="top my-[5rem]">
             <div className="top-image w-full grid grid-cols-2 mx-auto mb-[50px]">
               {/* ----- top-left ----- */}
               <div className="top-left mx-auto overflow-hidden h-[41.5rem]">
                 <img
-                  src={data.bean.beanImage}
+                  src={data.beanImage}
                   alt="원두이미지"
                   className="w-full h-[41.25rem] object-cover"
                   style={{ objectFit: 'contain' }}
@@ -152,11 +152,11 @@ const Details: React.FC = () => {
                   className="border-[1px] border-black flex justify-center
               rounded-[0.5rem] px-[0.3rem] text-[1.4rem]"
                 >
-                  {data.bean.hashTag}
+                  {data.hashTag}
                 </div>
                 <div className="flex justify-between my-[1rem]">
                   <div className="flex text-[2rem] font-semibold">
-                    {data.bean.origin} {data.bean.beanName}
+                    {data.origin} {data.beanName}
                   </div>
                   <div
                     className="flex justify-end items-center cursor-pointer"
@@ -180,13 +180,11 @@ const Details: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex">
-                  <img className="" src={coffeeGraph} alt="" />
+                  <img className="" src={data.beanGraph} alt="" />
                 </div>
               </div>
             </div>
-            <div className="top-text text-[1.4rem] mb-7">
-              {data.bean.beanInfo}
-            </div>
+            <div className="top-text text-[1.4rem] mb-7">{data.beanInfo}</div>
             <button
               className="moreText border-2 rounded-lg w-full text-[22px] text-gray-500 p-1.5 "
               type="button"

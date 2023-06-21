@@ -9,7 +9,7 @@ const getBeanMap = async card_id => {
       }/main/bean/${card_id}?address=${location}`,
     );
 
-    console.log('🍩 💛 getBeanMap 💛 response:', response.data.data.cafeList);
+    // console.log('🍩 💛 getBeanMap 💛 response:', response.data.data.cafeList);
     return response.data.data.cafeList;
   } catch (error) {
     console.log('🍩 💛 getBeanMap 💛 error:', error);
