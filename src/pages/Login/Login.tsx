@@ -74,9 +74,10 @@ const Login = () => {
     const REDIRECT_URI = `${import.meta.env.VITE_BE_SERVER}/users/oauth/kakao`;
     const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
-    navigate(`${kakaoURL}`);
+    alert('구현 중입니다.');
+    // navigate(`${kakaoURL}`);
 
-    window.location.href = kakaoURL;
+    // window.location.href = kakaoURL;
 
     const redirectCode = new URL(window.location.href).searchParams.get('code');
     console.log('너왔니코드?', redirectCode);
@@ -161,7 +162,9 @@ const Login = () => {
 
                         <button
                           type="submit"
-                          onClick={kakaoLoginHandler}
+                          onClick={() => {
+                            alert('준비중입니다.');
+                          }}
                           className="transition duration-200 bg-amber-300 hover:bg-yellow-400 
                           focus:bg-kakao-color focus:shadow-sm focus:ring-4 focus:ring-yellow-500 
                           focus:ring-opacity-50 w-full py-2.5 rounded-lg text-sm shadow-sm 

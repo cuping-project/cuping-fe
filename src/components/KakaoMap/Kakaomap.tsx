@@ -72,12 +72,16 @@ const Kakaomap = () => {
       marker.setMap(kakaoMap);
 
       const iwContent = `
-    <div style="width: 240px; padding: 10px; border-radius: 8px; background-color: white; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);">
-    <div style="position: relative; width: 100%; height: 150px; overflow: hidden;">
-      <img src="${cafe.cafeImage}" style="object-fit: cover; position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%);" />
-    </div>
-    <h4 style="margin: 10px 0;">${cafe.cafeName}</h4>
-    <p style="color: #888;">${cafe.cafeAddress}</p>
+    <div style="width: 300px; padding: 5px; margin: 5px; border-radius: 8px; background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);">
+      <div style="position: relative; width: 100%; height: 150px; overflow: hidden;">
+        <img src="${cafe.cafeImage}" style="object-fit: cover; position: absolute; top: 50%; left: 50%;
+        width: 100%; height: 100%; transform: translate(-50%, -50%); border-radius: 6px;" />
+      </div>
+      <div style="margin: 10px;">
+        <h4 style="font-size: 1.2rem;">${cafe.cafeName}</h4>
+        <p style="font-size: 0.8rem; color: #888; margin: 10px 0;">${cafe.cafeAddress}</p>
+      </div>
     </div> 
     `;
 
