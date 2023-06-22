@@ -15,6 +15,7 @@ import { loginState } from '../../recoil/atom/loginState';
 import { likeStatusState, likesCountState } from '../../recoil/atom/likeState';
 import { LikeMutation } from '../../apis/services/LikeService/LikeService';
 import {
+  isInfoCafeModalState,
   isLoginModalState,
   isMoreCafeModalState,
 } from '../../recoil/atom/modalState';
@@ -22,6 +23,7 @@ import MoreCafeModal from '../../components/Modal/MoreCafeModal/MoreCafeModal';
 import myPageApi from '../../apis/api/myPageApi/myPageApi';
 import BeanComments from '../../components/BeanComments/BeanComments';
 import beanPageIdState from '../../recoil/atom/beanPageIdState';
+import InfoCafeModal from '../../components/Modal/InfoCafeModal/InfoCafeModal';
 
 const Details: React.FC = () => {
   const navigate = useNavigate();
@@ -67,6 +69,13 @@ const Details: React.FC = () => {
 
   const openMoreCafeModal = () => {
     setIsMoreCafeModalOpen(true);
+  };
+
+  // 카페 상세 정보 모달 관련된 변수
+  const [, setIsInfoCafeModalOpen] = useRecoilState(isInfoCafeModalState);
+
+  const openInfoCafeModal = () => {
+    setIsInfoCafeModalOpen(true);
   };
 
   const { id } = useParams();
@@ -213,6 +222,10 @@ const Details: React.FC = () => {
               <div>
                 <span className="text-primary-color-orange">{count}</span>
                 개의 카페가 있습니다.
+                <div onClick={openInfoCafeModal} role="presentation">
+                  테스트
+                </div>
+                <InfoCafeModal />
               </div>
               {visibleCafes.length > 4 && (
                 <div

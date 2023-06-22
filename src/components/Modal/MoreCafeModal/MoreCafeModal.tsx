@@ -36,6 +36,7 @@ const MoreCafeModal = () => {
     setPage(pageNumber);
   };
 
+  // 전체 페이지 수 계산
   const totalPages = Math.ceil(extraCafes.length / cafesPerPage);
 
   // 페이지 번호 생성
