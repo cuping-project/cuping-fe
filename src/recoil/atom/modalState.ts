@@ -20,9 +20,15 @@ const isDeleteAccountModalState = atom({
   default: false,
 });
 
+const isInfoCafeModalState = atom({
+  key: 'isInfoCafeModalState',
+  default: false,
+});
+
 export {
   isLoginModalState,
   isCommentModalState,
   isMoreCafeModalState,
   isDeleteAccountModalState,
+  isInfoCafeModalState,
 };

@@ -13,6 +13,7 @@ import { loginState } from '../../recoil/atom/loginState';
 import { likeStatusState, likesCountState } from '../../recoil/atom/likeState';
 import { LikeMutation } from '../../apis/services/LikeService/LikeService';
 import {
+  isInfoCafeModalState,
   isLoginModalState,
   isMoreCafeModalState,
 } from '../../recoil/atom/modalState';
@@ -20,6 +21,7 @@ import MoreCafeModal from '../../components/Modal/MoreCafeModal/MoreCafeModal';
 import myPageApi from '../../apis/api/myPageApi/myPageApi';
 import BeanComments from '../../components/BeanComments/BeanComments';
 import beanPageIdState from '../../recoil/atom/beanPageIdState';
+import InfoCafeModal from '../../components/Modal/InfoCafeModal/InfoCafeModal';
 import { cardDetailApi } from '../../apis/api/cardDetailApi/cardDetailApi';
 
 const Details: React.FC = () => {
@@ -66,6 +68,13 @@ const Details: React.FC = () => {
 
   const openMoreCafeModal = () => {
     setIsMoreCafeModalOpen(true);
+  };
+
+  // 카페 상세 정보 모달 관련된 변수
+  const [, setIsInfoCafeModalOpen] = useRecoilState(isInfoCafeModalState);
+
+  const openInfoCafeModal = () => {
+    setIsInfoCafeModalOpen(true);
   };
 
   const [, setCardId] = useRecoilState(cardIdMapState);
@@ -120,7 +129,7 @@ const Details: React.FC = () => {
     fetchLikeStatus();
   }, [pageId]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div />;
 
   return (
     <div className="full-conainer w-full h-[100vh]">
@@ -203,28 +212,44 @@ const Details: React.FC = () => {
             <Kakaomap />
           </div>
           <div className="mb-[6rem]">
-            <div className="flex justify-between mt-[2rem] mb-[2rem] text-xl font-bold">
-              <div>
-                <span className="text-primary-color-orange">{count}</span>
-                개의 카페가 있습니다.
+            <div className="flex justify-between mt-[2rem] mb-[2rem] text-xl font-bold items-center">
+              <div className="flex items-center">
+                <div className="text-primary-color-orange">{count}</div>
+                <div>개의 카페가 있습니다.</div>
               </div>
+              {visibleCafes.length > 4 && (
+                <div
+                  className="border border-primary-color-orange text-primary-color-orange
+                  py-[0.5rem] px-[1.25rem] rounded-xl cursor-pointer"
+                  onClick={openMoreCafeModal}
+                  role="presentation"
+                >
+                  + 더보기
+                </div>
+              )}
+
               <div
-                className="border border-primary-color-orange text-primary-color-orange
-                py-[0.5rem] px-[1.25rem] rounded-xl cursor-pointer"
-                onClick={openMoreCafeModal}
+                className="relative z-[999]"
+                onClick={() => {
+                  alert('준비중입니다.');
+                }}
                 role="presentation"
               >
-                + 더보기
+                <MoreCafeModal />
               </div>
-              <MoreCafeModal />
             </div>
             <div className="cardBox grid grid-cols-4 gap-[0.8125rem]">
               {visibleCafes.slice(0, 4).map(cafe => (
-                <div className="cafeCard object-cover shadow-lg h-[20.825rem] rounded-2xl">
+                <div
+                  key={cafe.id}
+                  className="cafeCard object-cover shadow-lg h-[20.825rem] rounded-2xl"
+                  onClick={openInfoCafeModal}
+                  role="presentation"
+                >
                   <img
                     src={cafe.cafeImage}
                     alt=""
-                    className="w-full h-[14.825rem] rounded-2xl"
+                    className="w-full h-[14.825rem] rounded-2xl object-cover"
                   />
                   <div className="px-[1.4375rem] pt-[0.9rem] pb-[1.28125rem] ">
                     <p className="text-xl font-bold h-[2.25rem] leading-[1.625rem]">
@@ -236,6 +261,7 @@ const Details: React.FC = () => {
                   </div>
                 </div>
               ))}
+              <InfoCafeModal />
             </div>
           </div>
         </div>

@@ -142,7 +142,7 @@ const BeanComments = () => {
       </div>
       <div className="middle-card-area grid grid-cols-2">
         {/* ----- 댓글 카드 나열하기 -----  */}
-        {...getVisibleComments().map(comment => (
+        {getVisibleComments().map(comment => (
           <div
             key={comment.id}
             className="middle-card flex border-[0.07rem] border-gray-200 m-3 p-5 rounded-xl"
