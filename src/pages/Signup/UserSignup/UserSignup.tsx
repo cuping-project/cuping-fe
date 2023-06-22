@@ -85,7 +85,7 @@ const UserSignup = () => {
 
     if (!passwordRegex.test(password)) {
       alert(
-        '비밀번호는 최소 8~12자, 알파벳 대소문자 및 숫자로 구성되어야 합니다.',
+        '비밀번호는 최소 8~16자, 알파벳 소문자와 숫자와 특수문자로 구성되어야 합니다.',
       );
       return;
     }
@@ -229,7 +229,7 @@ const UserSignup = () => {
                         ref={PasswordRef}
                         id="pwInput"
                         type="password"
-                        placeholder="비밀번호는 최소 8~12자, 알파벳 대소문자 및 숫자"
+                        placeholder="알파벳 소문자와 숫자와 특수문자 8~16자"
                         className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                       />
                     </label>
