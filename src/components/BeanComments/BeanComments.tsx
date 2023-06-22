@@ -145,7 +145,9 @@ const BeanComments = () => {
         {getVisibleComments().map(comment => (
           <div
             key={comment.id}
-            className="middle-card flex border-[0.07rem] border-gray-200 m-3 p-5 rounded-xl"
+            className="middle-card flex border-[0.07rem] border-gray-200 m-3 p-5 rounded-xl cursor-pointer"
+            onClick={() => alert('댓글 수정 및 삭제는 준비중입니다')}
+            role="presentation"
           >
             <div className="card-picture mr-5 min-w-[60px] flex-shrink-0 flex items-center justify-center">
               {comment.user.profile_image === null ? (

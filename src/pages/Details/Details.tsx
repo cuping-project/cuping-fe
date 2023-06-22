@@ -190,12 +190,6 @@ const Details: React.FC = () => {
               </div>
             </div>
             <div className="top-text text-[1.4rem] mb-7">{data.beanInfo}</div>
-            <button
-              className="moreText border-2 rounded-lg w-full text-[22px] text-gray-500 p-1.5 "
-              type="button"
-            >
-              더보기
-            </button>
           </div>
 
           {/* ----- middle ----- */}
@@ -212,7 +206,7 @@ const Details: React.FC = () => {
             <Kakaomap />
           </div>
           <div className="mb-[6rem]">
-            <div className="flex justify-between mt-[2rem] mb-[2rem] text-xl font-bold items-center">
+            <div className="flex justify-between mt-[2rem] mb-[2rem] text-xl font-bold items-center px-[1.2rem]">
               <div className="flex items-center">
                 <div className="text-primary-color-orange">{count}</div>
                 <div>개의 카페가 있습니다.</div>
@@ -227,23 +221,16 @@ const Details: React.FC = () => {
                   + 더보기
                 </div>
               )}
-
-              <div
-                className="relative z-[999]"
-                onClick={() => {
-                  alert('준비중입니다.');
-                }}
-                role="presentation"
-              >
-                <MoreCafeModal />
-              </div>
+              <MoreCafeModal />
             </div>
             <div className="cardBox grid grid-cols-4 gap-[0.8125rem]">
               {visibleCafes.slice(0, 4).map(cafe => (
                 <div
                   key={cafe.id}
-                  className="cafeCard object-cover shadow-lg h-[20.825rem] rounded-2xl"
-                  onClick={openInfoCafeModal}
+                  className="cafeCard object-cover shadow-lg h-[20.825rem] rounded-2xl cursor-pointer"
+                  onClick={() => {
+                    alert('카페 자세히 보기는 준비중입니다.');
+                  }}
                   role="presentation"
                 >
                   <img
