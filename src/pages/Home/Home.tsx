@@ -39,13 +39,6 @@ const Home: React.FC = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] =
     useRecoilState(isLoginModalState);
 
-  // heart 관련된 기능
-  const [isHeartPressed, setIsHeartPressed] = useState(false);
-  const heartHandler = () => {
-    setIsHeartPressed(!isHeartPressed);
-  };
-
-  const [location, setLocation] = useRecoilState(locationState);
   // 좋아요 버튼 상태를 담기 위한 상태 변수
   const [likeStatus, setLikeStatus] = useRecoilState(likeStatusState);
   const [likesCount, setLikesCount] = useRecoilState(likesCountState);
@@ -55,33 +48,21 @@ const Home: React.FC = () => {
     setIsLoginModalOpen(true);
   };
 
-  // 전체, 위치 버튼 클릭 시 토글
-  const [isAllSelected, setIsAllSelected] = useState(true);
+  // 좋아요 순 버튼 토글
+  const [isFavoriteSelected, setIsFavoriteSelected] = useState(true);
 
   // 신맛, 쓴맛, 단맛, 탄맛, 디카페인 상태 변수
   const [isSshinSelected, setIsSshinSelected] = useState(false); // 신맛
 
-  // 상태변수
-  const [showCard, setShowCard] = useRecoilState(showCardState);
-
-  // 모달 상태 함수
-  const openModal = () => {
-    setIsLoginModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsLoginModalOpen(false);
-  };
-
   // 신맛 태그 클릭 토글
   const handleToggleShin = () => {
-    alert('태그로 필터 기능은 미구현 상태입니다.');
+    alert('태그로 필터 기능은 준비 중 입니다.');
     setIsSshinSelected(!isSshinSelected);
   };
 
-  // "전체" 버튼 클릭 시 토글
-  const handleToggleAll = () => {
-    setIsAllSelected(!isAllSelected);
+  // "좋아요 순" 버튼 클릭 시 토글
+  const handleToggleFavorite = () => {
+    setIsFavoriteSelected(!isFavoriteSelected);
   };
 
   //  메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
@@ -172,20 +153,17 @@ const Home: React.FC = () => {
         </div>
         <div className="contents-area max-w-[1440px] mx-auto pt-[3.5rem]">
           {/* ---------- 검색 네비게이터 ---------- */}
-          <div className="search-bar mb-[4rem] relative">
-            <div className="flex justify-center">
-              <div
-                className="text-primary-color-orange pb-4 pl-2 flex space-x-2
-              d1024:justify-start justify-center"
-              >
-                <img src={pinIcon} alt="" className="w-[14px] " />
+          <div className="search-bar mb-[4rem] relative ">
+            <div className="flex w-[12rem] mx-auto relative z-10">
+              <div className="text-primary-color-orange pb-4 flex">
+                <img src={pinIcon} alt="" className="w-[14px]" />
                 <button type="submit">서울특별시 강서구</button>
               </div>
             </div>
             {/* ---------- 검색창 ---------- */}
             <div
               className="relative flex justify-between items-center border-2 rounded-[15px] border-black
-              mx-auto d1440:w-[50rem] d1024:w-[30rem] z-[11]"
+              mx-auto d1440:w-[50rem] d1024:w-[30rem] z-10"
             >
               <input
                 type="text"
@@ -229,11 +207,11 @@ const Home: React.FC = () => {
                 <button
                   type="submit"
                   className={`sorting-btn bg-primary-color-orange text-white border-1 m-2 px-2 py-1 rounded-[10px] ${
-                    isAllSelected ? '' : 'opacity-30'
+                    isFavoriteSelected ? '' : 'opacity-30'
                   }`}
-                  onClick={handleToggleAll}
+                  onClick={handleToggleFavorite}
                 >
-                  전체
+                  좋아요 순
                 </button>
               </div>
 
@@ -259,41 +237,45 @@ const Home: React.FC = () => {
                   <img src={searchNone} alt="" />
                 </div>
               ) : (
-                cards.map(card => (
-                  <Link
-                    to={`/details/${card.id}`}
-                    key={card.id}
-                    className="card m-4 shadow-md border border-gray-300 rounded-[12px] cursor-pointer"
-                  >
-                    <div className="card-picture overflow-hidden">
-                      <img
-                        src={card.beanImage}
-                        alt=""
-                        className="w-full h-[14rem] object-cover rounded-[12px]"
-                      />
-                    </div>
-                    <div className="card-name flex justify-between">
-                      <div className="bean-name text-xl p-2 ml-3">
-                        {card.origin} {card.beanName}
+                [...cards]
+                  .sort((a, b) => b.likesCount - a.likesCount)
+                  .map(card => (
+                    <Link
+                      to={`/details/${card.id}`}
+                      key={card.id}
+                      className="card m-4 shadow-md border border-gray-300 rounded-[12px] cursor-pointer"
+                    >
+                      <div className="card-picture overflow-hidden">
+                        <img
+                          src={card.beanImage}
+                          alt=""
+                          className="w-full h-[14rem] object-cover rounded-[12px]"
+                        />
                       </div>
-                      <div className="flex items-center justify-end p-2">
-                        <div className="heart mx-2 cursor-pointer w-full flex items-center pr-[0.5rem] mr-[0.8rem]">
-                          <img
-                            src={heartFill}
-                            className="mr-[0.5rem] w-[1.2rem] cursor-pointer"
-                            alt="하트이미지"
-                          />
-                          <div className="text-[1.2rem]">{card.likesCount}</div>
+                      <div className="card-name flex justify-between">
+                        <div className="bean-name text-xl p-2 ml-3">
+                          {card.origin} {card.beanName}
+                        </div>
+                        <div className="flex items-center justify-end p-2">
+                          <div className="heart mx-2 cursor-pointer w-full flex items-center pr-[0.5rem] mr-[0.8rem]">
+                            <img
+                              src={heartFill}
+                              className="mr-[0.5rem] w-[1.2rem] cursor-pointer"
+                              alt="하트이미지"
+                            />
+                            <div className="text-[1.2rem]">
+                              {card.likesCount}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="card-labels p-2 flex">
-                      <div className="card-label border-2 rounded-[5px] px-2 m-2 text-[1rem]">
-                        {card.hashTag}
+                      <div className="card-labels p-2 flex">
+                        <div className="card-label border-2 rounded-[5px] px-2 m-2 text-[1rem]">
+                          {card.hashTag}
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                ))
+                    </Link>
+                  ))
               )}
             </div>
           </div>
