@@ -23,7 +23,7 @@ const UserSignup = () => {
   const [password, PasswordRef, handleChangePassword] = useInput();
   const [passwordCheck, PasswordCheckRef, handleChangePasswordCheck] =
     useInput();
-  const [passwordCheckError, setPasswordCheckError] = useState('');
+  const [passwordCheckMsg, setPasswordCheckMsg] = useState('');
 
   // 로그인이 되었는지 확인
   const [loggedin, setLoggedin] = useRecoilState(loginState);
@@ -46,11 +46,11 @@ const UserSignup = () => {
   // 비밀번호 일치 검사
   useEffect(() => {
     if (!passwordCheck) {
-      setPasswordCheckError('비밀번호를 입력해주세요.');
+      setPasswordCheckMsg('비밀번호를 입력해주세요.');
     } else if (!!passwordCheck && passwordCheck !== password) {
-      setPasswordCheckError('비밀번호가 일치하지 않습니다.');
+      setPasswordCheckMsg('비밀번호가 일치하지 않습니다.');
     } else {
-      setPasswordCheckError('비밀번호가 일치합니다.');
+      setPasswordCheckMsg('비밀번호가 일치합니다.');
     }
   }, [password, passwordCheck]);
 
@@ -69,8 +69,9 @@ const UserSignup = () => {
   const { mutate: SignupUserMutate } = SignupUserService();
   const signupBtnClick = (e: any) => {
     e.preventDefault();
-    const nicknameRegex = /^[a-z0-9]{5,12}$/i;
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,12}$/;
+    const nicknameRegex = /^[a-zA-Z가-힣]{2,8}$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*\d)(?=.*[~!?_@#$%^&*()+|=])[a-z\d~!?_@#$%^&*()+|=]{8,16}$/;
 
     if (!nickname || !password || !userId) {
       alert('아이디,닉네임과 비밀번호를 모두 입력하세요.');
@@ -78,7 +79,7 @@ const UserSignup = () => {
     }
 
     if (!nicknameRegex.test(nickname)) {
-      alert('닉네임은 최소 5~12자, 알파벳 소문자 및 숫자로 구성되어야 합니다.');
+      alert('닉네임은 최소 2~8자, 알파벳 소문자 및 한글 닉네임이어야 합니다.');
       return;
     }
 
@@ -173,7 +174,7 @@ const UserSignup = () => {
                     handleChangePassword={handleChangePassword}
                     passwordCheck={passwordCheck}
                     handleChangePasswordCheck={handleChangePasswordCheck}
-                    passwordCheckError={passwordCheckError}
+                    passwordCheckError={passwordCheckMsg}
                   />
                 ) : (
                   <div className="w-[350px]">
@@ -212,7 +213,7 @@ const UserSignup = () => {
                         ref={nicknameRef}
                         id="nkInput"
                         type="text"
-                        placeholder="닉네임은 최소 5~12자, 알파벳 소문자 및 숫자"
+                        placeholder="닉네임은 2~8자, 알파벳 소문자 및 한글"
                         className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                       />
                     </label>
@@ -248,39 +249,34 @@ const UserSignup = () => {
                             id="pwCheckInput"
                             type="password"
                             placeholder="비밀번호를 다시 입력하세요."
-                            className={`${
-                              passwordCheckError ===
-                              '비밀번호가 일치하지 않습니다.'
-                                ? 'ring-red-500 ring-1 border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full'
-                                : 'ring-green-500 ring-1 border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full'
+                            className={`ring-1 border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full ${
+                              passwordCheckMsg === '비밀번호가 일치합니다.'
+                                ? styles.successMsg
+                                : styles.errorMsg
                             }`}
                           />
                         </div>
                       </label>
-                      {passwordCheckError ===
-                      '비밀번호가 일치하지 않습니다.' ? (
-                        <div className="flex items-center justify-between">
-                          <p className="text-xs text-red-500 flex items-center">
-                            {passwordCheckError}
-                          </p>
-                          <img
-                            src={errorIcon}
-                            className="w-[18px] flex items-center"
-                            alt=""
-                          />
+                      <div className="flex items-center justify-between">
+                        <div
+                          className={`text-xs ${
+                            passwordCheckMsg === '비밀번호가 일치합니다.'
+                              ? styles.successMsg
+                              : styles.errorMsg
+                          }`}
+                        >
+                          {passwordCheckMsg}
                         </div>
-                      ) : (
-                        <div className="flex items-center justify-between">
-                          <p className="text-xs text-green-500 flex items-center">
-                            {passwordCheckError}
-                          </p>
-                          <img
-                            src={checkIcon}
-                            className="w-[18px] flex items-center"
-                            alt=""
-                          />
-                        </div>
-                      )}
+                        <img
+                          src={
+                            passwordCheckMsg === '비밀번호가 일치합니다.'
+                              ? checkIcon
+                              : errorIcon
+                          }
+                          alt=""
+                          className="w-[18px] flex items-center"
+                        />
+                      </div>
                     </div>
 
                     <button
@@ -294,6 +290,9 @@ const UserSignup = () => {
                     <button
                       type="button"
                       className="transition duration-200 bg-yellow-400 hover:bg-yellow-600 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
+                      onClick={() => {
+                        alert('준비중입니다.');
+                      }}
                     >
                       카카오톡 간편 가입하기
                     </button>

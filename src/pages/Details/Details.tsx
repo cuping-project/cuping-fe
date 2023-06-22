@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -8,13 +7,13 @@ import Header from '../../components/Header/Header';
 import Kakaomap from '../../components/KakaoMap/Kakaomap';
 import heartFill from '../../assets/img/heart-fill.png';
 import heart from '../../assets/img/heart.png';
-import coffeeGraph from '../../assets/img/coffee-graph.png';
 import { cardIdMapState } from '../../recoil/atom/cardIdMapState';
 import { visibleCafesState } from '../../recoil/atom/visibleCafesState';
 import { loginState } from '../../recoil/atom/loginState';
 import { likeStatusState, likesCountState } from '../../recoil/atom/likeState';
 import { LikeMutation } from '../../apis/services/LikeService/LikeService';
 import {
+  isInfoCafeModalState,
   isLoginModalState,
   isMoreCafeModalState,
 } from '../../recoil/atom/modalState';
@@ -22,6 +21,8 @@ import MoreCafeModal from '../../components/Modal/MoreCafeModal/MoreCafeModal';
 import myPageApi from '../../apis/api/myPageApi/myPageApi';
 import BeanComments from '../../components/BeanComments/BeanComments';
 import beanPageIdState from '../../recoil/atom/beanPageIdState';
+import InfoCafeModal from '../../components/Modal/InfoCafeModal/InfoCafeModal';
+import { cardDetailApi } from '../../apis/api/cardDetailApi/cardDetailApi';
 
 const Details: React.FC = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const Details: React.FC = () => {
     };
 
     checkLoginStatus();
-  }, []);
+  }, [loggedin]);
 
   // 로그인 모달 관련된 변수
   const [isLoginModalOpen, setIsLoginModalOpen] =
@@ -69,15 +70,23 @@ const Details: React.FC = () => {
     setIsMoreCafeModalOpen(true);
   };
 
-  const { id } = useParams();
-  const [cardId, setCardId] = useRecoilState(cardIdMapState);
-  setCardId(id);
+  // 카페 상세 정보 모달 관련된 변수
+  const [, setIsInfoCafeModalOpen] = useRecoilState(isInfoCafeModalState);
+
+  const openInfoCafeModal = () => {
+    setIsInfoCafeModalOpen(true);
+  };
+
+  const [, setCardId] = useRecoilState(cardIdMapState);
+  setCardId(pageId);
+
   // 좋아요 기능
   const likeMutation = LikeMutation();
   const handleLike = cardId => {
     // 로그인 상태 체크
     if (!loggedin) {
       openLoginModal();
+      return;
     }
 
     // 현재 좋아요 상태 반전
@@ -92,12 +101,10 @@ const Details: React.FC = () => {
 
   // 상세 데이터 가져오기
   const { isLoading, data } = useQuery(['cardDetail', pageId], async () => {
-    const response = await axios.get(
-      `${import.meta.env.VITE_BE_SERVER}/main/bean/${pageId}?address=`,
-    );
+    const beanData = await cardDetailApi(pageId);
 
-    setLikesCount(response.data.data.bean.likesCount);
-    return response.data.data;
+    setLikesCount(beanData.data.bean.likesCount);
+    return beanData.data.bean;
   });
 
   useEffect(() => {
@@ -105,44 +112,42 @@ const Details: React.FC = () => {
       setCard(data);
       setBeanPageId(pageId);
     }
-  }, [data]);
+  }, [data, likesCount]);
 
   const visibleCafes = useRecoilValue(visibleCafesState);
   const count = visibleCafes.length;
 
-  console.log('🍩 💛 visibleCafes:', visibleCafes);
   // 현재 좋아요 상태를 가져오기 위한 useEffect
   useEffect(() => {
     const fetchLikeStatus = async () => {
       const response = await myPageApi();
-      const { heartList } = response?.data.data;
-      // console.log(heartList);
+      const heartList = response.data.data.heartList.map(bean => bean.id);
+
       setLikeStatus(heartList.includes(parseInt(pageId)));
     };
 
     fetchLikeStatus();
   }, [pageId]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div />;
 
   return (
-    <div className="main-container">
-      <div className="flex flex-col mx-[5rem] max-w-[1440px]">
-        <div onClick={() => navigate('/')} role="presentation">
+    <div className="full-conainer w-full h-[100vh]">
+      <div className="body-container">
+        <div className="Header">
           <Header />
         </div>
         <hr />
-        <div className="inner-container w-full justify-center mx-auto">
+        <div className="contents-area max-w-[1440px] mx-auto pt-[12rem]">
           {/* ----- top ----- */}
           <div className="top my-[5rem]">
             <div className="top-image w-full grid grid-cols-2 mx-auto mb-[50px]">
               {/* ----- top-left ----- */}
-              <div className="top-left mx-auto overflow-hidden h-[41.5rem]">
+              <div className="top-left relative overflow-hidden h-[38rem] rounded-xl">
                 <img
-                  src={data.bean.beanImage}
+                  src={data.beanImage}
                   alt="원두이미지"
-                  className="w-full h-[41.25rem] object-cover"
-                  style={{ objectFit: 'contain' }}
+                  className="w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                 />
                 <div />
               </div>
@@ -152,11 +157,11 @@ const Details: React.FC = () => {
                   className="border-[1px] border-black flex justify-center
               rounded-[0.5rem] px-[0.3rem] text-[1.4rem]"
                 >
-                  {data.bean.hashTag}
+                  {data.hashTag}
                 </div>
                 <div className="flex justify-between my-[1rem]">
                   <div className="flex text-[2rem] font-semibold">
-                    {data.bean.origin} {data.bean.beanName}
+                    {data.origin} {data.beanName}
                   </div>
                   <div
                     className="flex justify-end items-center cursor-pointer"
@@ -180,13 +185,11 @@ const Details: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex">
-                  <img className="" src={coffeeGraph} alt="" />
+                  <img className="" src={data.beanGraph} alt="" />
                 </div>
               </div>
             </div>
-            <div className="top-text text-[1.4rem] mb-7">
-              {data.bean.beanInfo}
-            </div>
+            <div className="top-text text-[1.4rem] mb-7">{data.beanInfo}</div>
             <button
               className="moreText border-2 rounded-lg w-full text-[22px] text-gray-500 p-1.5 "
               type="button"
@@ -209,28 +212,44 @@ const Details: React.FC = () => {
             <Kakaomap />
           </div>
           <div className="mb-[6rem]">
-            <div className="flex justify-between mt-[2rem] mb-[2rem] text-xl font-bold">
-              <div>
-                <span className="text-primary-color-orange">{count}</span>
-                개의 카페가 있습니다.
+            <div className="flex justify-between mt-[2rem] mb-[2rem] text-xl font-bold items-center">
+              <div className="flex items-center">
+                <div className="text-primary-color-orange">{count}</div>
+                <div>개의 카페가 있습니다.</div>
               </div>
+              {visibleCafes.length > 4 && (
+                <div
+                  className="border border-primary-color-orange text-primary-color-orange
+                  py-[0.5rem] px-[1.25rem] rounded-xl cursor-pointer"
+                  onClick={openMoreCafeModal}
+                  role="presentation"
+                >
+                  + 더보기
+                </div>
+              )}
+
               <div
-                className="border border-primary-color-orange text-primary-color-orange
-                py-[0.5rem] px-[1.25rem] rounded-xl cursor-pointer"
-                onClick={openMoreCafeModal}
+                className="relative z-[999]"
+                onClick={() => {
+                  alert('준비중입니다.');
+                }}
                 role="presentation"
               >
-                + 더보기
+                <MoreCafeModal />
               </div>
-              <MoreCafeModal />
             </div>
             <div className="cardBox grid grid-cols-4 gap-[0.8125rem]">
               {visibleCafes.slice(0, 4).map(cafe => (
-                <div className="cafeCard object-cover shadow-lg h-[20.825rem] rounded-2xl">
+                <div
+                  key={cafe.id}
+                  className="cafeCard object-cover shadow-lg h-[20.825rem] rounded-2xl"
+                  onClick={openInfoCafeModal}
+                  role="presentation"
+                >
                   <img
                     src={cafe.cafeImage}
                     alt=""
-                    className="w-full h-[14.825rem] rounded-2xl"
+                    className="w-full h-[14.825rem] rounded-2xl object-cover"
                   />
                   <div className="px-[1.4375rem] pt-[0.9rem] pb-[1.28125rem] ">
                     <p className="text-xl font-bold h-[2.25rem] leading-[1.625rem]">
@@ -242,6 +261,7 @@ const Details: React.FC = () => {
                   </div>
                 </div>
               ))}
+              <InfoCafeModal />
             </div>
           </div>
         </div>

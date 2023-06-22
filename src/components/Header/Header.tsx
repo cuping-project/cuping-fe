@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -14,6 +14,7 @@ const Header: React.FC = () => {
   const [loggined, setLoggedin] = useRecoilState(loginState);
   const [cards, setCards] = useRecoilState(cardState);
   const navigate = useNavigate();
+  // 로그인 상태 변수
 
   // 검색 결과 가져오기
   const getSearchResults = async () => {
@@ -30,9 +31,10 @@ const Header: React.FC = () => {
   // 로고 클릭시 메인 페이지로 이동
   const handleHomePage = async () => {
     try {
-      const searchResults = await getSearchResults();
-      setCards(searchResults);
-      navigate('/');
+      // const searchResults = await getSearchResults();
+      // setCards(searchResults);
+      // navigate('/');
+      window.location.href = '/';
     } catch (err) {
       console.log('✨ ‣ handleSearch ‣ err:', err);
     }
@@ -42,17 +44,35 @@ const Header: React.FC = () => {
   const logoutHandler = () => {
     Cookies.remove('ACCESS_KEY');
     setLoggedin(false);
+    navigate('/');
     alert('로그아웃 되었습니다.');
   };
 
+  //  메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const accessToken = Cookies.get('ACCESS_KEY');
+      if (accessToken) {
+        setLoggedin(true);
+      } else {
+        setLoggedin(false);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
+
   return (
-    <div className="main-container w-full p-10">
-      <div className="header w-full flex justify-between items-center mx-auto">
+    <div className="bg-container w-full h-[9rem] fixed bg-[#fff] z-[10]">
+      <div
+        className="header container max-w-[1440px] flex justify-between items-center
+        p-10 mx-auto"
+      >
         <div className="logo m-2 relative z-10 flex justify-center items-center">
           <button type="button">
             <img
               src={cuppingLogo}
-              className="w-[4rem] d1920:w-[14rem] d1440:w-[10rem] d1024:w-[6rem]"
+              className="d1920:w-[14rem] d1440:w-[10rem] d1024:w-[8rem]"
               onClick={handleHomePage}
               role="presentation"
               alt="커핑로고"
@@ -65,7 +85,14 @@ const Header: React.FC = () => {
               <img src={beniImg} alt="" className="w-[2rem] mr-2" />
             </div>
             <div className="mypage text-primary-color-orange font-bold relative z-10 mr-[3rem]">
-              <button type="button">마이 페이지</button>
+              <button
+                onClick={() => {
+                  navigate('/usermypage');
+                }}
+                type="button"
+              >
+                마이 페이지
+              </button>
             </div>
             <button
               className="logout w-[2rem] relative z-10"
@@ -97,6 +124,7 @@ const Header: React.FC = () => {
           </div>
         )}
       </div>
+      <div className="border-[1px] border-[#e1e1e1]" />
     </div>
   );
 };

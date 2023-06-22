@@ -47,6 +47,44 @@ const BeanComments = () => {
     getCommentApi(beanPageId),
   );
 
+  // 페이지네이션을 위한 로직
+  // 페이지를 저장하기 위해 useState를 사용
+  const [page, setPage] = useState(1);
+  // 페이지당 표시할 댓글 수를 지정
+  const commentPerPage = 4;
+
+  /**
+   * 현재 페이지에 표시할 댓글을 가져오는 함수
+   * @returns {Array} visibleComments
+   */
+  const getVisibleComments = () => {
+    const sortedCommentList = [...commentList].sort((a, b) => b.id - a.id);
+    const indexOfLastComment = page * commentPerPage;
+    const indexOfFirstComment = indexOfLastComment - commentPerPage;
+    return sortedCommentList.slice(indexOfFirstComment, indexOfLastComment);
+  };
+
+  /**
+   * 클릭 시 페이지를 변경하는 함수
+   * @param pageNumber 페이지 번호
+   */
+  const handlePageClick = pageNumber => {
+    setPage(pageNumber);
+  };
+
+  /**
+   * 총페이지 수를 구하는 함수
+   */
+  const tatalPages = Math.ceil(commentList.length / commentPerPage);
+
+  /**
+   * 페이지네이션을 위한 페이지 번호를 저장하는 배열
+   */
+  const pageNumbers = [];
+  for (let i = 1; i <= tatalPages; i += 1) {
+    pageNumbers.push(i);
+  }
+
   // 메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
   useEffect(() => {
     const checkLoginStatus = () => {
@@ -103,8 +141,8 @@ const BeanComments = () => {
         )}
       </div>
       <div className="middle-card-area grid grid-cols-2">
-        {/* card */}
-        {commentList.map(comment => (
+        {/* ----- 댓글 카드 나열하기 -----  */}
+        {getVisibleComments().map(comment => (
           <div
             key={comment.id}
             className="middle-card flex border-[0.07rem] border-gray-200 m-3 p-5 rounded-xl"
@@ -120,7 +158,7 @@ const BeanComments = () => {
               <div className="card-nickname">{comment.user.nickname}</div>
               <div className="flex mb-2">
                 <div className="card-days text-[0.8rem] flex items-end">
-                  2023. 06. 01
+                  2023.06.01
                 </div>
               </div>
               <div className="card-text">{comment.content}</div>
@@ -128,19 +166,25 @@ const BeanComments = () => {
           </div>
         ))}
       </div>
+      {/* ----- 페이지 번호 ----- */}
       <div className="page-nation w-full flex justify-center">
-        <div
-          className="page-number flex items-center justify-center w-[2.5rem] h-[2.5rem] border-[0.07rem]
-    border-primary-color-orange m-2 rounded-[50%] text-center"
-        >
-          1
-        </div>
-        <div
-          className="page-number flex items-center justify-center w-[2.5rem] h-[2.5rem] border-[0.07rem]
-    border-primary-color-orange m-2 rounded-[50%] text-center"
-        >
-          2
-        </div>
+        {pageNumbers.map(number => (
+          <div
+            key={number}
+            className={`page-number flex items-center justify-center w-[2.5rem] h-[2.5rem] border-[0.07rem]
+            ${
+              number === page
+                ? 'bg-primary-color-orange text-white'
+                : 'border-primary-color-orange'
+            } m-2 rounded-[50%] text-center cursor-pointer`}
+            onClick={() => {
+              handlePageClick(number);
+            }}
+            role="presentation"
+          >
+            {number}
+          </div>
+        ))}
       </div>
     </div>
   );
