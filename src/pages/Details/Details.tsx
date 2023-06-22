@@ -228,7 +228,15 @@ const Details: React.FC = () => {
                 </div>
               )}
 
-              <MoreCafeModal />
+              <div
+                className="relative z-[999]"
+                onClick={() => {
+                  alert('준비중입니다.');
+                }}
+                role="presentation"
+              >
+                <MoreCafeModal />
+              </div>
             </div>
             <div className="cardBox grid grid-cols-4 gap-[0.8125rem]">
               {visibleCafes.slice(0, 4).map(cafe => (

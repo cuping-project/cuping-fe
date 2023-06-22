@@ -116,15 +116,8 @@ const Kakaomap = () => {
 
   if (isLoading) return <div>로딩중</div>;
   return (
-    <div
-      style={{
-        width: '100%',
-        display: 'inline-block',
-        marginLeft: '5px',
-        marginRight: '5px',
-      }}
-    >
-      <div id="map" style={{ width: '100%', height: '500px' }} />
+    <div className="w-full inline-block ml-[5px] mr-[5px]]">
+      <div id="map" className="w-full h-[500px]" />
     </div>
   );
 };
