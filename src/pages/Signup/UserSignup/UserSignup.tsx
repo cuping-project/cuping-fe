@@ -153,7 +153,10 @@ const UserSignup = () => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleButtonClick(true)}
+                    // onClick={() => handleButtonClick(true)}
+                    onClick={() => {
+                      alert('피드백을 받아 수정입니다.');
+                    }}
                     className={`transition duration-200 border bg-gray-200
                   border-gray-200 text-gray-500 py-0.5 rounded-lg
                   text-sm hover:shadow-sm mx-0.5
