@@ -23,7 +23,7 @@ const Kakaomap = () => {
     const container = document.getElementById('map'); // 지도를 표시할 div
     const options = {
       center: new kakao.maps.LatLng(37.5677463315893, 126.8397655094666), // 지도의 중심 좌표
-      level: 3, // 지도의 확대 레벨
+      level: 5, // 지도의 확대 레벨
     };
 
     // 지도 생성

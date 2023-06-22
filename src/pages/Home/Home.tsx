@@ -157,7 +157,14 @@ const Home: React.FC = () => {
             <div className="flex w-[12rem] mx-auto relative z-10">
               <div className="text-primary-color-orange pb-4 flex">
                 <img src={pinIcon} alt="" className="w-[14px]" />
-                <button type="submit">서울특별시 강서구</button>
+                <button
+                  onClick={() => {
+                    alert('준비중입니다.');
+                  }}
+                  type="submit"
+                >
+                  서울특별시 강서구
+                </button>
               </div>
             </div>
             {/* ---------- 검색창 ---------- */}
