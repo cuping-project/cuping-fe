@@ -139,12 +139,6 @@ const OwnerSignup = ({
             placeholder="닉네임을 입력하세요."
             className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
           />
-          <button
-            type="button"
-            className="transition duration-200 bg-primary-color-salgu hover:bg-primary-color-orange text-white w-[10rem] py-2 mb-4 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
-          >
-            중복확인
-          </button>
         </div>
       </label>
       <label htmlFor="pwInput" className="text-sm text-gray-600 pb-1 block">
@@ -154,7 +148,7 @@ const OwnerSignup = ({
           onChange={handleChangePassword}
           id="pwInput"
           type="password"
-          placeholder="비밀번호 입력(영문,숫자 조합 최소8자)"
+          placeholder="최소 8~12자, 알파벳 소문자, 숫자 및 특수문자"
           className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
         />
       </label>
