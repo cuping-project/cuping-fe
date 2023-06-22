@@ -8,6 +8,7 @@ import useInput from '../../../hooks/useInput';
 import errorIcon from '../../../assets/img/warning.svg';
 import checkIcon from '../../../assets/img/check.svg';
 import { SignupOwnerService } from '../../../apis/services/SignupService/SignupService';
+import styles from './OwnerSignup.module.css';
 
 // todo recoil로 상태관리 하기
 const OwnerSignup = ({
@@ -176,14 +177,23 @@ const OwnerSignup = ({
             }`}
           />
         </label>
-        {passwordCheckError &&
-        passwordCheckError === '비밀번호가 일치하지 않습니다.' ? (
+        {passwordCheckError ? (
           <div className="flex items-center justify-between">
-            <p className="text-xs text-red-500 flex items-center">
+            <p
+              className={`text-xs ${
+                passwordCheckError === '비밀번호가 일치합니다.'
+                  ? 'text-green-500'
+                  : 'text-red-500'
+              } flex items-center`}
+            >
               {passwordCheckError}
             </p>
             <img
-              src={errorIcon}
+              src={
+                passwordCheckError === '비밀번호가 일치합니다.'
+                  ? checkIcon
+                  : errorIcon
+              }
               className="w-[18px] flex items-center"
               alt=""
             />
