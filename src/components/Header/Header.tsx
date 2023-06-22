@@ -31,9 +31,10 @@ const Header: React.FC = () => {
   // 로고 클릭시 메인 페이지로 이동
   const handleHomePage = async () => {
     try {
-      const searchResults = await getSearchResults();
-      setCards(searchResults);
-      navigate('/');
+      // const searchResults = await getSearchResults();
+      // setCards(searchResults);
+      // navigate('/');
+      window.location.href = '/';
     } catch (err) {
       console.log('✨ ‣ handleSearch ‣ err:', err);
     }

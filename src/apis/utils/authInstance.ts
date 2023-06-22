@@ -15,12 +15,12 @@ authInstance.interceptors.request.use(
     const refreshToken = Cookies.get('REFRESH_KEY');
     config.headers['ACCESS_KEY'] = `${accessToken}`;
     config.headers['REFRESH_KEY'] = `${refreshToken}`;
-    console.log('인터셉터 요청 성공!');
+    // console.log('인터셉터 요청 성공!');
     return config;
   },
   // 오류 요청 보내기 전 수행
   function (error) {
-    console.log('인터셉터 요청 오류!');
+    // console.log('인터셉터 요청 오류!');
     return Promise.reject(error);
   },
 );
@@ -28,13 +28,13 @@ authInstance.interceptors.request.use(
 authInstance.interceptors.response.use(
   // 응답 내보내기 전 수행
   function (response) {
-    console.log('인터셉터 응답 받았습니다!');
+    // console.log('인터셉터 응답 받았습니다!');
     return response;
   },
 
   // 오류 응답 내보내기 전 수행
   function (error) {
-    console.log('인터셉터 응답 오류 발생!', error);
+    // console.log('인터셉터 응답 오류 발생!', error);
     return Promise.reject(error);
   },
 );

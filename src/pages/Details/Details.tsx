@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -8,7 +7,6 @@ import Header from '../../components/Header/Header';
 import Kakaomap from '../../components/KakaoMap/Kakaomap';
 import heartFill from '../../assets/img/heart-fill.png';
 import heart from '../../assets/img/heart.png';
-import coffeeGraph from '../../assets/img/coffee-graph.png';
 import { cardIdMapState } from '../../recoil/atom/cardIdMapState';
 import { visibleCafesState } from '../../recoil/atom/visibleCafesState';
 import { loginState } from '../../recoil/atom/loginState';
@@ -70,7 +68,6 @@ const Details: React.FC = () => {
     setIsMoreCafeModalOpen(true);
   };
 
-  // const { id } = useParams();
   const [, setCardId] = useRecoilState(cardIdMapState);
   setCardId(pageId);
 
@@ -137,12 +134,11 @@ const Details: React.FC = () => {
           <div className="top my-[5rem]">
             <div className="top-image w-full grid grid-cols-2 mx-auto mb-[50px]">
               {/* ----- top-left ----- */}
-              <div className="top-left mx-auto overflow-hidden h-[41.5rem]">
+              <div className="top-left relative overflow-hidden h-[38rem] rounded-xl">
                 <img
                   src={data.beanImage}
                   alt="원두이미지"
-                  className="w-full h-[41.25rem] object-cover"
-                  style={{ objectFit: 'contain' }}
+                  className="w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                 />
                 <div />
               </div>
