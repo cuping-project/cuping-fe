@@ -17,7 +17,6 @@ const FavoriteBeansList = () => {
   useEffect(() => {
     if (fetchCardData) {
       setFavoriteCard(fetchCardData);
-      console.log(favoriteCard);
     }
   }, [fetchCardData]);
 
@@ -26,7 +25,7 @@ const FavoriteBeansList = () => {
       <div className="text-3xl m-3">찜한 원두</div>
       <div className="grid grid-cols-3">
         {favoriteCard.map(bean => (
-          <Link to={`/details/${bean.id}`} className="">
+          <Link to={`/details/${bean.id}`} key={bean.id} className="">
             <div className="card border-none m-[1.2rem] bg-white rounded-xl shadow-md">
               <div className="h-[14rem] overflow-hidden relative rounded-xl">
                 <img

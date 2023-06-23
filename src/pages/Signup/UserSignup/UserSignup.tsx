@@ -61,7 +61,6 @@ const UserSignup = () => {
       alert('아이디를 입력하세요.');
       return;
     }
-
     CheckUserMutate({ userId });
   };
 
@@ -71,7 +70,7 @@ const UserSignup = () => {
     e.preventDefault();
     const nicknameRegex = /^[a-zA-Z가-힣]{2,8}$/;
     const passwordRegex =
-      /^(?=.*[a-z])(?=.*\d)(?=.*[~!?_@#$%^&*()+|=])[a-z\d~!?_@#$%^&*()+|=]{8,16}$/;
+      /^(?=.*[a-z])(?=.*\d)(?=.*[~!?_@#$%^&*()+|=])[a-z\d~!?_@#$%^&*()+|=]{8,12}$/;
 
     if (!nickname || !password || !userId) {
       alert('아이디,닉네임과 비밀번호를 모두 입력하세요.');
@@ -85,7 +84,7 @@ const UserSignup = () => {
 
     if (!passwordRegex.test(password)) {
       alert(
-        '비밀번호는 최소 8~16자, 알파벳 소문자와 숫자와 특수문자로 구성되어야 합니다.',
+        '비밀번호는 최소 8~12자, 알파벳 소문자와 숫자와 특수문자로 구성되어야 합니다.',
       );
       return;
     }
@@ -254,8 +253,8 @@ const UserSignup = () => {
                             placeholder="비밀번호를 다시 입력하세요."
                             className={`ring-1 border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full ${
                               passwordCheckMsg === '비밀번호가 일치합니다.'
-                                ? styles.successMsg
-                                : styles.errorMsg
+                                ? styles.successRing
+                                : styles.errorRing
                             }`}
                           />
                         </div>
