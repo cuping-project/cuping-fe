@@ -40,42 +40,26 @@ const Details: React.FC = () => {
   // 카드를 담기 위한 상태 변수
   const [card, setCard] = useState([]);
 
-  // 메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
-  useEffect(() => {
-    const checkLoginStatus = () => {
-      const accessToken = Cookies.get('ACCESS_KEY');
-      if (accessToken) {
-        setLoggedin(true);
-      } else {
-        setLoggedin(false);
-      }
-    };
-
-    checkLoginStatus();
-  }, [loggedin]);
-
-  // 로그인 모달 관련된 변수
+  // 로그인 모달 관련된 변수 ------------------------------------------
   const [isLoginModalOpen, setIsLoginModalOpen] =
     useRecoilState(isLoginModalState);
-
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
   };
-
-  // 카페 더보기 모달 관련된 변수
+  // ------------------------------------------------------------------
+  // 카페 더보기 모달 관련된 변수 --------------------------------------
   const [isMoreCafeModalOpen, setIsMoreCafeModalOpen] =
     useRecoilState(isMoreCafeModalState);
-
   const openMoreCafeModal = () => {
     setIsMoreCafeModalOpen(true);
   };
-
+  // ------------------------------------------------------------------
   // 카페 상세 정보 모달 관련된 변수
   const [, setIsInfoCafeModalOpen] = useRecoilState(isInfoCafeModalState);
-
   const openInfoCafeModal = () => {
     setIsInfoCafeModalOpen(true);
   };
+  // ------------------------------------------------------------------
 
   const [, setCardId] = useRecoilState(cardIdMapState);
   setCardId(pageId);
@@ -107,19 +91,35 @@ const Details: React.FC = () => {
     return beanData.data.bean;
   });
 
+  const visibleCafes = useRecoilValue(visibleCafesState);
+  const count = visibleCafes.length;
+
+  // 메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const accessToken = Cookies.get('ACCESS_KEY');
+      if (accessToken) {
+        setLoggedin(true);
+      } else {
+        setLoggedin(false);
+      }
+    };
+
+    checkLoginStatus();
+  }, [loggedin]);
+
+  // 상세 데이터 가져오기 성공 시 카드 데이터를 담기
   useEffect(() => {
     if (data) {
       setCard(data);
       setBeanPageId(pageId);
     }
-  }, [data, likesCount]);
-
-  const visibleCafes = useRecoilValue(visibleCafesState);
-  const count = visibleCafes.length;
+  }, [data, likesCount, pageId]);
 
   // 현재 좋아요 상태를 가져오기 위한 useEffect
   useEffect(() => {
     const fetchLikeStatus = async () => {
+      if (!loggedin) return;
       const response = await myPageApi();
       const heartList = response.data.data.heartList.map(bean => bean.id);
 
