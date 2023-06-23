@@ -14,7 +14,7 @@ const queryClient = new QueryClient({
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className={styles.containerLayout}>
+      <div className={`${styles.containerLayout}`}>
         <Router />
       </div>
     </QueryClientProvider>
