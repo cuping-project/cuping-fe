@@ -151,11 +151,14 @@ const Home: React.FC = () => {
         <div className="Header">
           <Header />
         </div>
-        <div className="contents-area max-w-[1440px] mx-auto pt-[3.5rem]">
+        <div
+          className="contents-area mobile:max-w-[320px] d1440:max-w-[1220px] d1024:max-w-[920px] d1920:max-w-[1500px]
+        mx-auto pt-[3.5rem] mobile:pt-[4.5rem]"
+        >
           {/* ---------- 검색 네비게이터 ---------- */}
-          <div className="search-bar mb-[4rem] relative ">
-            <div className="flex w-[12rem] mx-auto relative z-10">
-              <div className="text-primary-color-orange pb-4 flex">
+          <div className="search-bar mb-[4rem] mobile:mb-[2rem] relative ">
+            <div className="flex w-[12rem] mobile:w-[7rem] mx-auto relative z-10">
+              <div className="text-primary-color-orange pb-[1rem] mobile:pb-[0.1rem] flex mobile:text-[0.8rem]">
                 <img src={pinIcon} alt="" className="w-[14px]" />
                 <button
                   onClick={() => {
@@ -170,11 +173,12 @@ const Home: React.FC = () => {
             {/* ---------- 검색창 ---------- */}
             <div
               className="relative flex justify-between items-center border-2 rounded-[15px] border-black
-              mx-auto d1440:w-[50rem] d1024:w-[30rem] z-10"
+              mx-auto d1440:w-[50rem] d1024:w-[35rem] mobile:w-[15rem] z-10"
             >
               <input
                 type="text"
-                className="search-bar-input my-2 p-4 border-none w-full focus:outline-none "
+                className="search-bar-input my-2 p-[1rem] mobile:py-[0.1rem] border-none w-full
+                focus:outline-none mobile:text-[0.8rem]"
                 placeholder="찾으시는 원두를 입력해 주세요."
                 value={searchKeyword}
                 onChange={e => setSearchKeyword(e.target.value)}
@@ -185,7 +189,8 @@ const Home: React.FC = () => {
                 }}
               />
               <button
-                className="search-btn w-[2.5rem] mr-[1.5rem] absolute right-0"
+                className="search-btn w-[2.5rem] mr-[1.5rem] mobile:mr-[1rem]
+                absolute right-0 mobile:text-[0.8rem]"
                 onClick={searchHandler}
                 type="submit"
               >
@@ -194,12 +199,15 @@ const Home: React.FC = () => {
             </div>
           </div>
           {cards.length === 0 ? (
-            <div className="content-text flex justify-center text-5xl mb-[4rem] content-none">
+            <div className="content-text flex justify-center mobile:text-[1.2rem] text-[3rem] mobile:mb-[2rem] content-none">
               <div className="text-primary-color-orange">`{searchKeyword}`</div>
               <div>에 대한 검색결과가 없습니다.</div>
             </div>
           ) : (
-            <div className="content-text flex justify-center text-5xl mb-[4rem] content-none">
+            <div
+              className="content-text flex justify-center
+            text-[3rem] d1440:text-[3rem] d1024:text-[2rem] mobile:text-[1.2rem] mb-[4rem] mobile:mb-[2rem] content-none"
+            >
               <div>지금&nbsp;</div>
               <div className="text-primary-color-orange">
                 여기, 내 취향&nbsp;
@@ -208,7 +216,7 @@ const Home: React.FC = () => {
             </div>
           )}
 
-          <div className="card-contents w-full">
+          <div className="card-contents d1920:min-w-[1440px] mx-auto">
             <div className="sorting-btn-area w-full grid grid-cols-2">
               <div className="sorting-btn-right flex">
                 <button
@@ -237,7 +245,10 @@ const Home: React.FC = () => {
               </div>
             </div>
 
-            <div className="cards grid grid-cols-3 min-w-[1440px]">
+            <div
+              className="cards grid mx-auto d1920:min-w-[1440px] d1440:min-w-[1024px]
+              grid-cols-3 tablet:grid-cols-2 d1024:grid-cols-3 mobile:grid-cols-1"
+            >
               {/* // ----- Card ----- // */}
               {cards.length === 0 ? (
                 <div className="col-start-2 row-start-2">
