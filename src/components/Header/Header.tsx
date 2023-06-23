@@ -63,16 +63,20 @@ const Header: React.FC = () => {
   }, []);
 
   return (
-    <div className="bg-container w-full h-[9rem] fixed bg-[#fff] z-[10]">
+    <div
+      className="bg-container w-full fixed bg-[#fff] z-[10]
+    d1920:h-[9rem] d1440:h-[9rem] d1024:h-[9rem] tablet:h-[9rem] mobile:h-[6rem]"
+    >
       <div
         className="header container max-w-[1440px] flex justify-between items-center
-        p-[2.5rem] mobile:p-[1.25rem] mx-auto"
+        d1920:p-[2.5rem] d1440:p-[2.5rem] mobile:p-[1.25rem] mx-auto"
       >
         <div className="logo m-2 relative z-10 flex justify-center items-center ">
           <button type="button">
             <img
               src={cuppingLogo}
-              className="d1920:w-[14rem] d1440:w-[10rem] d1024:w-[8rem] mobile:w-[5rem]"
+              className="d1920:w-[14rem] d1440:w-[10rem] d1024:w-[8rem] tablet:w-[6.5rem]
+                mobile:w-[5rem]"
               onClick={handleHomePage}
               role="presentation"
               alt="커핑로고"

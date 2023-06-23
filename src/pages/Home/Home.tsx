@@ -152,13 +152,17 @@ const Home: React.FC = () => {
           <Header />
         </div>
         <div
-          className="contents-area mobile:max-w-[320px] d1440:max-w-[1220px] d1024:max-w-[920px] d1920:max-w-[1500px]
-        mx-auto pt-[3.5rem] mobile:pt-[4.5rem]"
+          className="contents-area
+          mobile:max-w-[320px] d1440:max-w-[1220px] d1024:max-w-[960px] d1920:max-w-[1500px] tablet:max-w-[600px]
+          mx-auto d1920:pt-[3.5rem] d1024:pt-[2.5rem] tablet:pt-[3rem] mobile:pt-[5rem]"
         >
           {/* ---------- 검색 네비게이터 ---------- */}
-          <div className="search-bar mb-[4rem] mobile:mb-[2rem] relative ">
-            <div className="flex w-[12rem] mobile:w-[7rem] mx-auto relative z-10">
-              <div className="text-primary-color-orange pb-[1rem] mobile:pb-[0.1rem] flex mobile:text-[0.8rem]">
+          <div className="search-bar d1920:mb-[4rem] mobile:mb-[2rem] relative ">
+            <div className="flex d1920:w-[14rem] d1440:w-[10rem] mobile:w-[7rem] mobile:hidden mx-auto relative z-10">
+              <div
+                className="text-primary-color-orange d1920:pb-[1rem] mobile:pb-[0.1rem]
+                flex d1920:text-[1.2rem] d1440:text-[1.2rem] mobile:text-[0.8rem]"
+              >
                 <img src={pinIcon} alt="" className="w-[14px]" />
                 <button
                   onClick={() => {
@@ -173,12 +177,13 @@ const Home: React.FC = () => {
             {/* ---------- 검색창 ---------- */}
             <div
               className="relative flex justify-between items-center border-2 rounded-[15px] border-black
-              mx-auto d1440:w-[50rem] d1024:w-[35rem] mobile:w-[15rem] z-10"
+              mx-auto d1440:w-[50rem] d1024:w-[35rem] tablet:w-[20rem] mobile:w-[15rem] z-10"
             >
               <input
                 type="text"
-                className="search-bar-input my-2 p-[1rem] mobile:py-[0.1rem] border-none w-full
-                focus:outline-none mobile:text-[0.8rem]"
+                className="search-bar-input my-2 d1920:p-[1rem] d1440:p-[1rem] d1024:p-[0.8rem]
+                tablet:p-[0.7rem] mobile:px-[0.5rem] border-none w-full
+                focus:outline-none d1920:text-[1.2rem] d1440:text-[1.2rem] mobile:text-[0.8rem]"
                 placeholder="찾으시는 원두를 입력해 주세요."
                 value={searchKeyword}
                 onChange={e => setSearchKeyword(e.target.value)}
@@ -189,8 +194,8 @@ const Home: React.FC = () => {
                 }}
               />
               <button
-                className="search-btn w-[2.5rem] mr-[1.5rem] mobile:mr-[1rem]
-                absolute right-0 mobile:text-[0.8rem]"
+                className="search-btn w-[2.5rem] d1440:mr-[1.5rem] mobile:mr-[1rem]
+                absolute right-0 d1920:text-[1.2rem] d1440:text-[1.2rem] mobile:text-[0.8rem]"
                 onClick={searchHandler}
                 type="submit"
               >
@@ -206,7 +211,8 @@ const Home: React.FC = () => {
           ) : (
             <div
               className="content-text flex justify-center
-            text-[3rem] d1440:text-[3rem] d1024:text-[2rem] mobile:text-[1.2rem] mb-[4rem] mobile:mb-[2rem] content-none"
+            text-[3rem] d1440:text-[2.5rem] d1024:text-[2rem] tablet:text-[1.5rem] mobile:text-[1.2rem]
+            mb-[4rem] mobile:mb-[2rem] content-none"
             >
               <div>지금&nbsp;</div>
               <div className="text-primary-color-orange">
