@@ -253,8 +253,8 @@ const UserSignup = () => {
                             placeholder="비밀번호를 다시 입력하세요."
                             className={`ring-1 border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full ${
                               passwordCheckMsg === '비밀번호가 일치합니다.'
-                                ? styles.successMsg
-                                : styles.errorMsg
+                                ? styles.successRing
+                                : styles.errorRing
                             }`}
                           />
                         </div>
