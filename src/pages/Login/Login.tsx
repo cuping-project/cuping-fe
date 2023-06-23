@@ -118,7 +118,7 @@ const Login = () => {
                           <p>아이디</p>
                           <input
                             type="text"
-                            placeholder="아이디를 입력하세요"
+                            placeholder="아이디를 입력하세요."
                             value={userIdInput}
                             onChange={e => setUserIdInput(e.target.value)}
                             className={`border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full ${
@@ -135,7 +135,7 @@ const Login = () => {
                           <p>비밀번호</p>
                           <input
                             type="password"
-                            placeholder="비밀번호 입력(영문, 숫자 조합 최소 8자)"
+                            placeholder="비밀번호를 입력하세요."
                             value={passwordInput}
                             onChange={e => setPasswordInput(e.target.value)}
                             className={`border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full ${

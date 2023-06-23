@@ -1,0 +1,7 @@
+.errorMsg {
+  @apply text-red-500 ring-red-500;
+}
+
+.successMsg {
+  @apply text-green-500;
+}
