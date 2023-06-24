@@ -127,7 +127,7 @@ const Details: React.FC = () => {
     };
 
     fetchLikeStatus();
-  }, [pageId]);
+  }, [pageId, loggedin]);
 
   if (isLoading) return <div />;
 

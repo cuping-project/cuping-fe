@@ -102,7 +102,6 @@ const BeanComments = () => {
   // 댓글 표시하기
   useEffect(() => {
     if (data) {
-      console.log(commentList);
       setCommentCount(data.data.commentList.length);
       setCommentList(data.data.commentList);
     }
