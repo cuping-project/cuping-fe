@@ -4,5 +4,5 @@
 
 @font-face {
   font-family: 'IBMPlexSansKR', sans-serif;
-  src: url('./assets/fonts/IBM_Plex_Sans_KR/IBMPlexSansKR-Regular.ttf');
+  src: url('/assets/IBM_Plex_Sans_KR/IBMPlexSansKR-Regular.woff2');
 }
