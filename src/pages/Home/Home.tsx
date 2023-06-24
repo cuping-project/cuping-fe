@@ -154,11 +154,14 @@ const Home: React.FC = () => {
         <div
           className="contents-area
           mobile:max-w-[320px] d1440:max-w-[1220px] d1024:max-w-[960px] d1920:max-w-[1500px] tablet:max-w-[600px]
-          mx-auto d1920:pt-[3.5rem] d1024:pt-[2.5rem] tablet:pt-[3rem] mobile:pt-[5rem]"
+          mx-auto d1920:pt-[3.5rem] d1440:pt-[3.5rem] d1024:pt-[1.7rem] tablet:pt-[1.5rem] mobile:pt-[5rem]"
         >
           {/* ---------- 검색 네비게이터 ---------- */}
           <div className="search-bar d1920:mb-[4rem] mobile:mb-[2rem] relative ">
-            <div className="flex d1920:w-[14rem] d1440:w-[10rem] mobile:w-[7rem] mobile:hidden mx-auto relative z-10">
+            <div
+              className="flex d1920:w-[14rem] d1440:w-[10rem] mobile:w-[7rem] mx-auto relative z-10
+             mobile:hidden tablet:block d1024:block d1440:block d1920:block"
+            >
               <div
                 className="text-primary-color-orange d1920:pb-[1rem] mobile:pb-[0.1rem]
                 flex d1920:text-[1.2rem] d1440:text-[1.2rem] mobile:text-[0.8rem]"
