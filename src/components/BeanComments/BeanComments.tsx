@@ -161,9 +161,8 @@ const BeanComments = () => {
               <div className="card-nickname">{comment.user.nickname}</div>
               <div className="flex mb-2">
                 <div className="card-days text-[0.8rem] flex items-end">
-                  {/* {comment.createdAt.slice(0, 10)}{' '}
-                  {comment.createdAt.slice(11, 16)} */}
-                  2023.06.01
+                  {comment.createdAt.slice(0, 10)}{' '}
+                  {comment.createdAt.slice(11, 16)}
                 </div>
               </div>
               <div className="card-text">{comment.content}</div>
