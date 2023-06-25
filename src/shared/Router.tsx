@@ -9,6 +9,7 @@ import Details from '../pages/Details/Details';
 import AdminLogin from '../pages/Admin/AdminLogin/AdminLogin';
 import AdminMain from '../pages/Admin/AdminMain/AdminMain';
 import UserMyPage from '../pages/MyPage/UserMyPage/UserMyPage';
+import KakaoLogin from '../pages/KakaoLogin/KakaoLogin';
 
 const Router = () => {
   return (
@@ -23,6 +24,7 @@ const Router = () => {
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<AdminMain />} />
         <Route path="/usermypage" element={<UserMyPage />} />
+        <Route path="/login/kakaologin" element={<KakaoLogin />} />
       </Routes>
     </BrowserRouter>
   );
