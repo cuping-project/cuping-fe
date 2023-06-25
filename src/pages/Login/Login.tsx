@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { useRecoilState } from 'recoil';
+import axios from 'axios';
 import LoginService from '../../apis/services/LoginService/LoginService';
 import cupingLogo from '../../assets/img/cupping-logo-icon02.svg';
 import bini from '../../assets/img/beni.svg';
@@ -69,18 +70,45 @@ const Login = () => {
     loginMutation.mutate({ userId: userIdInput, password: passwordInput });
   };
 
+  // 카카오 로그인 API
+  const kakaoLoginApi = async code => {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BE_SERVER}/users/oauth/kakao`,
+      { code },
+    );
+    console.log(response);
+    if (response.status !== 200) {
+      throw new Error('카카오 로그인 실패');
+    }
+    return response.data;
+  };
+
+  const kakaoLoginMutation = useMutation(kakaoLoginApi, {
+    onSuccess: data => {
+      const decoded = jwtDecode(data.access_key);
+      const accessExpirationDate = new Date(decoded.exp * 1000); // 1시간
+      const refreshExpirationDate = new Date(decoded.exp * 10000); // 10시간
+
+      Cookies.set('ACCESS_KEY', data.access_key, {
+        expires: accessExpirationDate,
+      });
+      Cookies.set('REFRESH_KEY', data.refresh_key, {
+        expires: refreshExpirationDate,
+      });
+    },
+    onError: error => {
+      console.log(error);
+    },
+  });
+
+  // 카카오 로그인 핸들러
   const kakaoLoginHandler = () => {
     const REST_API_KEY = import.meta.env.VITE_KAKAO_API_KEY;
-    const REDIRECT_URI = `${import.meta.env.VITE_BE_SERVER}/users/oauth/kakao`;
+    const REDIRECT_URI = `https://cuping.net/login/kakaologin`;
     const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
-    alert('구현 중입니다.');
-    // navigate(`${kakaoURL}`);
-
-    // window.location.href = kakaoURL;
-
-    const redirectCode = new URL(window.location.href).searchParams.get('code');
-    console.log('너왔니코드?', redirectCode);
+    // 사용자를 카카오 로그인 페이지로 리다이렉트합니다.
+    window.location.href = kakaoURL;
   };
 
   return (
@@ -162,9 +190,7 @@ const Login = () => {
 
                         <button
                           type="submit"
-                          onClick={() => {
-                            alert('준비중입니다.');
-                          }}
+                          onClick={kakaoLoginHandler}
                           className="transition duration-200 bg-amber-300 hover:bg-yellow-400 
                           focus:bg-kakao-color focus:shadow-sm focus:ring-4 focus:ring-yellow-500 
                           focus:ring-opacity-50 w-full py-2.5 rounded-lg text-sm shadow-sm 
