@@ -7,7 +7,10 @@ import { ownerSignupApi } from '../../../apis/api/signupApi/signupApi';
 import useInput from '../../../hooks/useInput';
 import errorIcon from '../../../assets/img/warning.svg';
 import checkIcon from '../../../assets/img/check.svg';
-import { SignupOwnerService } from '../../../apis/services/SignupService/SignupService';
+import {
+  CheckUserIdService,
+  SignupOwnerService,
+} from '../../../apis/services/SignupService/SignupService';
 import styles from './OwnerSignup.module.css';
 
 // todo recoil로 상태관리 하기
@@ -91,6 +94,17 @@ const OwnerSignup = ({
     setFileName(file.name);
   };
 
+  // 아이디 중복 검사
+  const { mutate: CheckUserMutate } = CheckUserIdService();
+  const idCheckBtnClick = () => {
+    if (!userId) {
+      alert('아이디를 입력하세요.');
+      return;
+    }
+
+    CheckUserMutate({ userId });
+  };
+
   // 회원가입 로직
   const { mutate: SignupOwnerMutation } = SignupOwnerService();
   // 회원가입 버튼 핸들러
@@ -122,6 +136,7 @@ const OwnerSignup = ({
           />
           <button
             type="button"
+            onClick={idCheckBtnClick}
             className="transition duration-200 bg-primary-color-salgu hover:bg-primary-color-orange text-white w-[10rem] py-2 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
           >
             중복확인

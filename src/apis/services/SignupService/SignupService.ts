@@ -42,12 +42,8 @@ const SignupOwnerService = () => {
   const navigate = useNavigate();
   return useMutation(ownerSignupApi, {
     onSuccess: data => {
-      if (data.response.status === 400) {
-        alert(data.response.data.message);
-      } else {
-        alert('회원가입이 완료되었습니다!');
-        navigate('/login');
-      }
+      alert('회원가입이 완료되었습니다!');
+      navigate('/login');
     },
     onError: error => {
       console.error('failed', error);
