@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { isMoreCafeModalState } from '../../../recoil/atom/modalState';
+import {
+  isInfoCafeModalState,
+  isMoreCafeModalState,
+} from '../../../recoil/atom/modalState';
 import { visibleCafesState } from '../../../recoil/atom/visibleCafesState';
 import beni from '../../../assets/img/beni02.png';
+import { selectedCafeState } from '../../../recoil/atom/selectedCafeState';
 
 const MoreCafeModal = () => {
   const [isMoreCafeModalOpen, setIsMoreCafeModalOpen] =
@@ -13,6 +17,15 @@ const MoreCafeModal = () => {
     if (e.target === e.currentTarget) {
       setIsMoreCafeModalOpen(false);
     }
+  };
+
+  // 카페 상세 정보 설정
+  const [selectedCafe, setSelectedCafe] = useRecoilState(selectedCafeState);
+  const [, setIsInfoCafeModalOpen] = useRecoilState(isInfoCafeModalState);
+
+  const openInfoModalWithSelectedCafe = selectedCafe => {
+    setSelectedCafe(selectedCafe);
+    setIsInfoCafeModalOpen(true);
   };
 
   // 카페 데이터 가져오기
@@ -75,7 +88,9 @@ const MoreCafeModal = () => {
                 {displayedCafes.map(cafe => (
                   <div
                     key={cafe.id}
-                    className="card bg-white rounded-[0.5rem] p-2 flex my-3"
+                    className="card bg-white rounded-[0.5rem] p-2 flex my-3 cursor-pointer"
+                    onClick={() => openInfoModalWithSelectedCafe(cafe)}
+                    role="presentation"
                   >
                     <div className="left flex justify-center items-center">
                       <div className="border-2 w-[6rem] h-[6rem] m-2 ">

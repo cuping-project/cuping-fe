@@ -71,7 +71,7 @@ const UserSignup = () => {
     e.preventDefault();
     const nicknameRegex = /^[a-zA-Z가-힣]{2,8}$/;
     const passwordRegex =
-      /^(?=.*[a-z])(?=.*\d)(?=.*[~!?_@#$%^&*()+|=])[a-z\d~!?_@#$%^&*()+|=]{8,16}$/;
+      /^(?=.*[a-z])(?=.*\d)(?=.*[~!?_@#$%^&*()+|=])[a-z\d~!?_@#$%^&*()+|=]{8,12}$/;
 
     if (!nickname || !password || !userId) {
       alert('아이디,닉네임과 비밀번호를 모두 입력하세요.');
@@ -85,7 +85,7 @@ const UserSignup = () => {
 
     if (!passwordRegex.test(password)) {
       alert(
-        '비밀번호는 최소 8~12자, 알파벳 대소문자 및 숫자로 구성되어야 합니다.',
+        '비밀번호는 최소 8~12자, 알파벳 소문자 및 숫자로 구성되어야 합니다.',
       );
       return;
     }
