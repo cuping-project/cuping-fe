@@ -46,7 +46,7 @@ const UserSignup = () => {
   // 비밀번호 일치 검사
   useEffect(() => {
     if (!passwordCheck) {
-      setPasswordCheckMsg('비밀번호를 입력해주세요.');
+      setPasswordCheckMsg('');
     } else if (!!passwordCheck && passwordCheck !== password) {
       setPasswordCheckMsg('비밀번호가 일치하지 않습니다.');
     } else {
@@ -152,10 +152,10 @@ const UserSignup = () => {
                   </button>
                   <button
                     type="button"
-                    // onClick={() => handleButtonClick(true)}
-                    onClick={() => {
-                      alert('피드백을 받아 수정입니다.');
-                    }}
+                    onClick={() => handleButtonClick(true)}
+                    // onClick={() => {
+                    //   alert('피드백을 받아 수정입니다.');
+                    // }}
                     className={`transition duration-200 border bg-gray-200
                   border-gray-200 text-gray-500 py-0.5 rounded-lg
                   text-sm hover:shadow-sm mx-0.5
@@ -251,9 +251,11 @@ const UserSignup = () => {
                             id="pwCheckInput"
                             type="password"
                             placeholder="비밀번호를 다시 입력하세요."
-                            className={`ring-1 border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full ${
+                            className={`border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full ${
                               passwordCheckMsg === '비밀번호가 일치합니다.'
                                 ? styles.successRing
+                                : passwordCheckMsg === ''
+                                ? ''
                                 : styles.errorRing
                             }`}
                           />
@@ -273,6 +275,8 @@ const UserSignup = () => {
                           src={
                             passwordCheckMsg === '비밀번호가 일치합니다.'
                               ? checkIcon
+                              : passwordCheckMsg === ''
+                              ? ''
                               : errorIcon
                           }
                           alt=""
@@ -306,7 +310,7 @@ const UserSignup = () => {
                         type="button"
                         onClick={() => navigate('/login')}
                         className="font-semibold text-sm ml-2 text-primary-color-orange
-                    tracking-tighter"
+                        tracking-tighter"
                       >
                         로그인 하러 가기
                       </button>
