@@ -23,6 +23,7 @@ import BeanComments from '../../components/BeanComments/BeanComments';
 import beanPageIdState from '../../recoil/atom/beanPageIdState';
 import InfoCafeModal from '../../components/Modal/InfoCafeModal/InfoCafeModal';
 import { cardDetailApi } from '../../apis/api/cardDetailApi/cardDetailApi';
+import { selectedCafeState } from '../../recoil/atom/selectedCafeState';
 
 const Details: React.FC = () => {
   const navigate = useNavigate();
@@ -56,7 +57,10 @@ const Details: React.FC = () => {
   // ------------------------------------------------------------------
   // 카페 상세 정보 모달 관련된 변수
   const [, setIsInfoCafeModalOpen] = useRecoilState(isInfoCafeModalState);
-  const openInfoCafeModal = () => {
+  const [selectedCafe, setSelectedCafe] = useRecoilState(selectedCafeState);
+
+  const openInfoCafeModal = selectedCafe => {
+    setSelectedCafe(selectedCafe);
     setIsInfoCafeModalOpen(true);
   };
   // ------------------------------------------------------------------
@@ -228,9 +232,7 @@ const Details: React.FC = () => {
                 <div
                   key={cafe.id}
                   className="cafeCard object-cover shadow-lg h-[20.825rem] rounded-2xl cursor-pointer"
-                  onClick={() => {
-                    alert('카페 자세히 보기는 준비중입니다.');
-                  }}
+                  onClick={() => openInfoCafeModal(cafe)}
                   role="presentation"
                 >
                   <img

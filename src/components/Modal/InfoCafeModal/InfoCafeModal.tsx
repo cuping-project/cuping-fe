@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { IoIosArrowBack, IoMdClose } from 'react-icons/io';
 import { isInfoCafeModalState } from '../../../recoil/atom/modalState';
-import Kakaomap from '../../KakaoMap/Kakaomap';
 import Heart from '../../../assets/img/heart-fill.png';
 import CafeKakaoMap from '../../CafeKakaoMap/CafeKakaoMap';
+import { selectedCafeState } from '../../../recoil/atom/selectedCafeState';
 
 const { kakao } = window;
 
@@ -18,6 +18,8 @@ const InfoCafeModal = () => {
       setIsInfoCafeModalOpen(false);
     }
   };
+
+  const selectedCafe = useRecoilValue(selectedCafeState);
 
   return (
     <div
@@ -50,132 +52,91 @@ const InfoCafeModal = () => {
               </div>
             </div>
             <div className="flex justify-center items-center">
-              <div className="w-[14rem] h-[14rem] mr-[4rem] border-2 border-black">
-                사진
-              </div>
-              <div>
-                <div className="mb-[3rem] text-[1.4rem]">카페명123</div>
-                <div className="flex mb-3 items-center">
-                  <div className="text-[1.2rem] mr-5">주소</div>
-                  <div className="text-gray-500">
-                    서울시 강동구 양재대로 123456
+              {selectedCafe !== null && (
+                <>
+                  <div className="w-[14rem] h-[14rem] mr-[4rem] border-2 border-black">
+                    <img
+                      src={selectedCafe.cafeImage}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                </div>
-                <div className="flex mb-3 items-center">
-                  <div className="text-[1.2rem] mr-5">시간</div>
-                  <div className="text-gray-500">
-                    평일 08:00~22:00 | 주말 08:00~22:00
+
+                  <div>
+                    <div className="mb-[3rem] text-[1.4rem] font-semibold">
+                      {selectedCafe.cafeName}
+                    </div>
+                    <div className="flex mb-3 items-center">
+                      <div className="text-[1.2rem] mr-5">주소</div>
+                      <div className="text-gray-500">
+                        {selectedCafe.cafeAddress}
+                      </div>
+                    </div>
+                    <div className="flex mb-3 items-center">
+                      <div className="text-[1.2rem] mr-5">시간</div>
+                      <div className="text-gray-500">
+                        평일 08:00~22:00 | 주말 08:00~22:00
+                      </div>
+                    </div>
+                    <div className="flex mb-3 items-center">
+                      <div className="text-[1.2rem] mr-5">연락처</div>
+                      <div className="text-gray-500">
+                        {selectedCafe.cafePhoneNumber}
+                      </div>
+                    </div>
+                    <div className="flex mb-3 items-center">
+                      <div className="text-[1.2rem] mr-5">URL</div>
+                      <div className="text-gray-500">www.instagram.com/</div>
+                    </div>
                   </div>
-                </div>
-                <div className="flex mb-3 items-center">
-                  <div className="text-[1.2rem] mr-5">연락처</div>
-                  <div className="text-gray-500">021-12312312-123135</div>
-                </div>
-                <div className="flex mb-3 items-center">
-                  <div className="text-[1.2rem] mr-5">URL</div>
-                  <div className="text-gray-500">www.instagram.com/</div>
-                </div>
-              </div>
+                </>
+              )}
             </div>
             <div className="mt-6">
               <div className="flex mb-[1rem]">
-                <div className="text-orange-600">카페명</div>
+                {selectedCafe && (
+                  <div className="text-orange-600">{selectedCafe.cafeName}</div>
+                )}
+
                 <div>의 위치</div>
               </div>
               <div className="w-full h-full">
-                <CafeKakaoMap />
+                <CafeKakaoMap x={selectedCafe?.y} y={selectedCafe?.x} />
               </div>
             </div>
             <div className="mt-6">
               <div className="flex">
-                <div className="text-orange-600">카페명</div>
+                {selectedCafe && (
+                  <div className="text-orange-600">{selectedCafe.cafeName}</div>
+                )}
                 <div>에 있는 원두</div>
               </div>
               <div className="grid grid-cols-4">
-                <div className="m-[1.5rem] rounded-lg shadow-lg w-[10rem]">
-                  <div className="border-[0.1rem] rounded-lg w-full h-[8rem] flex items-center justify-center">
-                    사진
-                  </div>
-                  <div className="p-[0.75rem]">
-                    <div className="flex justify-between items-center m-[0.2rem]">
-                      <div className="text-[1.25rem]">원두명</div>
-                      <div>
-                        <img className="w-[1rem] " src={Heart} alt="" />
-                      </div>
+                {selectedCafe !== null && (
+                  <div className="m-[1.5rem] rounded-lg shadow-xl w-[10rem]">
+                    <div className="border-[0.1rem] rounded-lg w-full h-[8rem] flex items-center justify-center">
+                      <img src={selectedCafe.bean.beanImage} />
                     </div>
-                    <div className="flex gap-2 mt-4 flex-wrap">
-                      <div className="px-3 py-0.5 border-[0.1rem] font-normal text-[0.44rem] border-gray-600 rounded-md text-gray-600">
-                        Label
+
+                    <div className="p-[0.75rem]">
+                      <div className="flex justify-between items-center m-[0.2rem] mt-3">
+                        <div className="text-[0.8rem]">
+                          {selectedCafe.bean.origin}
+                          <div>{selectedCafe.bean.beanName}</div>
+                        </div>
+
+                        <div>
+                          <img className="w-[1rem] " src={Heart} alt="" />
+                        </div>
                       </div>
-                      <div className="px-3 py-0.5 border-[0.1rem] font-normal text-[0.44rem] border-gray-600 rounded-md text-gray-600">
-                        Label
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="m-[1.5rem] rounded-lg shadow-lg w-[10rem]">
-                  <div className="border-[0.1rem] rounded-lg w-full h-[8rem] flex items-center justify-center">
-                    사진
-                  </div>
-                  <div className="p-[0.75rem]">
-                    <div className="flex justify-between items-center m-[0.2rem]">
-                      <div className="text-[1.25rem]">원두명</div>
-                      <div>
-                        <img className="w-[1rem] " src={Heart} alt="" />
-                      </div>
-                    </div>
-                    <div className="flex gap-2 mt-4 flex-wrap">
-                      <div className="px-3 py-0.5 border-[0.1rem] font-normal text-[0.44rem] border-gray-600 rounded-md text-gray-600">
-                        Label
-                      </div>
-                      <div className="px-3 py-0.5 border-[0.1rem] font-normal text-[0.44rem] border-gray-600 rounded-md text-gray-600">
-                        Label
+                      <div className="flex gap-2 mt-4 flex-wrap">
+                        <div className="px-3 py-0.5 border-[0.1rem] font-normal text-[0.44rem] border-gray-600 rounded-md text-gray-600">
+                          {selectedCafe.bean.hashTag}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="m-[1.5rem] rounded-lg shadow-lg w-[10rem]">
-                  <div className="border-[0.1rem] rounded-lg w-full h-[8rem] flex items-center justify-center">
-                    사진
-                  </div>
-                  <div className="p-[0.75rem]">
-                    <div className="flex justify-between items-center m-[0.2rem]">
-                      <div className="text-[1.25rem]">원두명</div>
-                      <div>
-                        <img className="w-[1rem] " src={Heart} alt="" />
-                      </div>
-                    </div>
-                    <div className="flex gap-2 mt-4 flex-wrap">
-                      <div className="px-3 py-0.5 border-[0.1rem] font-normal text-[0.44rem] border-gray-600 rounded-md text-gray-600">
-                        Label
-                      </div>
-                      <div className="px-3 py-0.5 border-[0.1rem] font-normal text-[0.44rem] border-gray-600 rounded-md text-gray-600">
-                        Label
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="m-[1.5rem] rounded-lg shadow-lg w-[10rem]">
-                  <div className="border-[0.1rem] rounded-lg w-full h-[8rem] flex items-center justify-center">
-                    사진
-                  </div>
-                  <div className="p-[0.75rem]">
-                    <div className="flex justify-between items-center m-[0.2rem]">
-                      <div className="text-[1.25rem]">원두명</div>
-                      <div>
-                        <img className="w-[1rem] " src={Heart} alt="" />
-                      </div>
-                    </div>
-                    <div className="flex gap-2 mt-4 flex-wrap">
-                      <div className="px-3 py-0.5 border-[0.1rem] font-normal text-[0.44rem] border-gray-600 rounded-md text-gray-600">
-                        Label
-                      </div>
-                      <div className="px-3 py-0.5 border-[0.1rem] font-normal text-[0.44rem] border-gray-600 rounded-md text-gray-600">
-                        Label
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
