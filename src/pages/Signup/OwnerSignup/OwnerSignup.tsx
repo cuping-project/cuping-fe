@@ -180,9 +180,9 @@ const OwnerSignup = ({
             type="password"
             placeholder="비밀번호를 다시 입력하세요."
             className={`${
-              passwordCheckError
-                ? 'ring-red-500 ring-1 border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full'
-                : 'border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full'
+              passwordCheckError === '비밀번호가 일치합니다.'
+                ? 'ring-green-500 ring-1 border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full'
+                : 'ring-red-500 ring-1 border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full'
             }`}
           />
         </label>

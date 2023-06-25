@@ -17,7 +17,7 @@ import { getCommentApi } from '../../apis/api/CommentApi/CommentApi';
 
 const BeanComments = () => {
   // 로그인이 되었는지 확인하기 위한 상태 변수
-  const [loggedin, setLoggedin] = useRecoilState(loginState);
+  const [loggedin, setLoggedin] = useRecoilState<boolean>(loginState);
 
   // 댓글을 담기 위한 변수
   const [commentList, setCommentList] = useState([]);
@@ -160,7 +160,8 @@ const BeanComments = () => {
               <div className="card-nickname">{comment.user.nickname}</div>
               <div className="flex mb-2">
                 <div className="card-days text-[0.8rem] flex items-end">
-                  2023.06.01
+                  {comment.createdAt.slice(0, 10)}{' '}
+                  {comment.createdAt.slice(11, 16)}
                 </div>
               </div>
               <div className="card-text">{comment.content}</div>

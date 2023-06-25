@@ -61,7 +61,6 @@ const UserSignup = () => {
       alert('아이디를 입력하세요.');
       return;
     }
-
     CheckUserMutate({ userId });
   };
 
@@ -85,7 +84,7 @@ const UserSignup = () => {
 
     if (!passwordRegex.test(password)) {
       alert(
-        '비밀번호는 최소 8~12자, 알파벳 소문자 및 숫자로 구성되어야 합니다.',
+        '비밀번호는 최소 8~12자, 알파벳 소문자와 숫자와 특수문자로 구성되어야 합니다.',
       );
       return;
     }
@@ -153,7 +152,10 @@ const UserSignup = () => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleButtonClick(true)}
+                    // onClick={() => handleButtonClick(true)}
+                    onClick={() => {
+                      alert('피드백을 받아 수정입니다.');
+                    }}
                     className={`transition duration-200 border bg-gray-200
                   border-gray-200 text-gray-500 py-0.5 rounded-lg
                   text-sm hover:shadow-sm mx-0.5
@@ -229,7 +231,7 @@ const UserSignup = () => {
                         ref={PasswordRef}
                         id="pwInput"
                         type="password"
-                        placeholder="비밀번호는 최소 8~12자, 알파벳 대소문자 및 숫자"
+                        placeholder="알파벳 소문자와 숫자와 특수문자 8~16자"
                         className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                       />
                     </label>
@@ -251,8 +253,8 @@ const UserSignup = () => {
                             placeholder="비밀번호를 다시 입력하세요."
                             className={`ring-1 border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full ${
                               passwordCheckMsg === '비밀번호가 일치합니다.'
-                                ? styles.successMsg
-                                : styles.errorMsg
+                                ? styles.successRing
+                                : styles.errorRing
                             }`}
                           />
                         </div>
