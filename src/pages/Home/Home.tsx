@@ -296,10 +296,15 @@ const Home: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="card-labels p-2 flex">
-                        <div className="card-label border-2 rounded-[5px] px-2 m-2 text-[1rem]">
-                          {card.hashTag}
-                        </div>
+                      <div className="card-labels p-[1rem] flex">
+                        {card.hashTag.split('/').map((tag, index) => (
+                          <div
+                            key={index}
+                            className="card-label border-2 rounded-[5px] px-2 mr-2 text-[1rem]"
+                          >
+                            # {tag}
+                          </div>
+                        ))}
                       </div>
                     </Link>
                   ))
