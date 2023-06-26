@@ -3,7 +3,7 @@ import axiosInstance from '../../utils/axiosInstance';
 const getBeanCardApi = async () => {
   try {
     const { data } = await axiosInstance.get(
-      `${import.meta.env.VITE_BE_SERVER}/main/beans/search?keyword=`,
+      `${import.meta.env.VITE_BE_SERVER}/main/beans/search?keyword=&sort=likes`,
     );
 
     return data;
