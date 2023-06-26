@@ -46,7 +46,7 @@ const UserSignup = () => {
   // 비밀번호 일치 검사
   useEffect(() => {
     if (!passwordCheck) {
-      setPasswordCheckMsg('비밀번호를 입력해주세요.');
+      setPasswordCheckMsg('');
     } else if (!!passwordCheck && passwordCheck !== password) {
       setPasswordCheckMsg('비밀번호가 일치하지 않습니다.');
     } else {
@@ -61,7 +61,6 @@ const UserSignup = () => {
       alert('아이디를 입력하세요.');
       return;
     }
-
     CheckUserMutate({ userId });
   };
 
@@ -71,7 +70,7 @@ const UserSignup = () => {
     e.preventDefault();
     const nicknameRegex = /^[a-zA-Z가-힣]{2,8}$/;
     const passwordRegex =
-      /^(?=.*[a-z])(?=.*\d)(?=.*[~!?_@#$%^&*()+|=])[a-z\d~!?_@#$%^&*()+|=]{8,16}$/;
+      /^(?=.*[a-z])(?=.*\d)(?=.*[~!?_@#$%^&*()+|=])[a-z\d~!?_@#$%^&*()+|=]{8,12}$/;
 
     if (!nickname || !password || !userId) {
       alert('아이디,닉네임과 비밀번호를 모두 입력하세요.');
@@ -85,7 +84,7 @@ const UserSignup = () => {
 
     if (!passwordRegex.test(password)) {
       alert(
-        '비밀번호는 최소 8~12자, 알파벳 대소문자 및 숫자로 구성되어야 합니다.',
+        '비밀번호는 최소 8~12자, 알파벳 소문자와 숫자와 특수문자로 구성되어야 합니다.',
       );
       return;
     }
@@ -154,6 +153,9 @@ const UserSignup = () => {
                   <button
                     type="button"
                     onClick={() => handleButtonClick(true)}
+                    // onClick={() => {
+                    //   alert('피드백을 받아 수정입니다.');
+                    // }}
                     className={`transition duration-200 border bg-gray-200
                   border-gray-200 text-gray-500 py-0.5 rounded-lg
                   text-sm hover:shadow-sm mx-0.5
@@ -229,7 +231,7 @@ const UserSignup = () => {
                         ref={PasswordRef}
                         id="pwInput"
                         type="password"
-                        placeholder="비밀번호는 최소 8~12자, 알파벳 대소문자 및 숫자"
+                        placeholder="알파벳 소문자와 숫자와 특수문자 8~16자"
                         className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                       />
                     </label>
@@ -249,10 +251,12 @@ const UserSignup = () => {
                             id="pwCheckInput"
                             type="password"
                             placeholder="비밀번호를 다시 입력하세요."
-                            className={`ring-1 border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full ${
+                            className={`border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full ${
                               passwordCheckMsg === '비밀번호가 일치합니다.'
-                                ? styles.successMsg
-                                : styles.errorMsg
+                                ? styles.successRing
+                                : passwordCheckMsg === ''
+                                ? ''
+                                : styles.errorRing
                             }`}
                           />
                         </div>
@@ -271,6 +275,8 @@ const UserSignup = () => {
                           src={
                             passwordCheckMsg === '비밀번호가 일치합니다.'
                               ? checkIcon
+                              : passwordCheckMsg === ''
+                              ? ''
                               : errorIcon
                           }
                           alt=""
@@ -304,7 +310,7 @@ const UserSignup = () => {
                         type="button"
                         onClick={() => navigate('/login')}
                         className="font-semibold text-sm ml-2 text-primary-color-orange
-                    tracking-tighter"
+                        tracking-tighter"
                       >
                         로그인 하러 가기
                       </button>

@@ -23,6 +23,7 @@ import BeanComments from '../../components/BeanComments/BeanComments';
 import beanPageIdState from '../../recoil/atom/beanPageIdState';
 import InfoCafeModal from '../../components/Modal/InfoCafeModal/InfoCafeModal';
 import { cardDetailApi } from '../../apis/api/cardDetailApi/cardDetailApi';
+import { selectedCafeState } from '../../recoil/atom/selectedCafeState';
 
 const Details: React.FC = () => {
   const navigate = useNavigate();
@@ -40,42 +41,29 @@ const Details: React.FC = () => {
   // 카드를 담기 위한 상태 변수
   const [card, setCard] = useState([]);
 
-  // 메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
-  useEffect(() => {
-    const checkLoginStatus = () => {
-      const accessToken = Cookies.get('ACCESS_KEY');
-      if (accessToken) {
-        setLoggedin(true);
-      } else {
-        setLoggedin(false);
-      }
-    };
-
-    checkLoginStatus();
-  }, [loggedin]);
-
-  // 로그인 모달 관련된 변수
+  // 로그인 모달 관련된 변수 ------------------------------------------
   const [isLoginModalOpen, setIsLoginModalOpen] =
     useRecoilState(isLoginModalState);
-
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
   };
-
-  // 카페 더보기 모달 관련된 변수
+  // ------------------------------------------------------------------
+  // 카페 더보기 모달 관련된 변수 --------------------------------------
   const [isMoreCafeModalOpen, setIsMoreCafeModalOpen] =
     useRecoilState(isMoreCafeModalState);
-
   const openMoreCafeModal = () => {
     setIsMoreCafeModalOpen(true);
   };
-
+  // ------------------------------------------------------------------
   // 카페 상세 정보 모달 관련된 변수
   const [, setIsInfoCafeModalOpen] = useRecoilState(isInfoCafeModalState);
+  const [selectedCafe, setSelectedCafe] = useRecoilState(selectedCafeState);
 
-  const openInfoCafeModal = () => {
+  const openInfoCafeModal = selectedCafe => {
+    setSelectedCafe(selectedCafe);
     setIsInfoCafeModalOpen(true);
   };
+  // ------------------------------------------------------------------
 
   const [, setCardId] = useRecoilState(cardIdMapState);
   setCardId(pageId);
@@ -107,19 +95,36 @@ const Details: React.FC = () => {
     return beanData.data.bean;
   });
 
+  const visibleCafes = useRecoilValue(visibleCafesState);
+  const count = visibleCafes.length;
+
+  // 메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const accessToken = Cookies.get('ACCESS_KEY');
+      if (accessToken) {
+        setLoggedin(true);
+      } else {
+        setLoggedin(false);
+      }
+    };
+
+    checkLoginStatus();
+  }, [loggedin]);
+
+  // 상세 데이터 가져오기 성공 시 카드 데이터를 담기
   useEffect(() => {
     if (data) {
+      console.log(data);
       setCard(data);
       setBeanPageId(pageId);
     }
-  }, [data, likesCount]);
-
-  const visibleCafes = useRecoilValue(visibleCafesState);
-  const count = visibleCafes.length;
+  }, [data, likesCount, pageId]);
 
   // 현재 좋아요 상태를 가져오기 위한 useEffect
   useEffect(() => {
     const fetchLikeStatus = async () => {
+      if (!loggedin) return;
       const response = await myPageApi();
       const heartList = response.data.data.heartList.map(bean => bean.id);
 
@@ -127,7 +132,7 @@ const Details: React.FC = () => {
     };
 
     fetchLikeStatus();
-  }, [pageId]);
+  }, [pageId, loggedin]);
 
   if (isLoading) return <div />;
 
@@ -190,12 +195,6 @@ const Details: React.FC = () => {
               </div>
             </div>
             <div className="top-text text-[1.4rem] mb-7">{data.beanInfo}</div>
-            <button
-              className="moreText border-2 rounded-lg w-full text-[22px] text-gray-500 p-1.5 "
-              type="button"
-            >
-              더보기
-            </button>
           </div>
 
           {/* ----- middle ----- */}
@@ -212,10 +211,10 @@ const Details: React.FC = () => {
             <Kakaomap />
           </div>
           <div className="mb-[6rem]">
-            <div className="flex justify-between mt-[2rem] mb-[2rem] text-xl font-bold items-center">
+            <div className="flex justify-between mt-[2rem] mb-[2rem] text-xl font-bold items-center px-[1.2rem]">
               <div className="flex items-center">
                 <div className="text-primary-color-orange">{count}</div>
-                <div>개의 카페가 있습니다.</div>
+                <div>개의 가 있습니다.</div>
               </div>
               {visibleCafes.length > 4 && (
                 <div
@@ -227,23 +226,14 @@ const Details: React.FC = () => {
                   + 더보기
                 </div>
               )}
-
-              <div
-                className="relative z-[999]"
-                onClick={() => {
-                  alert('준비중입니다.');
-                }}
-                role="presentation"
-              >
-                <MoreCafeModal />
-              </div>
+              <MoreCafeModal />
             </div>
             <div className="cardBox grid grid-cols-4 gap-[0.8125rem]">
               {visibleCafes.slice(0, 4).map(cafe => (
                 <div
                   key={cafe.id}
-                  className="cafeCard object-cover shadow-lg h-[20.825rem] rounded-2xl"
-                  onClick={openInfoCafeModal}
+                  className="cafeCard object-cover shadow-lg h-[20.825rem] rounded-2xl cursor-pointer"
+                  onClick={() => openInfoCafeModal(cafe)}
                   role="presentation"
                 >
                   <img

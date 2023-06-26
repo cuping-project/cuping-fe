@@ -7,7 +7,11 @@ import { ownerSignupApi } from '../../../apis/api/signupApi/signupApi';
 import useInput from '../../../hooks/useInput';
 import errorIcon from '../../../assets/img/warning.svg';
 import checkIcon from '../../../assets/img/check.svg';
-import { SignupOwnerService } from '../../../apis/services/SignupService/SignupService';
+import {
+  CheckUserIdService,
+  SignupOwnerService,
+} from '../../../apis/services/SignupService/SignupService';
+import styles from './OwnerSignup.module.css';
 
 // todo recoil로 상태관리 하기
 const OwnerSignup = ({
@@ -90,6 +94,17 @@ const OwnerSignup = ({
     setFileName(file.name);
   };
 
+  // 아이디 중복 검사
+  const { mutate: CheckUserMutate } = CheckUserIdService();
+  const idCheckBtnClick = () => {
+    if (!userId) {
+      alert('아이디를 입력하세요.');
+      return;
+    }
+
+    CheckUserMutate({ userId });
+  };
+
   // 회원가입 로직
   const { mutate: SignupOwnerMutation } = SignupOwnerService();
   // 회원가입 버튼 핸들러
@@ -121,6 +136,7 @@ const OwnerSignup = ({
           />
           <button
             type="button"
+            onClick={idCheckBtnClick}
             className="transition duration-200 bg-primary-color-salgu hover:bg-primary-color-orange text-white w-[10rem] py-2 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
           >
             중복확인
@@ -138,12 +154,6 @@ const OwnerSignup = ({
             placeholder="닉네임을 입력하세요."
             className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
           />
-          <button
-            type="button"
-            className="transition duration-200 bg-primary-color-salgu hover:bg-primary-color-orange text-white w-[10rem] py-2 mb-4 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
-          >
-            중복확인
-          </button>
         </div>
       </label>
       <label htmlFor="pwInput" className="text-sm text-gray-600 pb-1 block">
@@ -153,7 +163,7 @@ const OwnerSignup = ({
           onChange={handleChangePassword}
           id="pwInput"
           type="password"
-          placeholder="비밀번호 입력(영문,숫자 조합 최소8자)"
+          placeholder="최소 8~12자, 알파벳 소문자, 숫자 및 특수문자"
           className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
         />
       </label>
@@ -169,37 +179,38 @@ const OwnerSignup = ({
             id="pwCheckInput"
             type="password"
             placeholder="비밀번호를 다시 입력하세요."
-            className={`${
-              passwordCheckError
-                ? 'ring-red-500 ring-1 border rounded-lg px-3 py-2 mt-1 mb-1 text-sm w-full'
-                : 'border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full'
+            className={`border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full ${
+              passwordCheckError === '비밀번호가 일치합니다.'
+                ? styles.successRing
+                : passwordCheckError === ''
+                ? ''
+                : styles.errorRing
             }`}
           />
         </label>
-        {passwordCheckError &&
-        passwordCheckError === '비밀번호가 일치하지 않습니다.' ? (
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-red-500 flex items-center">
-              {passwordCheckError}
-            </p>
-            <img
-              src={errorIcon}
-              className="w-[18px] flex items-center"
-              alt=""
-            />
-          </div>
-        ) : (
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-green-500 flex items-center">
-              {passwordCheckError}
-            </p>
-            <img
-              src={checkIcon}
-              className="w-[18px] flex items-center"
-              alt=""
-            />
-          </div>
-        )}
+
+        <div className="flex items-center justify-between">
+          <p
+            className={`text-xs ${
+              passwordCheckError === '비밀번호가 일치합니다.'
+                ? styles.successMsg
+                : styles.errorMsg
+            } flex items-center`}
+          >
+            {passwordCheckError}
+          </p>
+          <img
+            src={
+              passwordCheckError === '비밀번호가 일치합니다.'
+                ? checkIcon
+                : passwordCheckError === ''
+                ? ''
+                : errorIcon
+            }
+            className="w-[18px] flex items-center"
+            alt=""
+          />
+        </div>
       </div>
       <label htmlFor="shopnameInput" className="text-sm text-gray-600 pb-1">
         <div className="font-semibold mb-1 mt-6">가게 이름</div>
@@ -300,7 +311,10 @@ const OwnerSignup = ({
       </label>
       <button
         type="submit"
-        onClick={handleSubmit}
+        // onClick={handleSubmit}
+        onClick={() => {
+          alert('준비중입니다.');
+        }}
         className="transition duration-200 bg-primary-color-salgu hover:bg-primary-color-orange text-white w-full py-2.5 mt-6 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
       >
         <span className="inline-block mr-2">회원가입 하기</span>

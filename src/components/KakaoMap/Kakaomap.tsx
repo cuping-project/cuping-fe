@@ -7,6 +7,7 @@ import { cardIdMapState } from '../../recoil/atom/cardIdMapState';
 import { visibleCafesState } from '../../recoil/atom/visibleCafesState';
 
 const { kakao } = window;
+let currentInfowindow = null;
 
 const Kakaomap = () => {
   const [location, setLocation] = useRecoilState(locationState);
@@ -17,13 +18,23 @@ const Kakaomap = () => {
 
   const { isLoading, data } = useQuery('getmap', () => getBeanMap(cardId));
 
+  // 인포윈도우 한개씩만 띄우는 함수
+  const openInfoWindow = (newInfowindow, map, marker) => {
+    // 이미 열려있는 iw가 있을경우, 이전 iw를 닫음
+    if (currentInfowindow) {
+      currentInfowindow.close();
+    }
+    newInfowindow.open(map, marker);
+    currentInfowindow = newInfowindow;
+  };
+
   useEffect(() => {
     if (isLoading || !data) return;
 
     const container = document.getElementById('map'); // 지도를 표시할 div
     const options = {
       center: new kakao.maps.LatLng(37.5677463315893, 126.8397655094666), // 지도의 중심 좌표
-      level: 3, // 지도의 확대 레벨
+      level: 5, // 지도의 확대 레벨
     };
 
     // 지도 생성
@@ -97,7 +108,7 @@ const Kakaomap = () => {
 
       // Add event listener for each marker
       kakao.maps.event.addListener(marker, 'click', () => {
-        infowindow.open(kakaoMap, marker);
+        openInfoWindow(infowindow, kakaoMap, marker);
         const iwContainer = infowindow.getContent();
         const iwCloseButton = iwContainer.querySelector('button');
 

@@ -24,7 +24,7 @@ import nicknameState from '../../recoil/atom/nicknameState';
 
 const BeanComments = () => {
   // 로그인이 되었는지 확인하기 위한 상태 변수
-  const [loggedin, setLoggedin] = useRecoilState(loginState);
+  const [loggedin, setLoggedin] = useRecoilState<boolean>(loginState);
 
   // 댓글을 담기 위한 변수
   const [commentList, setCommentList] = useState([]);
@@ -194,7 +194,9 @@ const BeanComments = () => {
         {getVisibleComments().map(comment => (
           <div
             key={comment.id}
-            className="middle-card flex border-[0.07rem] border-gray-200 m-3 p-5 rounded-xl"
+            className="middle-card flex border-[0.07rem] border-gray-200 m-3 p-5 rounded-xl cursor-pointer"
+            onClick={() => alert('댓글 수정 및 삭제는 준비중입니다')}
+            role="presentation"
           >
             <div className="card-picture mr-5 min-w-[60px] flex-shrink-0 flex items-center justify-center">
               {comment.user.profile_image === null ? (
@@ -207,7 +209,8 @@ const BeanComments = () => {
               <div className="card-nickname">{comment.user.nickname}</div>
               <div className="flex mb-2">
                 <div className="card-days text-[0.8rem] flex items-end">
-                  2023.06.01
+                  {comment.createdAt.slice(0, 10)}{' '}
+                  {comment.createdAt.slice(11, 16)}
                 </div>
               </div>
 
