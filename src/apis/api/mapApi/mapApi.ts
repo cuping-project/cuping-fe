@@ -2,11 +2,11 @@ import axiosInstance from '../../utils/axiosInstance';
 
 const getBeanMap = async card_id => {
   try {
-    const location = '강서';
+    const region = '서울 강서구';
     const response = await axiosInstance.get(
       `${
         import.meta.env.VITE_BE_SERVER
-      }/main/bean/${card_id}?address=${location}`,
+      }/main/bean/${card_id}?address=${region}`,
     );
 
     // console.log('🍩 💛 getBeanMap 💛 response:', response.data.data.cafeList);
