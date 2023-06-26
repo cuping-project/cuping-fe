@@ -213,8 +213,8 @@ const Details: React.FC = () => {
           <div className="mb-[6rem]">
             <div className="flex justify-between mt-[2rem] mb-[2rem] text-xl font-bold items-center px-[1.2rem]">
               <div className="flex items-center">
-                <div className="text-primary-color-orange">{count}</div>
-                <div>개의 가 있습니다.</div>
+                <div className="text-primary-color-orange">"{count}"</div>
+                <div>&nbsp;개의 카페가 있습니다.</div>
               </div>
               {visibleCafes.length > 4 && (
                 <div

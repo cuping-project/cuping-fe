@@ -111,7 +111,7 @@ const BeanComments = () => {
     <div className="beanComments-container">
       <div className="middle-top w-full flex justify-between">
         <div className="middle-title text-[2.5rem] flex">
-          <div className="text-primary-color-orange">{commentCount}</div>
+          <div className="text-primary-color-orange">"{commentCount}"</div>
           <div>건의 커핑 노트</div>
         </div>
         {loggedin ? (

@@ -160,7 +160,7 @@ const Home: React.FC = () => {
           <div className="search-bar d1920:mb-[4rem] mobile:mb-[2rem] relative ">
             <div
               className="flex d1920:w-[14rem] d1440:w-[10rem] mobile:w-[7rem] mx-auto relative z-10
-             mobile:hidden tablet:block d1024:block d1440:block d1920:block"
+              mobile:hidden tablet:block d1024:block d1440:block d1920:block"
             >
               <div
                 className="text-primary-color-orange d1920:pb-[1rem] mobile:pb-[0.1rem]
