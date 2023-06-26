@@ -24,6 +24,7 @@ import beanPageIdState from '../../recoil/atom/beanPageIdState';
 import InfoCafeModal from '../../components/Modal/InfoCafeModal/InfoCafeModal';
 import { cardDetailApi } from '../../apis/api/cardDetailApi/cardDetailApi';
 import { selectedCafeState } from '../../recoil/atom/selectedCafeState';
+import Footer from '../../components/Footer/Footer';
 
 const Details: React.FC = () => {
   const navigate = useNavigate();
@@ -255,6 +256,9 @@ const Details: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="Footer mt-[12rem]">
+        <Footer />
       </div>
     </div>
   );

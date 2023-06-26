@@ -21,6 +21,7 @@ import {
 import { LikeMutation } from '../../apis/services/LikeService/LikeService';
 import { likeStatusState, likesCountState } from '../../recoil/atom/likeState';
 import { isLoginModalState } from '../../recoil/atom/modalState';
+import Footer from '../../components/Footer/Footer';
 
 const Home: React.FC = () => {
   // 로그인 상태 변수
@@ -311,6 +312,9 @@ const Home: React.FC = () => {
               )}
             </div>
           </div>
+        </div>
+        <div className="Footer mt-[12rem]">
+          <Footer />
         </div>
       </div>
     </div>
