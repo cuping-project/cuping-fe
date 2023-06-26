@@ -33,8 +33,19 @@ const BeanComments = () => {
   // 댓글의 현재 수정 상태인지에 대한 상태값
   const [isEditing, setIsEditing] = useState(false);
 
+  // 댓글 수정 후 업데이트 상태 변수
+  const [commentContent, setCommentContent] = useState('');
+
   // cardPageId를 담기 위한 상태 변수
   const [beanPageId, setBeanPageId] = useRecoilState(beanPageIdState);
+
+  // 로그인 모달 관련된 변수
+  const [isLoginModalOpen, setIsLoginModalOpen] =
+    useRecoilState(isLoginModalState);
+
+  const openLoginModal = () => {
+    setIsLoginModalOpen(true);
+  };
 
   // 댓글 모달 관련된 변수
   const [isCommentModalOpen, setIsCommentModalOpen] =
@@ -150,11 +161,19 @@ const BeanComments = () => {
   );
 
   // 댓글 수정 핸들러 , true로 바꾸기
-  const handleEdit = () => {
-    setIsEditing(() => !isEditing);
+  // const handleEdit = () => {
+  //   setIsEditing(() => !isEditing);
+  // };
+  const handleEdit = (id, content) => {
+    setIsEditing(true);
+    setCommentContent(content);
+    editCommentMutation.mutate({ id, content: commentContent });
   };
 
-  //
+  // 댓글 수정 후 업데이트 핸들러
+  const handleContentChange = event => {
+    setCommentContent(event.target.value);
+  };
 
   return (
     <div className="beanComments-container">
@@ -194,38 +213,38 @@ const BeanComments = () => {
         {getVisibleComments().map(comment => (
           <div
             key={comment.id}
-            className="middle-card flex border-[0.07rem] border-gray-200 m-3 p-5 rounded-xl cursor-pointer"
-            onClick={() => alert('댓글 수정 및 삭제는 준비중입니다')}
+            className="middle-card flex border-[0.07rem] border-gray-200 m-3 p-5 rounded-xl cursor-pointer justify-between items-center"
             role="presentation"
           >
-            <div className="card-picture mr-5 min-w-[60px] flex-shrink-0 flex items-center justify-center">
-              {comment.user.profile_image === null ? (
-                <img src={bini} className="w-[3rem]" alt="프로필 카드" />
-              ) : (
-                <img src={profileImage} alt="프로필 카드" />
-              )}
-            </div>
-            <div className="card-contents">
-              <div className="card-nickname">{comment.user.nickname}</div>
-              <div className="flex mb-2">
-                <div className="card-days text-[0.8rem] flex items-end">
-                  {comment.createdAt.slice(0, 10)}{' '}
-                  {comment.createdAt.slice(11, 16)}
-                </div>
+            <div className="flex">
+              <div className="card-picture mr-5 min-w-[60px] flex-shrink-0 flex items-center justify-center">
+                {comment.user.profile_image === null ? (
+                  <img src={bini} className="w-[3rem]" alt="프로필 카드" />
+                ) : (
+                  <img src={profileImage} alt="프로필 카드" />
+                )}
               </div>
-
-              <div className="card-text">{comment.content}</div>
+              <div className="card-contents">
+                <div className="card-nickname">{comment.user.nickname}</div>
+                <div className="flex mb-2">
+                  <div className="card-days text-[0.8rem] flex items-end">
+                    {comment.createdAt.slice(0, 10)}{' '}
+                    {comment.createdAt.slice(11, 16)}
+                  </div>
+                </div>
+                <div className="card-text">{comment.content}</div>
+              </div>
             </div>
-            <div className="comment-delete">
+            <div className="comment-edit-delete">
               {comment.user.nickname === nickname ? (
                 <>
-                  <button
+                  {/* <button
                     type="button"
-                    onClick={() => editCommentMutation.mutate(comment.id)}
-                    className="delete-button border rounded-lg border-primary-color-orange w-[3rem] h-[1.8rem] "
+                    onClick={() => handleEdit(comment.id, comment.content)}
+                    className="edit-button border rounded-lg border-primary-color-orange w-[3rem] h-[1.8rem] mr-[1rem]"
                   >
                     수정
-                  </button>
+                  </button> */}
                   <button
                     type="button"
                     onClick={() => deleteCommentMutation.mutate(comment.id)}
