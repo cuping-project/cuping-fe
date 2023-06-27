@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { loginState } from '../../recoil/atom/loginState';
 import {
   isCommentModalState,
@@ -13,7 +13,14 @@ import LoginModal from '../Modal/LoginModal/LoginModal';
 import bini from '../../assets/img/beni.svg';
 import profileImage from '../../assets/img/detail-profile-card.png';
 import beanPageIdState from '../../recoil/atom/beanPageIdState';
-import { getCommentApi } from '../../apis/api/CommentApi/CommentApi';
+import commentIdState from '../../recoil/atom/commentIdState';
+import {
+  getCommentApi,
+  deleteCommentApi,
+  editCommentApi,
+} from '../../apis/api/CommentApi/CommentApi';
+import fetchNickname from '../../apis/utils/userInfo';
+import nicknameState from '../../recoil/atom/nicknameState';
 
 const BeanComments = () => {
   // 로그인이 되었는지 확인하기 위한 상태 변수
@@ -22,6 +29,12 @@ const BeanComments = () => {
   // 댓글을 담기 위한 변수
   const [commentList, setCommentList] = useState([]);
   const [commentCount, setCommentCount] = useState(0);
+
+  // 댓글의 현재 수정 상태인지에 대한 상태값
+  const [isEditing, setIsEditing] = useState(false);
+
+  // 댓글 수정 후 업데이트 상태 변수
+  const [commentContent, setCommentContent] = useState('');
 
   // cardPageId를 담기 위한 상태 변수
   const [beanPageId, setBeanPageId] = useRecoilState(beanPageIdState);
@@ -63,6 +76,7 @@ const BeanComments = () => {
     const indexOfFirstComment = indexOfLastComment - commentPerPage;
     return sortedCommentList.slice(indexOfFirstComment, indexOfLastComment);
   };
+  console.log('comment');
 
   /**
    * 클릭 시 페이지를 변경하는 함수
@@ -99,19 +113,73 @@ const BeanComments = () => {
     checkLoginStatus();
   }, []);
 
+  // 닉네임 가져오기
+  const [nickname, setNickname] = useRecoilState(nicknameState);
+
   // 댓글 표시하기
   useEffect(() => {
     if (data) {
       setCommentCount(data.data.commentList.length);
       setCommentList(data.data.commentList);
+      console.log(data.data.commentList);
     }
   }, [data, beanPageId]);
+
+  // 닉네임 가져오기
+  useEffect(() => {
+    // 별도의 async 함수 선언
+    const fetchAndSetNickname = async () => {
+      const userNickname = await fetchNickname();
+      setNickname(() => userNickname);
+    };
+
+    // 선언한 async 함수 호출
+    fetchAndSetNickname();
+  }, [nickname]);
+
+  // 댓글 삭제하기
+  const queryClient = useQueryClient();
+
+  const deleteCommentMutation = useMutation(
+    commentId => deleteCommentApi(commentId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('comments');
+      },
+    },
+  );
+
+  // 댓글 수정하기
+  const editCommentMutation = useMutation(
+    updatedContent => editCommentApi(updatedContent),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('comments');
+        alert('Comment updated!');
+      },
+    },
+  );
+
+  // 댓글 수정 핸들러 , true로 바꾸기
+  // const handleEdit = () => {
+  //   setIsEditing(() => !isEditing);
+  // };
+  const handleEdit = (id, content) => {
+    setIsEditing(true);
+    setCommentContent(content);
+    editCommentMutation.mutate({ id, content: commentContent });
+  };
+
+  // 댓글 수정 후 업데이트 핸들러
+  const handleContentChange = event => {
+    setCommentContent(event.target.value);
+  };
 
   return (
     <div className="beanComments-container">
       <div className="middle-top w-full flex justify-between">
         <div className="middle-title text-[2.5rem] flex">
-          <div className="text-primary-color-orange">{commentCount}</div>
+          <div className="text-primary-color-orange">"{commentCount}"</div>
           <div>건의 커핑 노트</div>
         </div>
         {loggedin ? (
@@ -145,26 +213,47 @@ const BeanComments = () => {
         {getVisibleComments().map(comment => (
           <div
             key={comment.id}
-            className="middle-card flex border-[0.07rem] border-gray-200 m-3 p-5 rounded-xl cursor-pointer"
-            onClick={() => alert('댓글 수정 및 삭제는 준비중입니다')}
+            className="middle-card flex border-[0.07rem] border-gray-200 m-3 p-5 rounded-xl cursor-pointer justify-between items-center"
             role="presentation"
           >
-            <div className="card-picture mr-5 min-w-[60px] flex-shrink-0 flex items-center justify-center">
-              {comment.user.profile_image === null ? (
-                <img src={bini} className="w-[3rem]" alt="프로필 카드" />
-              ) : (
-                <img src={profileImage} alt="프로필 카드" />
-              )}
-            </div>
-            <div className="card-contents">
-              <div className="card-nickname">{comment.user.nickname}</div>
-              <div className="flex mb-2">
-                <div className="card-days text-[0.8rem] flex items-end">
-                  {comment.createdAt.slice(0, 10)}{' '}
-                  {comment.createdAt.slice(11, 16)}
-                </div>
+            <div className="flex">
+              <div className="card-picture mr-5 min-w-[60px] flex-shrink-0 flex items-center justify-center">
+                {comment.user.profile_image === null ? (
+                  <img src={bini} className="w-[3rem]" alt="프로필 카드" />
+                ) : (
+                  <img src={profileImage} alt="프로필 카드" />
+                )}
               </div>
-              <div className="card-text">{comment.content}</div>
+              <div className="card-contents">
+                <div className="card-nickname">{comment.user.nickname}</div>
+                <div className="flex mb-2">
+                  <div className="card-days text-[0.8rem] flex items-end">
+                    {comment.createdAt.slice(0, 10)}{' '}
+                    {comment.createdAt.slice(11, 16)}
+                  </div>
+                </div>
+                <div className="card-text">{comment.content}</div>
+              </div>
+            </div>
+            <div className="comment-edit-delete">
+              {comment.user.nickname === nickname ? (
+                <>
+                  {/* <button
+                    type="button"
+                    onClick={() => handleEdit(comment.id, comment.content)}
+                    className="edit-button border rounded-lg border-primary-color-orange w-[3rem] h-[1.8rem] mr-[1rem]"
+                  >
+                    수정
+                  </button> */}
+                  <button
+                    type="button"
+                    onClick={() => deleteCommentMutation.mutate(comment.id)}
+                    className="delete-button border rounded-lg border-primary-color-orange w-[3rem] h-[1.8rem] "
+                  >
+                    삭제
+                  </button>
+                </>
+              ) : null}
             </div>
           </div>
         ))}

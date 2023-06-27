@@ -1,9 +1,11 @@
 import axiosInstance from '../../utils/axiosInstance';
 
-const getBeanCardApi = async () => {
+const getBeanCardApi = async sort => {
   try {
     const { data } = await axiosInstance.get(
-      `${import.meta.env.VITE_BE_SERVER}/main/beans/search?keyword=&sort=likes`,
+      `${
+        import.meta.env.VITE_BE_SERVER
+      }/main/beans/search?keyword=&sort=${sort}`,
     );
 
     return data;
@@ -13,10 +15,17 @@ const getBeanCardApi = async () => {
   }
 };
 
-const searchBeanCardApi = async keyword => {
+const searchBeanCardApi = async (sortSelected, keyword, filters = []) => {
   try {
+    let sort = sortSelected;
+    if (sort === '') {
+      sort = 'abc';
+    }
+    const filterParams = filters.map(filter => `&filter=${filter}`).join('');
     const { data } = await axiosInstance.get(
-      `${import.meta.env.VITE_BE_SERVER}/main/beans/search?keyword=${keyword}`,
+      `${
+        import.meta.env.VITE_BE_SERVER
+      }/main/beans/search?keyword=${keyword}&sort=${sort}${filterParams}`,
     );
 
     return data;
