@@ -1,0 +1,43 @@
+.modalContainer {
+  @apply fixed inset-0 flex items-center justify-center z-[100];
+}
+
+.modalWrapper {
+  @apply absolute z-[99] top-0 left-0 w-[100vw] h-[100vh] bg-white bg-opacity-50;
+}
+
+.modalContent {
+  @apply absolute border-[1px] border-gray-100 p-[14px] rounded-[10px] w-[600px]
+  overflow-y-auto bg-white top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2;
+}
+
+.contentArea {
+  @apply mx-[74px] my-[24px];
+}
+
+.textArea {
+  @apply mb-[24px];
+}
+
+.textTitle {
+  @apply text-[20px] font-semibold;
+}
+
+.textLoginQuestion {
+  @apply text-[20px] font-semibold;
+}
+
+.loginAnswer {
+  @apply flex justify-center;
+}
+
+.loginCancel {
+  @apply font-semibold border-[.1rem] rounded-[12px]
+  py-[8px] px-[28px] mr-[33px] text-black
+  border-black cursor-pointer;
+}
+
+.loginOk {
+  @apply font-semibold border-[.1rem] rounded-[12px] py-[8px] px-[28px] mr-[33px] mt-[15px]
+  bg-primary-color-orange text-white border-primary-color-orange cursor-pointer;
+}

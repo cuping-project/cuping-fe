@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import pinIcon from '../../assets/img/pin.svg';
 import styles from './Home.module.css';
 import Header from '../../components/Header/Header';
@@ -20,7 +20,13 @@ import {
 } from '../../apis/api/beanCardApi/beanCardApi';
 import { LikeMutation } from '../../apis/services/LikeService/LikeService';
 import { likeStatusState, likesCountState } from '../../recoil/atom/likeState';
-import { isLoginModalState } from '../../recoil/atom/modalState';
+import {
+  isCitySelectModalState,
+  isLoginModalState,
+} from '../../recoil/atom/modalState';
+import Footer from '../../components/Footer/Footer';
+import CitySelectModal from '../../components/Modal/CitySelectModal/CitySelectModal';
+import { selectedLocationState } from '../../recoil/atom/selectedLocationState';
 
 const Home: React.FC = () => {
   // 로그인 상태 변수
@@ -47,6 +53,15 @@ const Home: React.FC = () => {
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
   };
+
+  // 지역 선택 모달 관련 변수
+  const [, setIsCitySelectModalOpen] = useRecoilState(isCitySelectModalState);
+  // 지역 선택 모달 상태 변수
+  const openCitySelectModal = () => {
+    setIsCitySelectModalOpen(true);
+  };
+  // 선택 지역 전역 변수로 관리
+  const selectedLocation = useRecoilValue(selectedLocationState);
 
   // 좋아요 순 버튼 토글
   const [isFavoriteSelected, setIsFavoriteSelected] = useState(true);
@@ -167,14 +182,9 @@ const Home: React.FC = () => {
                 flex d1920:text-[1.2rem] d1440:text-[1.2rem] mobile:text-[0.8rem]"
               >
                 <img src={pinIcon} alt="" className="w-[14px]" />
-                <button
-                  onClick={() => {
-                    alert('준비중입니다.');
-                  }}
-                  type="submit"
-                >
-                  서울특별시 강서구
-                </button>
+                <div onClick={openCitySelectModal} role="presentation">
+                  {selectedLocation.city} {selectedLocation.district}
+                </div>
               </div>
             </div>
             {/* ---------- 검색창 ---------- */}
@@ -205,6 +215,7 @@ const Home: React.FC = () => {
                 검색
               </button>
             </div>
+            <CitySelectModal />
           </div>
           {cards.length === 0 ? (
             <div className="content-text flex justify-center mobile:text-[1.2rem] text-[3rem] mobile:mb-[2rem] content-none">
@@ -311,6 +322,9 @@ const Home: React.FC = () => {
               )}
             </div>
           </div>
+        </div>
+        <div className="Footer mt-[12rem]">
+          <Footer />
         </div>
       </div>
     </div>

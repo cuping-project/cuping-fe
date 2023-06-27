@@ -1,8 +1,8 @@
 import axiosInstance from '../../utils/axiosInstance';
 
-const cardDetailApi = async pageId => {
+const cardDetailApi = async (pageId, city, district) => {
   try {
-    const region = '서울 강서구';
+    const region = `${city} ${district}`;
     const { data } = await axiosInstance.get(
       `${import.meta.env.VITE_BE_SERVER}/main/bean/${pageId}?address=${region}`,
     );
