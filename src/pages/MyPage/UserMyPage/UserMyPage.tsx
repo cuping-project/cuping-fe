@@ -10,6 +10,7 @@ import myPageApi from '../../../apis/api/myPageApi/myPageApi';
 import nicknameState from '../../../recoil/atom/nicknameState';
 import UpdateProfile from './UpdateProfile/UpdateProfile';
 import FavoriteBeansList from './FavoriteBeansList/FavoriteBeansList';
+import fetchNickname from '../../../apis/utils/userInfo';
 
 const UserMyPage = () => {
   const navigate = useNavigate();
@@ -21,12 +22,14 @@ const UserMyPage = () => {
 
   // 닉네임 가져오기
   useEffect(() => {
-    const fetchNickname = async () => {
-      const response = await myPageApi();
-      setNickname(response.data.data.nickname);
+    // 별도의 async 함수 선언
+    const fetchAndSetNickname = async () => {
+      const userNickname = await fetchNickname();
+      setNickname(() => userNickname);
     };
 
-    fetchNickname();
+    // 선언한 async 함수 호출
+    fetchAndSetNickname();
   }, [nickname]);
 
   // 마이페이지가 로딩되었을 때 로그인이 되어있는지 판단

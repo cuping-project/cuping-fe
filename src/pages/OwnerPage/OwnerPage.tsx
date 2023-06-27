@@ -5,6 +5,7 @@ import Header from '../../components/Header/Header';
 import Menu from './components/Menu';
 import UserHeader from './components/UserHeader';
 import CafeInfo from './components/cafeInfo/CafeInfo';
+import BeanAddModal from './components/modal/BeanAddModal';
 
 const OwnerPage = () => {
   const [selected, setSelected] = useState<string>('내 정보 관리');
@@ -184,22 +185,7 @@ const OwnerPage = () => {
                       />
                     </div>
                     {/* ----- 원두 추가 모달 ----- */}
-                    <div className="flex flex-row mb-[1.5rem] mt-[1rem]">
-                      <div className="text-[1.5rem] font-bold mr-[3.375rem]">
-                        사용 원두
-                        <span className="text-red-600 text-[1.7rem] ">*</span>
-                      </div>
-                    </div>
-                    <div>
-                      <div
-                        className="h-[19.875rem] w-[18.625rem] border-2 
-                    border-dashed border-gray-200 rounded-lg flex justify-center items-center mb-[2rem]"
-                      >
-                        <button type="button" className="text-[1.25rem]">
-                          + 원두 추가하기
-                        </button>
-                      </div>
-                    </div>
+                    <BeanAddModal />
                     {/* ----- 카페 등록 저장 버튼----- */}
                     <div className="flex flex-row mb-[10rem]">
                       <button

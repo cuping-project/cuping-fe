@@ -5,7 +5,10 @@ import { isCommentModalState } from '../../../recoil/atom/modalState';
 import nicknameState from '../../../recoil/atom/nicknameState';
 import closeIcon from '../../../assets/img/close.svg';
 import beanPageIdState from '../../../recoil/atom/beanPageIdState';
-import { postCommentApi } from '../../../apis/api/CommentApi/CommentApi';
+import {
+  postCommentApi,
+  editCommentApi,
+} from '../../../apis/api/CommentApi/CommentApi';
 import myPageApi from '../../../apis/api/myPageApi/myPageApi';
 
 const CommentModal = () => {
