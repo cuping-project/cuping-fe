@@ -10,8 +10,6 @@ import searchNone from '../../assets/img/search-none.png';
 import { cardState } from '../../recoil/atom/cardState';
 import { searchKeywordState } from '../../recoil/atom/searchKeywordState';
 import { loginState } from '../../recoil/atom/loginState';
-import { locationState } from '../../recoil/atom/locationState';
-import showCardState from '../../recoil/atom/showCardState';
 import myPageApi from '../../apis/api/myPageApi/myPageApi';
 import nicknameState from '../../recoil/atom/nicknameState';
 import {
@@ -49,23 +47,68 @@ const Home: React.FC = () => {
   };
 
   // 좋아요 순 버튼 토글
-  const [isFavoriteSelected, setIsFavoriteSelected] = useState(true);
-
-  // 신맛, 쓴맛, 단맛, 탄맛, 디카페인 상태 변수
-  const [isSshinSelected, setIsSshinSelected] = useState(false); // 신맛
-
-  // 신맛 태그 클릭 토글
-  const handleToggleShin = () => {
-    alert('태그로 필터 기능은 준비 중 입니다.');
-    setIsSshinSelected(!isSshinSelected);
-  };
+  const [isFavoriteSelected, setIsFavoriteSelected] = useState(false);
+  const [sortSelected, setSortSelected] = useState('');
 
   // "좋아요 순" 버튼 클릭 시 토글
   const handleToggleFavorite = () => {
     setIsFavoriteSelected(!isFavoriteSelected);
+
+    // 좋아요 순으로 정렬할 것인지 여부에 따라 sort 값 변경
+    const sort = isFavoriteSelected ? 'abc' : 'likes';
+    setSortSelected(sort);
+    const fetchBeanCard = async () => {
+      try {
+        const { data } = await getBeanCardApi(sort);
+        setCards(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchBeanCard();
   };
 
-  //  메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
+  // 필터 상태 변수
+  const [filter, setFilter] = useState([
+    { name: 'burnt', displayName: '탄맛' },
+    { name: 'sweet', displayName: '단맛' },
+    { name: 'sour', displayName: '신맛' },
+    { name: 'bitter', displayName: '쓴맛' },
+  ]);
+  // const [filter, setFilter] = useState(['burnt', 'sweet', 'sour', 'bitter']);
+  const [filterOptions, setFilterOptions] = useState<string[]>([]);
+
+  // filter-option 처리 (추가 또는 삭제)
+  const toggleFilterOption = option => {
+    if (filterOptions.includes(option)) {
+      // 이미 존재하는 경우 제거
+      setFilterOptions(filterOptions.filter(o => o !== option));
+    } else {
+      // 존재하지 않는 경우 추가
+      setFilterOptions([...filterOptions, option]);
+    }
+  };
+
+  // 검색버튼 클릭 시 검색어를 통해 카드를 받아옴
+  const searchHandler = async () => {
+    try {
+      const response = await searchBeanCardApi(
+        sortSelected,
+        searchKeyword,
+        filterOptions,
+      );
+      setCards(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // 필터 옵션이 바뀌면 재 랜더링
+  useEffect(() => {
+    searchHandler();
+  }, [sortSelected, filterOptions]);
+
+  // 메인페이지가 로딩되었을 때 로그인이 되어있는지 판단
   useEffect(() => {
     const checkLoginStatus = () => {
       const accessToken = Cookies.get('ACCESS_KEY');
@@ -83,6 +126,10 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchNickname = async () => {
       try {
+        // 로그인 상태가 아닐시 요청 보내지 않기
+        if (!loggedin) {
+          return;
+        }
         const response = await myPageApi();
         setNickname(response.data.data.nickname);
       } catch (error) {
@@ -97,7 +144,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchBeanCard = async () => {
       try {
-        const { data } = await getBeanCardApi();
+        const { data } = await getBeanCardApi('abc');
         setCards(data);
       } catch (error) {
         console.log(error);
@@ -105,17 +152,6 @@ const Home: React.FC = () => {
     };
     fetchBeanCard();
   }, []);
-
-  // 검색버튼 클릭 시 검색어를 통해 카드를 받아옴
-  const searchHandler = async () => {
-    try {
-      const response = await searchBeanCardApi(searchKeyword);
-      console.log(response.data);
-      setCards(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   // 좋아요 기능
   const likeMutation = LikeMutation();
@@ -135,15 +171,6 @@ const Home: React.FC = () => {
       },
     });
   };
-
-  // 메인페이지를 처음 로딩 되었을때 카드를 받아옴
-  // GetBeanCardService();
-
-  // 검색버튼 클릭 시 검색어를 통해 카드를 받아 옴
-  // const searchHandler = () => {
-  //   setShowCard(true);
-  // };
-  // SearchBeanCardService();
 
   return (
     <div className="full-conainer w-full h-[100vh]">
@@ -173,7 +200,7 @@ const Home: React.FC = () => {
                   }}
                   type="submit"
                 >
-                  서울특별시 강서구
+                  서울 강서구
                 </button>
               </div>
             </div>
@@ -207,7 +234,10 @@ const Home: React.FC = () => {
             </div>
           </div>
           {cards.length === 0 ? (
-            <div className="content-text flex justify-center mobile:text-[1.2rem] text-[3rem] mobile:mb-[2rem] content-none">
+            <div
+              className="content-text flex justify-center
+              mobile:text-[1.2rem] d1440:text-[2rem] text-[2rem] mobile:mb-[2rem] content-none"
+            >
               <div className="text-primary-color-orange">`{searchKeyword}`</div>
               <div>에 대한 검색결과가 없습니다.</div>
             </div>
@@ -226,8 +256,8 @@ const Home: React.FC = () => {
           )}
 
           <div className="card-contents d1920:min-w-[1440px] mx-auto">
-            <div className="sorting-btn-area w-full grid grid-cols-2">
-              <div className="sorting-btn-right flex">
+            <div className="sorting-btn-area w-full grid grid-cols-2 px-[1rem]">
+              <div className="sorting-btn-left flex">
                 <button
                   type="submit"
                   className={`sorting-btn bg-primary-color-orange text-white border-1 m-2 px-2 py-1 rounded-[10px] ${
@@ -239,18 +269,21 @@ const Home: React.FC = () => {
                 </button>
               </div>
 
-              <div className="sorting-btn-left flex justify-end">
-                <button
-                  type="submit"
-                  className={`m-2 px-4 py-1 border-2 rounded-[10px] text-[12px] cursor-pointer ${
-                    isSshinSelected
-                      ? 'bg-primary-color-orange text-white'
-                      : 'border-black opacity-20'
-                  }`}
-                  onClick={handleToggleShin}
-                >
-                  신맛
-                </button>
+              {/* 필터링 버튼 자리 */}
+              <div className="sorting-btn-right flex justify-end">
+                {filter.map(option => (
+                  <button
+                    key={option.name}
+                    type="submit"
+                    className={`sorting-btn bg-primary-color-orange text-white border-1
+                      m-2 px-[1.25rem] py-1 rounded-[10px] ${
+                        filterOptions.includes(option.name) ? '' : 'opacity-30'
+                      }`}
+                    onClick={() => toggleFilterOption(option.name)}
+                  >
+                    {option.displayName}
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -264,50 +297,46 @@ const Home: React.FC = () => {
                   <img src={searchNone} alt="" />
                 </div>
               ) : (
-                [...cards]
-                  .sort((a, b) => b.likesCount - a.likesCount)
-                  .map(card => (
-                    <Link
-                      to={`/details/${card.id}`}
-                      key={card.id}
-                      className="card m-4 shadow-md border border-gray-300 rounded-[12px] cursor-pointer"
-                    >
-                      <div className="card-picture overflow-hidden">
-                        <img
-                          src={card.beanImage}
-                          alt=""
-                          className="w-full h-[14rem] object-cover rounded-[12px]"
-                        />
+                [...cards].map(card => (
+                  <Link
+                    to={`/details/${card.id}`}
+                    key={card.id}
+                    className="card m-4 shadow-md border border-gray-300 rounded-[12px] cursor-pointer"
+                  >
+                    <div className="card-picture overflow-hidden">
+                      <img
+                        src={card.beanImage}
+                        alt=""
+                        className="w-full h-[14rem] object-cover rounded-[12px]"
+                      />
+                    </div>
+                    <div className="card-name flex justify-between">
+                      <div className="bean-name text-xl p-2 ml-3">
+                        {card.origin} {card.beanName}
                       </div>
-                      <div className="card-name flex justify-between">
-                        <div className="bean-name text-xl p-2 ml-3">
-                          {card.origin} {card.beanName}
-                        </div>
-                        <div className="flex items-center justify-end p-2">
-                          <div className="heart mx-2 cursor-pointer w-full flex items-center pr-[0.5rem] mr-[0.8rem]">
-                            <img
-                              src={heartFill}
-                              className="mr-[0.5rem] w-[1.2rem] cursor-pointer"
-                              alt="하트이미지"
-                            />
-                            <div className="text-[1.2rem]">
-                              {card.likesCount}
-                            </div>
-                          </div>
+                      <div className="flex items-center justify-end p-2">
+                        <div className="heart mx-2 cursor-pointer w-full flex items-center pr-[0.5rem] mr-[0.8rem]">
+                          <img
+                            src={heartFill}
+                            className="mr-[0.5rem] w-[1.2rem] cursor-pointer"
+                            alt="하트이미지"
+                          />
+                          <div className="text-[1.2rem]">{card.likesCount}</div>
                         </div>
                       </div>
-                      <div className="card-labels p-[1rem] flex">
-                        {card.hashTag.split('/').map((tag, index) => (
-                          <div
-                            key={index}
-                            className="card-label border-2 rounded-[5px] px-2 mr-2 text-[1rem]"
-                          >
-                            # {tag}
-                          </div>
-                        ))}
-                      </div>
-                    </Link>
-                  ))
+                    </div>
+                    <div className="card-labels p-[1rem] flex">
+                      {card.hashTag.split('/').map((tag, index) => (
+                        <div
+                          key={index}
+                          className="card-label border-2 rounded-[5px] px-2 mr-2 text-[1rem]"
+                        >
+                          # {tag}
+                        </div>
+                      ))}
+                    </div>
+                  </Link>
+                ))
               )}
             </div>
           </div>
