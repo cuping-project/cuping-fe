@@ -148,6 +148,13 @@ const BeanComments = () => {
     },
   );
 
+  // 삭제 버튼 클릭 이벤트 핸들러
+  const handleDeleteButtonClick = commentId => {
+    if (window.confirm('정말로 삭제하시겠습니까?')) {
+      deleteCommentMutation.mutate(commentId);
+    }
+  };
+
   // 댓글 수정하기
   const editCommentMutation = useMutation(
     updatedContent => editCommentApi(updatedContent),
@@ -246,7 +253,7 @@ const BeanComments = () => {
                   </button> */}
                   <button
                     type="button"
-                    onClick={() => deleteCommentMutation.mutate(comment.id)}
+                    onClick={() => handleDeleteButtonClick(comment.id)}
                     className="delete-button border rounded-lg border-primary-color-orange w-[3rem] h-[1.8rem] "
                   >
                     삭제
