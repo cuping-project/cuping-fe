@@ -76,7 +76,6 @@ const BeanComments = () => {
     const indexOfFirstComment = indexOfLastComment - commentPerPage;
     return sortedCommentList.slice(indexOfFirstComment, indexOfLastComment);
   };
-  console.log('comment');
 
   /**
    * 클릭 시 페이지를 변경하는 함수
@@ -121,7 +120,7 @@ const BeanComments = () => {
     if (data) {
       setCommentCount(data.data.commentList.length);
       setCommentList(data.data.commentList);
-      console.log(data.data.commentList);
+      // console.log(data.data.commentList);
     }
   }, [data, beanPageId]);
 

@@ -10,7 +10,7 @@ const kakaoLoginApi = async code => {
   const response = await axios.get(
     `${import.meta.env.VITE_BE_SERVER}/users/oauth/kakao/${code}`,
   );
-  console.log(response);
+  // console.log(response);
   if (response.status !== 200) {
     throw new Error('카카오 로그인 실패');
   }
@@ -45,7 +45,7 @@ const KakaoLogin = () => {
     const code = url.searchParams.get('code');
     if (code) {
       // code가 있다면 이를 사용하여 로그인을 시도합니다.
-      console.log(code);
+      // console.log(code);
       kakaoLoginMutation.mutate(code);
     }
   }, [kakaoLoginMutation]);
