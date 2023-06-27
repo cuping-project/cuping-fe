@@ -68,7 +68,9 @@ const Details: React.FC = () => {
   // ------------------------------------------------------------------
 
   const [, setCardId] = useRecoilState(cardIdMapState);
-  setCardId(pageId);
+  useEffect(() => {
+    setCardId(pageId);
+  }, [pageId]);
 
   // 좋아요 기능
   const likeMutation = LikeMutation();
