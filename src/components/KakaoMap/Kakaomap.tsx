@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { getBeanMap } from '../../apis/api/mapApi/mapApi';
 import { locationState } from '../../recoil/atom/locationState';
 import { cardIdMapState } from '../../recoil/atom/cardIdMapState';
 import { visibleCafesState } from '../../recoil/atom/visibleCafesState';
+import { selectedLocationState } from '../../recoil/atom/selectedLocationState';
 
 const { kakao } = window;
 let currentInfowindow = null;
@@ -13,10 +14,15 @@ const Kakaomap = () => {
   const [location, setLocation] = useRecoilState(locationState);
   const [cardId, setCardId] = useRecoilState(cardIdMapState);
   const [visibleCafes, setVisibleCafes] = useRecoilState(visibleCafesState);
+  // 선택 지역 전역 변수로 관리
+  const selectedLocation = useRecoilValue(selectedLocationState);
+  console.log('🍩 💛 Kakaomap 💛 selectedLocation:', selectedLocation);
 
   const [map, setMap] = useState(null);
 
-  const { isLoading, data } = useQuery('getmap', () => getBeanMap(cardId));
+  const { isLoading, data } = useQuery('getmap', () =>
+    getBeanMap(cardId, selectedLocation.city, selectedLocation.district),
+  );
 
   // 인포윈도우 한개씩만 띄우는 함수
   const openInfoWindow = (newInfowindow, map, marker) => {
@@ -34,8 +40,15 @@ const Kakaomap = () => {
     const container = document.getElementById('map'); // 지도를 표시할 div
     const options = {
       center: new kakao.maps.LatLng(37.5677463315893, 126.8397655094666), // 지도의 중심 좌표
-      level: 5, // 지도의 확대 레벨
+      level: 4, // 지도의 확대 레벨
     };
+
+    if (data && data.length > 0) {
+      options.center = new kakao.maps.LatLng(
+        Number(data[0].y),
+        Number(data[0].x),
+      ); // 데이터가 있으면 첫번째 데이터의 정보를 가져와서 설정
+    }
 
     // 지도 생성
     const kakaoMap = new kakao.maps.Map(container, options);

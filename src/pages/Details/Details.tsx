@@ -25,6 +25,7 @@ import InfoCafeModal from '../../components/Modal/InfoCafeModal/InfoCafeModal';
 import { cardDetailApi } from '../../apis/api/cardDetailApi/cardDetailApi';
 import { selectedCafeState } from '../../recoil/atom/selectedCafeState';
 import Footer from '../../components/Footer/Footer';
+import { selectedLocationState } from '../../recoil/atom/selectedLocationState';
 
 const Details: React.FC = () => {
   const navigate = useNavigate();
@@ -88,9 +89,16 @@ const Details: React.FC = () => {
     });
   };
 
+  // 선택 지역 전역 변수로 관리
+  const selectedLocation = useRecoilValue(selectedLocationState);
+
   // 상세 데이터 가져오기
   const { isLoading, data } = useQuery(['cardDetail', pageId], async () => {
-    const beanData = await cardDetailApi(pageId);
+    const beanData = await cardDetailApi(
+      pageId,
+      selectedLocation.city,
+      selectedLocation.district,
+    );
 
     setLikesCount(beanData.data.bean.likesCount);
     return beanData.data.bean;
@@ -116,7 +124,7 @@ const Details: React.FC = () => {
   // 상세 데이터 가져오기 성공 시 카드 데이터를 담기
   useEffect(() => {
     if (data) {
-      console.log(data);
+      // console.log(data);
       setCard(data);
       setBeanPageId(pageId);
     }
@@ -215,7 +223,7 @@ const Details: React.FC = () => {
             <div className="flex justify-between mt-[2rem] mb-[2rem] text-xl font-bold items-center px-[1.2rem]">
               <div className="flex items-center">
                 <div className="text-primary-color-orange">{count}</div>
-                <div>개의 가 있습니다.</div>
+                <div>개의 카페가 있습니다.</div>
               </div>
               {visibleCafes.length > 4 && (
                 <div

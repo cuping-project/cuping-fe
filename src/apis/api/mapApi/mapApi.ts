@@ -1,8 +1,8 @@
 import axiosInstance from '../../utils/axiosInstance';
 
-const getBeanMap = async card_id => {
+const getBeanMap = async (card_id, city, district) => {
   try {
-    const region = '서울 강서구';
+    const region = `${city} ${district}`;
     const response = await axiosInstance.get(
       `${
         import.meta.env.VITE_BE_SERVER
