@@ -17,7 +17,7 @@ const CitySelectModal: React.FC = () => {
   );
   const [cityData, setCityDate] = useState([]);
   const [uniqueCities, setUniqueCities] = useState([]);
-  const [selectedCity, setSelectedCity] = useState(null);
+  const [selectedCity, setSelectedCity] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [selectedLocation, setSelectedLocation] = useRecoilState(
     selectedLocationState,
