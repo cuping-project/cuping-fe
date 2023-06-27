@@ -190,7 +190,10 @@ const Login = () => {
 
                         <button
                           type="submit"
-                          onClick={kakaoLoginHandler}
+                          // onClick={kakaoLoginHandler}
+                          onClick={() => {
+                            alert('수정 중입니다.');
+                          }}
                           className="transition duration-200 bg-amber-300 hover:bg-yellow-400 
                           focus:bg-kakao-color focus:shadow-sm focus:ring-4 focus:ring-yellow-500 
                           focus:ring-opacity-50 w-full py-2.5 rounded-lg text-sm shadow-sm 
