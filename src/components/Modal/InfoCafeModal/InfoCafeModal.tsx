@@ -95,7 +95,9 @@ const InfoCafeModal = () => {
             <div className="mt-6">
               <div className="flex mb-[1rem]">
                 {selectedCafe && (
-                  <div className="text-orange-600">{selectedCafe.cafeName}</div>
+                  <div className="text-orange-600">
+                    "{selectedCafe.cafeName}"
+                  </div>
                 )}
 
                 <div>의 위치</div>
@@ -107,7 +109,9 @@ const InfoCafeModal = () => {
             <div className="mt-6">
               <div className="flex">
                 {selectedCafe && (
-                  <div className="text-orange-600">{selectedCafe.cafeName}</div>
+                  <div className="text-orange-600">
+                    "{selectedCafe.cafeName}"
+                  </div>
                 )}
                 <div>에 있는 원두</div>
               </div>

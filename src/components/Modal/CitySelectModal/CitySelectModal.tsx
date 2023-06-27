@@ -8,6 +8,7 @@ import {
   selectedLocationState,
   saveSelectedLocationSelector,
 } from '../../../recoil/atom/selectedLocationState';
+import arrowDown from '../../../assets/img/arrow-down.svg';
 
 const CitySelectModal: React.FC = () => {
   const navigate = useNavigate();
@@ -71,34 +72,50 @@ const CitySelectModal: React.FC = () => {
               <p className={styles.textTitle}>현재 위치를 확인하세요.</p>
               <p className={styles.textTitle}>지역을 선택해 주시기 바랍니다.</p>
             </div>
-            <div className="flex justify-center ">
-              <select
-                className={styles.loginCancel}
-                value={selectedCity}
-                onChange={e => {
-                  setSelectedCity(e.target.value);
-                }}
-              >
-                {uniqueCities.map((city, index) => (
-                  <option key={index} value={city}>
-                    {city}
-                  </option>
-                ))}
-              </select>
-              <select
-                className={styles.loginCancel}
-                onChange={e => {
-                  setSelectedDistrict(e.target.value);
-                }}
-              >
-                {cityData
-                  .filter(item => item.city === selectedCity)
-                  .map((item, index) => (
-                    <option key={index} value={item.district}>
-                      {item.district}
+            <div className="flex justify-center">
+              <div className="relative">
+                <select
+                  className={`${styles.loginCancel} w-32 h-[3rem] pl-[1.2rem] pr-8 py-2 rounded-lg relative
+                  bg-white border-2 border-gray-400 focus:border-blue-500 shadow appearance-none`}
+                  value={selectedCity}
+                  onChange={e => {
+                    setSelectedCity(e.target.value);
+                  }}
+                >
+                  {uniqueCities.map((city, index) => (
+                    <option key={index} value={city}>
+                      {city}
                     </option>
                   ))}
-              </select>
+                </select>
+                <img
+                  className="absolute w-[1rem] top-[1rem] right-[3rem]"
+                  src={arrowDown}
+                  alt=""
+                />
+              </div>
+              <div className="relative">
+                <select
+                  className={`${styles.loginCancel} w-32 h-[3rem] pl-[1.2rem] pr-8 py-2 rounded-lg relative
+                  bg-white border-2 border-gray-400 focus:border-blue-500 shadow appearance-none`}
+                  onChange={e => {
+                    setSelectedDistrict(e.target.value);
+                  }}
+                >
+                  {cityData
+                    .filter(item => item.city === selectedCity)
+                    .map((item, index) => (
+                      <option key={index} value={item.district}>
+                        {item.district}
+                      </option>
+                    ))}
+                </select>
+                <img
+                  className="absolute w-[1rem] top-[1rem] right-[3rem]"
+                  src={arrowDown}
+                  alt=""
+                />
+              </div>
             </div>
             <div className={styles.loginAnswer}>
               <div
