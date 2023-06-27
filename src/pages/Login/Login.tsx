@@ -76,7 +76,7 @@ const Login = () => {
       `${import.meta.env.VITE_BE_SERVER}/users/oauth/kakao`,
       { code },
     );
-    console.log(response);
+    // console.log(response);
     if (response.status !== 200) {
       throw new Error('카카오 로그인 실패');
     }

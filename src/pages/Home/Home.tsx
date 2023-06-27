@@ -180,7 +180,7 @@ const Home: React.FC = () => {
     const newLikeStatus = !likeStatus;
     likeMutation.mutate(cardId, {
       onSuccess: data => {
-        console.log(data.data.likeCount);
+        // console.log(data.data.likeCount);
         setLikesCount(data.data.likeCount);
         setLikeStatus(newLikeStatus);
       },

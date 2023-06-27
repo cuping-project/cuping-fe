@@ -18,7 +18,7 @@ const OwnerPage = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
     if (file) {
-      console.log('이미지?:', file);
+      // console.log('이미지?:', file);
       setSelectedFile(file);
 
       // Read the file and convert it to Base64 URL

@@ -16,7 +16,7 @@ const Kakaomap = () => {
   const [visibleCafes, setVisibleCafes] = useRecoilState(visibleCafesState);
   // 선택 지역 전역 변수로 관리
   const selectedLocation = useRecoilValue(selectedLocationState);
-  console.log('🍩 💛 Kakaomap 💛 selectedLocation:', selectedLocation);
+  // console.log('🍩 💛 Kakaomap 💛 selectedLocation:', selectedLocation);
 
   const [map, setMap] = useState(null);
 
