@@ -3,7 +3,6 @@ import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import pinIcon from '../../assets/img/pin.svg';
-import styles from './Home.module.css';
 import Header from '../../components/Header/Header';
 import heartFill from '../../assets/img/heart-fill.png';
 import searchNone from '../../assets/img/search-none.png';
@@ -17,7 +16,7 @@ import {
   searchBeanCardApi,
 } from '../../apis/api/beanCardApi/beanCardApi';
 import { LikeMutation } from '../../apis/services/LikeService/LikeService';
-import { likeStatusState, likesCountState } from '../../recoil/atom/likeState';
+import { likesCountState, likeStatusState } from '../../recoil/atom/likeState';
 import {
   isCitySelectModalState,
   isLoginModalState,
@@ -25,6 +24,11 @@ import {
 import Footer from '../../components/Footer/Footer';
 import CitySelectModal from '../../components/Modal/CitySelectModal/CitySelectModal';
 import { selectedLocationState } from '../../recoil/atom/selectedLocationState';
+
+interface IFilterOption {
+  name: string;
+  displayName: string;
+}
 
 const Home: React.FC = () => {
   // 로그인 상태 변수
@@ -84,13 +88,12 @@ const Home: React.FC = () => {
   };
 
   // 필터 상태 변수
-  const [filter, setFilter] = useState([
+  const [filter, setFilter] = useState<IFilterOption[]>([
     { name: 'burnt', displayName: '탄맛' },
     { name: 'sweet', displayName: '단맛' },
     { name: 'sour', displayName: '신맛' },
     { name: 'bitter', displayName: '쓴맛' },
   ]);
-  // const [filter, setFilter] = useState(['burnt', 'sweet', 'sour', 'bitter']);
   const [filterOptions, setFilterOptions] = useState<string[]>([]);
 
   // filter-option 처리 (추가 또는 삭제)

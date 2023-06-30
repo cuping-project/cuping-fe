@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { log } from 'console';
 import { loginState } from '../../recoil/atom/loginState';
 import {
   isCommentModalState,
