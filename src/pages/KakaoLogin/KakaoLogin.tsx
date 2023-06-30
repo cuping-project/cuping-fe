@@ -3,14 +3,14 @@ import { useMutation } from 'react-query';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import Cookies from 'js-cookie';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // 카카오 로그인 API
 const kakaoLoginApi = async code => {
   const response = await axios.get(
-    `${import.meta.env.VITE_BE_SERVER}/users/oauth/kakao/${code}`,
+    `${import.meta.env.VITE_BE_SERVER}/users/oauth/kakao?code=${code}`,
   );
-  // console.log(response);
+  console.log(response);
   if (response.status !== 200) {
     throw new Error('카카오 로그인 실패');
   }
