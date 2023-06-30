@@ -21,6 +21,7 @@ const KakaoLogin = () => {
   const navigate = useNavigate();
   const kakaoLoginMutation = useMutation(kakaoLoginApi, {
     onSuccess: data => {
+      console.log(data);
       const decoded = jwtDecode(data.access_key);
       const accessExpirationDate = new Date(decoded.exp * 1000); // 1시간
       const refreshExpirationDate = new Date(decoded.exp * 10000); // 10시간
@@ -35,7 +36,7 @@ const KakaoLogin = () => {
       navigate('/');
     },
     onError: error => {
-      console.log(error);
+      console.log('에러 입니다.', error);
     },
   });
 
@@ -48,7 +49,7 @@ const KakaoLogin = () => {
       // console.log(code);
       kakaoLoginMutation.mutate(code);
     }
-  }, [kakaoLoginMutation]);
+  }, []);
 
   return <div>로그인 중입니다.</div>;
 };
