@@ -4,10 +4,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import styles from './CitySelectModal.module.css';
 import { isCitySelectModalState } from '../../../recoil/atom/modalState';
 import { citySearchApi } from '../../../apis/api/citySearchApi/citySearchApi';
-import {
-  selectedLocationState,
-  saveSelectedLocationSelector,
-} from '../../../recoil/atom/selectedLocationState';
+import { selectedLocationState } from '../../../recoil/atom/selectedLocationState';
 import arrowDown from '../../../assets/img/arrow-down.svg';
 
 const CitySelectModal: React.FC = () => {

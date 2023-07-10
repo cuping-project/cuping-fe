@@ -110,6 +110,15 @@ const OwnerSignup = ({
   // 회원가입 버튼 핸들러
   const handleSubmit = e => {
     e.preventDefault();
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*\d)(?=.*[~!?_@#$%^&*()+|=])[a-z\d~!?_@#$%^&*()+|=]{8,12}$/;
+
+    if (!passwordRegex.test(password)) {
+      alert(
+        '비밀번호는 최소 8~12자, 알파벳 소문자와 숫자와 특수문자로 구성되어야 합니다.',
+      );
+      return;
+    }
     const formData = new FormData();
     formData.append('userId', userId);
     formData.append('nickname', nickname);
@@ -311,10 +320,7 @@ const OwnerSignup = ({
       </label>
       <button
         type="submit"
-        // onClick={handleSubmit}
-        onClick={() => {
-          alert('준비중입니다.');
-        }}
+        onClick={handleSubmit}
         className="transition duration-200 bg-primary-color-salgu hover:bg-primary-color-orange text-white w-full py-2.5 mt-6 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
       >
         <span className="inline-block mr-2">회원가입 하기</span>
